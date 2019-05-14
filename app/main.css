@@ -1,0 +1,59 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: "Source Code Pro", monospace;
+  font-size: 16px;
+  background: #444 url("../assets/simple-bg.png");
+  color: #444;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+a {
+  color: #c44;
+  text-decoration: none;
+}
+a:hover {
+  color: #e66;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 48rem;
+  margin: 0 auto;
+  background: #fff;
+}
+
+#app > header,
+#app > footer {
+  flex: 0 0 auto;
+  padding: 0.5rem;
+  background: #c44;
+  color: #eee;
+}
+#app > header h1,
+#app > footer h1 {
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+#app > main {
+  flex: 1 1 auto;
+  background: #fff;
+}
+
+#app > #action-pane {
+  display: block;
+}
+
+/*# sourceMappingURL=main.css.map */
