@@ -46,6 +46,10 @@ a:hover {
   margin: 0;
   padding: 0;
 }
+#app > header a,
+#app > footer a {
+  color: #eee;
+}
 
 #app > main {
   flex: 1 1 auto;
