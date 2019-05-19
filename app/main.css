@@ -28,7 +28,7 @@ a:hover {
 #app {
   display: flex;
   flex-direction: column;
-  width: 48rem;
+  width: 640px;
   margin: 0 auto;
   background: #fff;
 }
@@ -56,8 +56,12 @@ a:hover {
   background: #fff;
 }
 
-#app > #action-pane {
+#app #action-pane {
   display: block;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  width: 640px;
+  height: 480px;
 }
 
 /*# sourceMappingURL=main.css.map */

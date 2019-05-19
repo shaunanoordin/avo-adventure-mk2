@@ -26,15 +26,36 @@ class AvoAdventure {
   play () {
     const story = this.story;
     
+    // Initialising Mode: Assets Check
+    // Start the story when all assets are loaded.
+    // --------------------------------
+    if (this.mode === MODES.INITIALISING) {
+      let allAssetsLoaded = true;
+      Object.keys(this.assets).forEach((key) => {
+        const asset = this.assets[key];
+        allAssetsLoaded = allAssetsLoaded && asset.loaded;
+      });
+      if (allAssetsLoaded) {
+        this.story.start(this);
+      }
+    }
+    // --------------------------------
+    
+    // Game Logic
+    // --------------------------------
     story.prePlay();
     
+    // Run the main 
     if (!story.skipPlay()) {
-      // ...
+      if (this.mode === MODES.ACTION) this.actionPane.play(this);
     }
-        
-    story.postPlay();
     
-    // Play and Paint are tied. 
+    //
+    story.postPlay();
+    // --------------------------------
+    
+    // Update visuals
+    // Note: gameplay and visual frames are tied. 
     this.paint();
     
     // Next step
@@ -44,15 +65,13 @@ class AvoAdventure {
   paint () {
     const story = this.story;
     
-    if (this.mode === MODES.ACTION) {
-      story.prePaint();
-    
-      if (!story.skipPaint()) {
-        // ...
-      }
+    story.prePaint();
 
-      story.postPaint();
+    if (!story.skipPaint()) {
+      if (this.mode === MODES.ACTION) this.actionPane.paint(this);
     }
+
+    story.postPaint();
   }
 }
 
