@@ -1,12 +1,19 @@
+import { MODES } from './constants';
+import ImageAsset from './image-asset';
+
 class Story {
   constructor (app) {
+    // Assets
+    app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
+    
     //app.addActor();
     //app.addActor();
     //app.addAsset();
   }
   
   start (app) {
-    //app.
+    console.info('READY TO START!');
+    app.mode = MODES.ACTION;
   }
   
   prePlay (app) {}
