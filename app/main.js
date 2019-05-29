@@ -86,6 +86,18 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/avo/action-mode/action-mode.js":
+/*!********************************************!*\
+  !*** ./src/avo/action-mode/action-mode.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar ActionMode =\n/*#__PURE__*/\nfunction () {\n  function ActionMode(app) {\n    _classCallCheck(this, ActionMode);\n\n    this.html = document.getElementById('action-mode');\n    this.width = 320;\n    this.height = 240;\n    this.canvas2d = this.html.getContext(\"2d\"); // Set HTML\n\n    console.log(this.html);\n    this.html.width = this.width;\n    this.html.height = this.height;\n    this.canvasSizeRatio = 1;\n    this.html.onkeydown = this.onKeyDown.bind(this);\n    this.html.onkeyup = this.onKeyUp.bind(this);\n  }\n\n  _createClass(ActionMode, [{\n    key: \"play\",\n    value: function play(app) {}\n  }, {\n    key: \"paint\",\n    value: function paint(app) {\n      var assets = app.assets;\n      var canvas2d = this.canvas2d;\n      canvas2d.clearRect(0, 0, this.canvasWidth, this.canvasHeight);\n      canvas2d.drawImage(assets.basicActor.img, 0, 0, 48, 48, 0, 0, 48, 48);\n    }\n  }, {\n    key: \"focus\",\n    value: function focus() {\n      this.html.focus();\n    }\n  }, {\n    key: \"onKeyDown\",\n    value: function onKeyDown(e) {\n      console.log(e);\n    }\n  }, {\n    key: \"onKeyUp\",\n    value: function onKeyUp(e) {}\n  }]);\n\n  return ActionMode;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (ActionMode);\n\n//# sourceURL=webpack:///./src/avo/action-mode/action-mode.js?");
+
+/***/ }),
+
 /***/ "./src/avo/action-mode/index.js":
 /*!**************************************!*\
   !*** ./src/avo/action-mode/index.js ***!
@@ -94,7 +106,7 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nvar ActionMode =\n/*#__PURE__*/\nfunction () {\n  function ActionMode(app) {\n    _classCallCheck(this, ActionMode);\n\n    this.html = document.getElementById('action-mode');\n    this.width = 640;\n    this.height = 480;\n    this.canvas2d = this.html.getContext(\"2d\"); // Set HTML\n\n    console.log(this.html);\n    this.html.width = this.width;\n    this.html.height = this.height;\n    this.canvasSizeRatio = 1;\n    this.html.onkeydown = this.onKeyDown.bind(this);\n    this.html.onkeyup = this.onKeyUp.bind(this);\n  }\n\n  _createClass(ActionMode, [{\n    key: \"play\",\n    value: function play(app) {}\n  }, {\n    key: \"paint\",\n    value: function paint(app) {\n      var assets = app.assets;\n      var canvas2d = this.canvas2d;\n      canvas2d.clearRect(0, 0, this.canvasWidth, this.canvasHeight);\n      canvas2d.drawImage(assets.basicActor.img, 0, 0, 48, 48, 0, 0, 48, 48);\n    }\n  }, {\n    key: \"focus\",\n    value: function focus() {\n      this.html.focus();\n    }\n  }, {\n    key: \"onKeyDown\",\n    value: function onKeyDown(e) {\n      console.log(e);\n    }\n  }, {\n    key: \"onKeyUp\",\n    value: function onKeyUp(e) {}\n  }]);\n\n  return ActionMode;\n}();\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (ActionMode);\n\n//# sourceURL=webpack:///./src/avo/action-mode/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _action_mode__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./action-mode */ \"./src/avo/action-mode/action-mode.js\");\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (_action_mode__WEBPACK_IMPORTED_MODULE_0__[\"default\"]);\n\n//# sourceURL=webpack:///./src/avo/action-mode/index.js?");
 
 /***/ }),
 
