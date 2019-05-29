@@ -1,6 +1,6 @@
-class ActionPane {
+class ActionMode {
   constructor (app) {
-    this.html = document.getElementById('action-pane');
+    this.html = document.getElementById('action-mode');
     this.canvas2d = this.html.getContext("2d");
     
     // Set HTML
@@ -35,4 +35,4 @@ class ActionPane {
   }
 }
 
-export default ActionPane;
+export default ActionMode;

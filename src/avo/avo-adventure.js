@@ -1,4 +1,4 @@
-import ActionPane from './action-pane';
+import ActionMode from './action-mode';
 import Story from './story';
 import { FRAMES_PER_SECOND, MODES } from './constants';
 
@@ -10,7 +10,7 @@ class AvoAdventure {
     this.actors = {};
     this.assets = {};
 
-    this.actionPane = new ActionPane(this);
+    this.actionMode = new ActionMode(this);
     
     this.input = {
       keysPressed: {}
@@ -47,7 +47,7 @@ class AvoAdventure {
     
     // Run the main 
     if (!story.skipPlay()) {
-      if (this.mode === MODES.ACTION) this.actionPane.play(this);
+      if (this.mode === MODES.ACTION) this.actionMode.play(this);
     }
     
     //
@@ -68,7 +68,7 @@ class AvoAdventure {
     story.prePaint();
 
     if (!story.skipPaint()) {
-      if (this.mode === MODES.ACTION) this.actionPane.paint(this);
+      if (this.mode === MODES.ACTION) this.actionMode.paint(this);
     }
 
     story.postPaint();
