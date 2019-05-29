@@ -1,9 +1,14 @@
 class ActionMode {
   constructor (app) {
     this.html = document.getElementById('action-mode');
+    this.width = 640;
+    this.height = 480;
     this.canvas2d = this.html.getContext("2d");
     
     // Set HTML
+    console.log(this.html);
+    this.html.width = this.width;
+    this.html.height = this.height;
     this.canvasSizeRatio = 1;
 
     this.html.onkeydown = this.onKeyDown.bind(this);
