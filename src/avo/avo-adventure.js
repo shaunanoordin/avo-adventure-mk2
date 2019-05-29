@@ -30,7 +30,11 @@ class AvoAdventure {
     this.mode = newMode;
   }
   
+  /*  Each frame is a 'step' in the game
+   */
   runFrame () {
+    if  (this.mode === MODES.INITIALISING) this.startStoryIfReady();
+    
     // Run game logic
     this.play();
     
@@ -42,26 +46,11 @@ class AvoAdventure {
     this.nextFrame = setTimeout(this.runFrame.bind(this), 1000 / FRAMES_PER_SECOND);
   }
   
+  /*  Run game logic
+   */
   play () {
     const story = this.story;
     
-    // Initialising Mode: Assets Check
-    // Start the story when all assets are loaded.
-    // --------------------------------
-    if (this.mode === MODES.INITIALISING) {
-      let allAssetsLoaded = true;
-      Object.keys(this.assets).forEach((key) => {
-        const asset = this.assets[key];
-        allAssetsLoaded = allAssetsLoaded && asset.loaded;
-      });
-      if (allAssetsLoaded) {
-        this.story.start(this);
-      }
-    }
-    // --------------------------------
-    
-    // Game Logic
-    // --------------------------------
     story.prePlay();
     
     // Run the main 
@@ -69,11 +58,11 @@ class AvoAdventure {
       if (this.mode === MODES.ACTION) this.actionMode.play(this);
     }
     
-    //
     story.postPlay();
-    // --------------------------------
   }
-  
+
+  /*  Update game visuals
+   */
   paint () {
     const story = this.story;
     
@@ -84,6 +73,23 @@ class AvoAdventure {
     }
 
     story.postPaint();
+  }
+  
+  /*  Check if Story is ready to start
+   */
+  startStoryIfReady () {
+    if (this.mode !== MODES.INITIALISING) return;
+    
+    // Assets Check
+    let allAssetsLoaded = true;
+    Object.keys(this.assets).forEach((key) => {
+      const asset = this.assets[key];
+      allAssetsLoaded = allAssetsLoaded && asset.loaded;
+    });
+    
+    if (allAssetsLoaded) {
+      this.story.start(this);
+    }
   }
 }
 
