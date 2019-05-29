@@ -7,13 +7,12 @@ class Story {
     app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
     
     //app.addActor();
-    //app.addActor();
     //app.addAsset();
   }
   
   start (app) {
     console.info('READY TO START!');
-    app.mode = MODES.ACTION;
+    app.changeMode(MODES.ACTION);
   }
   
   prePlay (app) {}

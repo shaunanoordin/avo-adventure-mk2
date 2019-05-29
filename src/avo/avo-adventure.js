@@ -5,7 +5,6 @@ import { FRAMES_PER_SECOND, MODES } from './constants';
 class AvoAdventure {
   constructor (story) {
     this.mode = MODES.INITIALISING;
-    this.state = '';
     
     this.actors = {};
     this.assets = {};
@@ -19,8 +18,28 @@ class AvoAdventure {
     // Initialise the story
     this.story = story || new Story(this);
     
-    this.nextPlay = null;
+    this.nextFrame = null;
+    this.runFrame();
+  }
+  
+  changeMode (newMode) {
+    if (this.mode === MODES.ACTION) this.actionMode.unload(this);
+    
+    if (newMode === MODES.ACTION) this.actionMode.load(this);
+    
+    this.mode = newMode;
+  }
+  
+  runFrame () {
+    // Run game logic
     this.play();
+    
+    // Update visuals
+    // Note: gameplay and visual frames are tied. 
+    this.paint();
+
+    // Next step
+    this.nextFrame = setTimeout(this.runFrame.bind(this), 1000 / FRAMES_PER_SECOND);
   }
   
   play () {
@@ -53,13 +72,6 @@ class AvoAdventure {
     //
     story.postPlay();
     // --------------------------------
-    
-    // Update visuals
-    // Note: gameplay and visual frames are tied. 
-    this.paint();
-    
-    // Next step
-    this.nextPlay = setTimeout(this.play.bind(this), 1000 / FRAMES_PER_SECOND);
   }
   
   paint () {

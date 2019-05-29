@@ -15,6 +15,16 @@ class ActionMode {
     this.html.onkeyup = this.onKeyUp.bind(this);
   }
   
+  load (app) {
+    this.focus();    
+  }
+  
+  unload (app) {}
+  
+  focus () {
+    this.html.focus();
+  }
+  
   play (app) {
     
   }
