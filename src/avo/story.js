@@ -11,17 +11,15 @@ class Story {
   }
   
   start (app) {
-    console.info('READY TO START!');
+    console.info('STORY IS READY TO START!');
     app.changeMode(MODES.ACTION);
   }
   
-  prePlay (app) {}
   skipPlay () { return false }
-  postPlay (app) {}
+  customPlay (app) {}
   
-  prePaint (app) {}
   skipPaint () { return false }
-  postPaint (app) {}
+  customPaint (app) {}
 }
 
 export default Story;

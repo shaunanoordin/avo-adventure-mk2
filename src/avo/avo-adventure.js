@@ -35,14 +35,11 @@ class AvoAdventure {
   runFrame () {
     if  (this.mode === MODES.INITIALISING) this.startStoryIfReady();
     
-    // Run game logic
+    // Run game logic and update game visuals
+    // Note: gameplay and visual frames are tied.
     this.play();
-    
-    // Update visuals
-    // Note: gameplay and visual frames are tied. 
     this.paint();
-
-    // Next step
+    
     this.nextFrame = setTimeout(this.runFrame.bind(this), 1000 / FRAMES_PER_SECOND);
   }
   
@@ -51,14 +48,11 @@ class AvoAdventure {
   play () {
     const story = this.story;
     
-    story.prePlay();
-    
-    // Run the main 
     if (!story.skipPlay()) {
       if (this.mode === MODES.ACTION) this.actionMode.play(this);
     }
     
-    story.postPlay();
+    story.customPlay(this);
   }
 
   /*  Update game visuals
@@ -66,13 +60,11 @@ class AvoAdventure {
   paint () {
     const story = this.story;
     
-    story.prePaint();
-
     if (!story.skipPaint()) {
       if (this.mode === MODES.ACTION) this.actionMode.paint(this);
     }
 
-    story.postPaint();
+    story.customPaint(this);
   }
   
   /*  Check if Story is ready to start
