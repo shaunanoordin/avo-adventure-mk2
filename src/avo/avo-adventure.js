@@ -8,6 +8,7 @@ class AvoAdventure {
     
     this.actors = {};
     this.assets = {};
+    this.playerActor = null;
 
     this.actionMode = new ActionMode(this);
     

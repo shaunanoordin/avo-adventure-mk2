@@ -1,13 +1,18 @@
 import { MODES } from './constants';
 import ImageAsset from './image-asset';
+import Actor from './story-elements/actor';
 
 class Story {
   constructor (app) {
     // Assets
     app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
     
-    //app.addActor();
-    //app.addAsset();
+    app.playerActor = new Actor();
+    app.actors['player'] = app.playerActor;
+    
+    // TODO:
+    // app.addActor();
+    // app.addAsset();
   }
   
   start (app) {
