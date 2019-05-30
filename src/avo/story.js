@@ -7,7 +7,7 @@ class Story {
     // Assets
     app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
     
-    app.playerActor = new Actor();
+    app.playerActor = new Actor(app);
     app.actors['player'] = app.playerActor;
     
     // TODO:

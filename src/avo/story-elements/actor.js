@@ -2,8 +2,8 @@ import { MODES } from '../constants';
 import StoryElement from './story-element'
 
 class Actor extends StoryElement {
-  constructor () {
-    super();
+  constructor (app) {
+    super(app);
   }
   
   play (app) {}
@@ -22,6 +22,13 @@ class Actor extends StoryElement {
     canvas2d.fill();
     canvas2d.closePath();
     
+    // Paint basic actor
+    const assets = app.assets;
+    const srcX = 0, srcY = 0;
+    const srcSizeX = this.sizeX, srcSizeY = this.sizeY;
+    const tgtX = this.x - srcSizeX / 2, tgtY = this.y - srcSizeY / 2;
+    const tgtSizeX = this.sizeX, tgtSizeY = this.sizeY;
+    canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
   }
 }
 
