@@ -1,6 +1,6 @@
 # AvO Adventure Mk2
 
-AvO is an Action RPG where each adventure is a short story in an anthology. Players are given options to finish each adventure in any way they want, from skillfully fighting enemies to cleverly solving puzzles.
+AvO is an Action RPG where each adventure is a short story in an anthology. Players are given options to finish each adventure in any way they want, from skilfully fighting enemies to cleverly solving puzzles.
 
 Created by [Shaun A. Noordin](https://shaunanoordin.com).
 

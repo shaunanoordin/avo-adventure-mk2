@@ -56,7 +56,7 @@ a:hover {
   background: #fff;
 }
 
-#app #action-pane {
+#app #action-mode {
   display: block;
   image-rendering: crisp-edges;
   image-rendering: pixelated;

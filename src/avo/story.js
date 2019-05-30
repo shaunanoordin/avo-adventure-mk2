@@ -1,28 +1,30 @@
 import { MODES } from './constants';
 import ImageAsset from './image-asset';
+import Actor from './story-elements/actor';
 
 class Story {
   constructor (app) {
     // Assets
     app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
     
-    //app.addActor();
-    //app.addActor();
-    //app.addAsset();
+    app.playerActor = new Actor(app);
+    app.actors['player'] = app.playerActor;
+    
+    // TODO:
+    // app.addActor();
+    // app.addAsset();
   }
   
   start (app) {
-    console.info('READY TO START!');
-    app.mode = MODES.ACTION;
+    console.info('STORY IS READY TO START!');
+    app.changeMode(MODES.ACTION);
   }
   
-  prePlay (app) {}
   skipPlay () { return false }
-  postPlay (app) {}
+  customPlay (app) {}
   
-  prePaint (app) {}
   skipPaint () { return false }
-  postPaint (app) {}
+  customPaint (app) {}
 }
 
 export default Story;
