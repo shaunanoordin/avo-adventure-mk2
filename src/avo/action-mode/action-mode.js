@@ -13,6 +13,10 @@ class ActionMode {
 
     this.html.onkeydown = this.onKeyDown.bind(this, app);
     this.html.onkeyup = this.onKeyUp.bind(this, app);
+    
+    // Keys that are currently being pressed, and the number of frames they've
+    // been pressed for.
+    this.keysPressed = {};
   }
   
   load (app) {
@@ -26,7 +30,13 @@ class ActionMode {
   }
   
   play (app) {
+    this.processPlayerInput(app);
     
+    // Run logic for each Story Element
+    Object.keys(app.actors).forEach((id) => {
+      const actor = app.actors[id];
+      actor.play(app);
+    })
   }
   
   paint (app) {
@@ -38,9 +48,6 @@ class ActionMode {
     Object.keys(app.actors).forEach((actorId) => {
       app.actors[actorId].paint(app);
     });
-    
-    // const assets = app.assets;
-    // canvas2d.drawImage(assets.basicActor.img, 0, 0, 48, 48, 0, 0, 48, 48);
   }
   
   focus () {
@@ -48,8 +55,13 @@ class ActionMode {
   }
   
   onKeyDown (app, e) {
+    if (!this.keysPressed[e.key])
+      this.keysPressed[e.key] = 1;
+    else
+      this.keysPressed[e.key]++;
+    
     // TEMP: move Player
-    const speed = 1;
+    /*const speed = 1;
     switch (e.key) {
       case 'ArrowRight':
         app.playerActor.x += speed;
@@ -63,10 +75,31 @@ class ActionMode {
       case 'ArrowUp':
         app.playerActor.y -= speed;
         break;
-    }
+    }*/
   }
   
   onKeyUp (app, e) {
+    this.keysPressed[e.key] = undefined;
+  }
+  
+  processPlayerInput(app) {
+    const playerActor = app.playerActor;
+    
+    if (playerActor) {
+      playerActor.intent = undefined;
+      
+      let moveX = 0;
+      let moveY = 0;
+      
+      if (this.keysPressed['ArrowRight']) moveX++;
+      if (this.keysPressed['ArrowDown']) moveY++;
+      if (this.keysPressed['ArrowLeft']) moveX--;
+      if (this.keysPressed['ArrowUp']) moveY--;
+      
+      if (moveX || moveY) {
+        playerActor.intent = { name: 'move', x: moveX, y: moveY };
+      }
+    }
     
   }
 }
