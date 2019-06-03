@@ -6,7 +6,6 @@ class ActionMode {
     this.canvas2d = this.html.getContext("2d");
     
     // Set HTML
-    console.log(this.html);
     this.html.width = this.width;
     this.html.height = this.height;
     this.canvasSizeRatio = 1;

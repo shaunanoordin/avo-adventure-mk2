@@ -17,17 +17,12 @@ class Actor extends StoryElement {
       this.action = undefined;
     }
     
-    console.log(this.action);
-    
     // Perform actions
     if (this.action && this.action.name === 'move'
         && !(this.action.x === 0 && this.action.y === 0)
         && this.checkState('can move')) {
-      
-      console.log('!!!');
-      
       const speed = 4; // TODO
-      const rotation = Math.atan2(this.action.y, this.action.x);
+      const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
       this.x += Math.cos(rotation) * speed;
       this.y += Math.sin(rotation) * speed;
     }
@@ -51,8 +46,8 @@ class Actor extends StoryElement {
     const assets = app.assets;
     const srcX = 0, srcY = 0;
     const srcSizeX = this.sizeX, srcSizeY = this.sizeY;
-    const tgtX = this.x - srcSizeX / 2, tgtY = this.y - srcSizeY / 2;
-    const tgtSizeX = this.sizeX, tgtSizeY = this.sizeY;
+    const tgtX = Math.floor(this.x - srcSizeX / 2), tgtY = Math.floor(this.y - srcSizeY / 2);
+    const tgtSizeX = Math.floor(this.sizeX), tgtSizeY = Math.floor(this.sizeY);
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
   }
   

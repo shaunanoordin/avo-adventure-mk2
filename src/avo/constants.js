@@ -1,4 +1,4 @@
-const FRAMES_PER_SECOND = 50;
+const FRAMES_PER_SECOND = 30;
 
 const MODES = {
   INITIALISING: 'initialising',
