@@ -75,8 +75,8 @@ class AvoAdventure {
     
     // Assets Check
     let allAssetsLoaded = true;
-    Object.keys(this.assets).forEach((key) => {
-      const asset = this.assets[key];
+    Object.keys(this.assets).forEach((id) => {
+      const asset = this.assets[id];
       allAssetsLoaded = allAssetsLoaded && asset.loaded;
     });
     
