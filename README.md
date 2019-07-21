@@ -10,7 +10,7 @@ Start the web app by accessing `index.html` from your web browser. (Compatible w
 
 ## Development Notes
 
-- This is a web app built on HTML5, JavaScript, and CSS.
+- This is a web app built on HTML5, JavaScript, and [Sass](https://sass-lang.com/)/CSS.
 - Developing the web app requires [Node](https://nodejs.org/) and NPM installed on your machine and a handy command line interface. (Bash, cmd.exe, etc)
 
 Project anatomy:
