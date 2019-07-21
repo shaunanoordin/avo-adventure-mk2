@@ -7,6 +7,11 @@ module.exports = {
     path: path.resolve(__dirname, 'app'),
   },
   mode: "development",
+  resolve: {
+    alias: {  // Allows absolute paths in import statements 
+      '@avo': path.resolve(__dirname, 'src/avo/'),
+    },
+  },
   module: {
     rules: [
       {

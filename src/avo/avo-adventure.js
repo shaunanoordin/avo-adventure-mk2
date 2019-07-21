@@ -1,6 +1,6 @@
-import ActionMode from './action-mode';
-import Story from './story';
-import { FRAMES_PER_SECOND, MODES } from './constants';
+import ActionMode from '@avo/action-mode';
+import Story from '@avo/story';
+import { FRAMES_PER_SECOND, MODES } from '@avo/misc/constants';
 
 class AvoAdventure {
   constructor (story) {
