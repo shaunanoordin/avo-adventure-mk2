@@ -1,4 +1,4 @@
-import { MODES } from '../constants';
+import { MODES } from '@avo/misc/constants';
 import StoryElement from './story-element'
 
 class Actor extends StoryElement {

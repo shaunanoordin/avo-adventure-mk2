@@ -13,13 +13,13 @@
     "dev": "concurrently \"webpack --watch\" \"sass --watch src:app\" \"node server.js\""
   },
   "devDependencies": {
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
-    "babel-loader": "^8.0.5",
-    "concurrently": "^4.1.0",
-    "express": "^4.16.4",
-    "sass": "^1.17.2",
-    "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "concurrently": "^4.1.1",
+    "express": "^4.17.1",
+    "sass": "^1.22.7",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6"
   }
 }

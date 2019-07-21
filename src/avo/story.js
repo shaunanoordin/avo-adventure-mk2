@@ -1,6 +1,6 @@
-import { MODES } from './constants';
-import ImageAsset from './image-asset';
-import Actor from './story-elements/actor';
+import { MODES } from '@avo/misc/constants';
+import ImageAsset from '@avo/misc/image-asset';
+import Actor from '@avo/story-elements/actor';
 
 class Story {
   constructor (app) {
