@@ -1,39 +1,30 @@
 import { MODES } from '@avo/misc/constants';
-import StoryElement from './story-element'
+import StoryElement from './story-element';
+import Particle from './particle';
 
 class Actor extends StoryElement {
-  constructor (app) {
+  constructor (app, initialValues = {}) {
     super(app);
     
     this.intent = undefined;
     this.action = undefined;
+    
+    // Set initial values
+    Object.assign(this, initialValues);
   }
   
   play (app) {
-    // Translate intent into action.
-    if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
-      this.action = Object.assign({}, this.intent);
-    } else {
-      this.action = undefined;
-    }
-    
-    // Perform actions
-    if (this.action && this.action.name === 'move'
-        && !(this.action.x === 0 && this.action.y === 0)
-        && this.checkState('can move')) {
-      const speed = 4; // TODO
-      const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
-      this.x += Math.cos(rotation) * speed;
-      this.y += Math.sin(rotation) * speed;
-    }
+    this.processIntent(app);
+    this.performActions(app);
+    this.performReactions(app);
   }
   
   paint (app) {
+    const camera = app.camera;
     const canvas2d = app.actionMode && app.actionMode.canvas2d;
+    
     if (app.mode !== MODES.ACTION) return;    
     if (!canvas2d) return;
-    
-    const camera = { x: 0, y: 0 };  // TEMP
     
     // Simple shadow
     canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -53,6 +44,42 @@ class Actor extends StoryElement {
   
   checkState(state) {
     return true;  // TODO
+  }
+  
+  processIntent (app) {
+    // Translate intent into action.
+    if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
+      this.action = Object.assign({}, this.intent);
+    } else if (this.checkState('can act')) {
+      this.action = Object.assign({}, this.intent);
+    } else {
+      this.action = undefined;
+    }
+  }
+  
+  performActions (app) {
+    if (!this.action) return;
+    
+    // TODO: move all these to a library
+    
+    if (this.action.name === 'move'
+        && !(this.action.x === 0 && this.action.y === 0)
+        && this.checkState('can move')) {
+      const speed = 4; // TODO
+      const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
+      this.x += Math.cos(rotation) * speed;
+      this.y += Math.sin(rotation) * speed;
+    }
+    
+    if (this.action.name === 'primary') {
+      console.log('PEW PEW');
+      const particle = new Particle(app, { x: this.x, y: this.y + this.sizeY / 2, duration: 5 * 30 });  // TODO
+      app.particles.push(particle);
+    }
+  }
+  
+  performReactions (app) {
+    // TODO
   }
 }
 

@@ -1,3 +1,5 @@
+import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
+
 class ActionMode {
   constructor (app) {
     this.html = document.getElementById('action-mode');
@@ -32,9 +34,17 @@ class ActionMode {
     this.processPlayerInput(app);
     
     // Run logic for each Story Element
-    Object.keys(app.actors).forEach((id) => {
+    Object.keys(app.actors).forEach(id => {
       const actor = app.actors[id];
       actor.play(app);
+    });
+    app.particles.forEach(particle => {
+      particle.play(app);
+    });
+    
+    // Increment the duration of each currently pressed key
+    Object.keys(this.keysPressed).forEach(key => {
+      if (this.keysPressed[key]) this.keysPressed[key]++;
     })
   }
   
@@ -44,9 +54,14 @@ class ActionMode {
     // Clear canvas before painting
     canvas2d.clearRect(0, 0, this.width, this.height);
     
-    Object.keys(app.actors).forEach((actorId) => {
+    // Paint each Story Element
+    app.particles.forEach(particle => {
+      particle.paint(app);
+    });
+    Object.keys(app.actors).forEach(actorId => {
       app.actors[actorId].paint(app);
     });
+    
   }
   
   focus () {
@@ -54,27 +69,7 @@ class ActionMode {
   }
   
   onKeyDown (app, e) {
-    if (!this.keysPressed[e.key])
-      this.keysPressed[e.key] = 1;
-    else
-      this.keysPressed[e.key]++;
-    
-    // TEMP: move Player
-    /*const speed = 1;
-    switch (e.key) {
-      case 'ArrowRight':
-        app.playerActor.x += speed;
-        break;
-      case 'ArrowDown':
-        app.playerActor.y += speed;
-        break;
-      case 'ArrowLeft':
-        app.playerActor.x -= speed;
-        break;
-      case 'ArrowUp':
-        app.playerActor.y -= speed;
-        break;
-    }*/
+    if (!this.keysPressed[e.key]) this.keysPressed[e.key] = 1;
   }
   
   onKeyUp (app, e) {
@@ -95,7 +90,9 @@ class ActionMode {
       if (this.keysPressed['ArrowLeft']) moveX--;
       if (this.keysPressed['ArrowUp']) moveY--;
       
-      if (moveX || moveY) {
+      if (this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
+        playerActor.intent = { name: 'primary' };
+      } else if (moveX || moveY) {
         playerActor.intent = { name: 'move', x: moveX, y: moveY };
       }
     }

@@ -7,8 +7,11 @@ class AvoAdventure {
     this.mode = MODES.INITIALISING;
     
     this.actors = {};
+    this.particles = [];
     this.assets = {};
     this.playerActor = null;
+    
+    this.camera = { x: 0, y: 0 };
 
     this.actionMode = new ActionMode(this);
     
@@ -40,6 +43,7 @@ class AvoAdventure {
     // Note: gameplay and visual frames are tied.
     this.play();
     this.paint();
+    this.cleanUp();
     
     this.nextFrame = setTimeout(this.runFrame.bind(this), 1000 / FRAMES_PER_SECOND);
   }
@@ -66,6 +70,16 @@ class AvoAdventure {
     }
 
     story.customPaint(this);
+  }
+  
+  /*  Remove expired elements
+   */
+  cleanUp () {
+    Object.keys(this.actors).forEach(id => {
+      if (this.actors[id]._expired) delete this.actors[id];
+    });
+    
+    this.particles = this.particles.filter(particle => !particle._expired);
   }
   
   /*  Check if Story is ready to start
