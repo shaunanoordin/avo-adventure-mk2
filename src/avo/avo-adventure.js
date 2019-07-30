@@ -10,6 +10,8 @@ class AvoAdventure {
     this.particles = [];
     this.assets = {};
     this.playerActor = null;
+    
+    this.camera = { x: 0, y: 0 };
 
     this.actionMode = new ActionMode(this);
     
@@ -74,7 +76,7 @@ class AvoAdventure {
    */
   cleanUp () {
     Object.keys(this.actors).forEach(id => {
-      if (actors[id]._expired) delete actors[id];
+      if (this.actors[id]._expired) delete this.actors[id];
     });
     
     this.particles = this.particles.filter(particle => !particle._expired);
