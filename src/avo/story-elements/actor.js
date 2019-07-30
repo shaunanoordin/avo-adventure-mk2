@@ -10,22 +10,9 @@ class Actor extends StoryElement {
   }
   
   play (app) {
-    // Translate intent into action.
-    if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
-      this.action = Object.assign({}, this.intent);
-    } else {
-      this.action = undefined;
-    }
-    
-    // Perform actions
-    if (this.action && this.action.name === 'move'
-        && !(this.action.x === 0 && this.action.y === 0)
-        && this.checkState('can move')) {
-      const speed = 4; // TODO
-      const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
-      this.x += Math.cos(rotation) * speed;
-      this.y += Math.sin(rotation) * speed;
-    }
+    this.processIntent(app);
+    this.performActions(app);
+    this.performReactions(app);
   }
   
   paint (app) {
@@ -53,6 +40,38 @@ class Actor extends StoryElement {
   
   checkState(state) {
     return true;  // TODO
+  }
+  
+  processIntent (app) {
+    // Translate intent into action.
+    if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
+      this.action = Object.assign({}, this.intent);
+    } else if (this.checkState('can act')) {
+      this.action = Object.assign({}, this.intent);
+    } else {
+      this.action = undefined;
+    }
+  }
+  
+  performActions (app) {
+    if (!this.action) return;
+    
+    if (this.action.name === 'move'
+        && !(this.action.x === 0 && this.action.y === 0)
+        && this.checkState('can move')) {
+      const speed = 4; // TODO
+      const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
+      this.x += Math.cos(rotation) * speed;
+      this.y += Math.sin(rotation) * speed;
+    }
+    
+    if (this.action.name === 'primary') {
+      console.log('BING');
+    }
+  }
+  
+  performReactions (app) {
+    // TODO
   }
 }
 
