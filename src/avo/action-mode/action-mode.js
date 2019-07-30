@@ -34,9 +34,12 @@ class ActionMode {
     this.processPlayerInput(app);
     
     // Run logic for each Story Element
-    Object.keys(app.actors).forEach((id) => {
+    Object.keys(app.actors).forEach(id => {
       const actor = app.actors[id];
       actor.play(app);
+    });
+    app.particles.forEach(particle => {
+      particle.play(app);
     });
     
     // Increment the duration of each currently pressed key
@@ -51,9 +54,14 @@ class ActionMode {
     // Clear canvas before painting
     canvas2d.clearRect(0, 0, this.width, this.height);
     
-    Object.keys(app.actors).forEach((actorId) => {
+    // Paint each Story Element
+    app.particles.forEach(particle => {
+      particle.paint(app);
+    });
+    Object.keys(app.actors).forEach(actorId => {
       app.actors[actorId].paint(app);
     });
+    
   }
   
   focus () {

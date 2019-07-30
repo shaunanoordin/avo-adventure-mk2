@@ -1,12 +1,16 @@
 import { MODES } from '@avo/misc/constants';
-import StoryElement from './story-element'
+import StoryElement from './story-element';
+import Particle from './particle';
 
 class Actor extends StoryElement {
-  constructor (app) {
+  constructor (app, initialValues = {}) {
     super(app);
     
     this.intent = undefined;
     this.action = undefined;
+    
+    // Set initial values
+    Object.assign(this, initialValues);
   }
   
   play (app) {
@@ -56,6 +60,8 @@ class Actor extends StoryElement {
   performActions (app) {
     if (!this.action) return;
     
+    // TODO: move all these to a library
+    
     if (this.action.name === 'move'
         && !(this.action.x === 0 && this.action.y === 0)
         && this.checkState('can move')) {
@@ -66,7 +72,9 @@ class Actor extends StoryElement {
     }
     
     if (this.action.name === 'primary') {
-      console.log('BING');
+      console.log('PEW PEW');
+      const particle = new Particle(app, { x: this.x, y: this.y + this.sizeY / 2, duration: 5 * 30 });  // TODO
+      app.particles.push(particle);
     }
   }
   
