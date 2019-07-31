@@ -2,6 +2,8 @@ import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
 
 class ActionMode {
   constructor (app) {
+    this._app = app;
+    
     this.html = document.getElementById('action-mode');
     this.width = 320;
     this.height = 240;
@@ -12,34 +14,36 @@ class ActionMode {
     this.html.height = this.height;
     this.canvasSizeRatio = 1;
 
-    this.html.onkeydown = this.onKeyDown.bind(this, app);
-    this.html.onkeyup = this.onKeyUp.bind(this, app);
+    this.html.onkeydown = this.onKeyDown.bind(this);
+    this.html.onkeyup = this.onKeyUp.bind(this);
     
     // Keys that are currently being pressed, and the number of frames they've
     // been pressed for.
     this.keysPressed = {};
   }
   
-  load (app) {
+  load () {
     this.focus();    
   }
   
-  unload (app) {}
+  unload () {}
   
   focus () {
     this.html.focus();
   }
   
-  play (app) {
-    this.processPlayerInput(app);
+  play () {
+    const app = this._app;
+    
+    this.processPlayerInput();
     
     // Run logic for each Story Element
     Object.keys(app.actors).forEach(id => {
       const actor = app.actors[id];
-      actor.play(app);
+      actor.play();
     });
     app.particles.forEach(particle => {
-      particle.play(app);
+      particle.play();
     });
     
     // Increment the duration of each currently pressed key
@@ -48,7 +52,8 @@ class ActionMode {
     })
   }
   
-  paint (app) {
+  paint () {
+    const app = this._app;
     const canvas2d = this.canvas2d;
     
     // Clear canvas before painting
@@ -56,10 +61,10 @@ class ActionMode {
     
     // Paint each Story Element
     app.particles.forEach(particle => {
-      particle.paint(app);
+      particle.paint();
     });
     Object.keys(app.actors).forEach(actorId => {
-      app.actors[actorId].paint(app);
+      app.actors[actorId].paint();
     });
     
   }
@@ -68,15 +73,16 @@ class ActionMode {
     this.html.focus();
   }
   
-  onKeyDown (app, e) {
+  onKeyDown (e) {
     if (!this.keysPressed[e.key]) this.keysPressed[e.key] = 1;
   }
   
-  onKeyUp (app, e) {
+  onKeyUp (e) {
     this.keysPressed[e.key] = undefined;
   }
   
-  processPlayerInput(app) {
+  processPlayerInput() {
+    const app = this._app;
     const playerActor = app.playerActor;
     
     if (playerActor) {

@@ -11,13 +11,14 @@ class Particle extends StoryElement {
     Object.assign(this, initialValues);
   }
   
-  play (app) {
+  play () {
     this.duration --;
     
     if (this.duration < 0) this._expired = true;
   }
   
-  paint (app) {
+  paint () {
+    const app = this._app;
     const camera = app.camera;
     const canvas2d = app.actionMode && app.actionMode.canvas2d;
     

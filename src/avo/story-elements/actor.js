@@ -13,13 +13,15 @@ class Actor extends StoryElement {
     Object.assign(this, initialValues);
   }
   
-  play (app) {
-    this.processIntent(app);
-    this.performActions(app);
-    this.performReactions(app);
+  play () {
+    const app = this._app;
+    this.processUpkeep();
+    this.processIntent();
+    this.processActions();
   }
   
-  paint (app) {
+  paint () {
+    const app = this._app;
     const camera = app.camera;
     const canvas2d = app.actionMode && app.actionMode.canvas2d;
     
@@ -42,29 +44,34 @@ class Actor extends StoryElement {
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
   }
   
-  checkState(state) {
+  checkStatus(status) {
     return true;  // TODO
   }
   
-  processIntent (app) {
+  processUpkeep () {
+    // TODO
+  }
+  
+  processIntent () {
     // Translate intent into action.
-    if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
+    if (this.intent && this.intent.name === 'move' && this.checkStatus('can move')) {
       this.action = Object.assign({}, this.intent);
-    } else if (this.checkState('can act')) {
+    } else if (this.checkStatus('can act')) {
       this.action = Object.assign({}, this.intent);
     } else {
       this.action = undefined;
     }
   }
   
-  performActions (app) {
+  processActions () {
+    const app = this._app;
     if (!this.action) return;
     
     // TODO: move all these to a library
     
     if (this.action.name === 'move'
         && !(this.action.x === 0 && this.action.y === 0)
-        && this.checkState('can move')) {
+        && this.checkStatus('can move')) {
       const speed = 4; // TODO
       const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
       this.x += Math.cos(rotation) * speed;
@@ -76,11 +83,7 @@ class Actor extends StoryElement {
       const particle = new Particle(app, { x: this.x, y: this.y + this.sizeY / 2, duration: 5 * 30 });  // TODO
       app.particles.push(particle);
     }
-  }
-  
-  performReactions (app) {
-    // TODO
-  }
+  }  
 }
 
 export default Actor;
