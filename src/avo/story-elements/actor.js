@@ -14,10 +14,10 @@ class Actor extends StoryElement {
   }
   
   play () {
-    const app = this._app;    
+    const app = this._app;
+    this.processUpkeep();
     this.processIntent();
-    this.performActions();
-    this.performReactions();
+    this.processActions();
   }
   
   paint () {
@@ -44,22 +44,26 @@ class Actor extends StoryElement {
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
   }
   
-  checkState(state) {
+  checkStatus(status) {
     return true;  // TODO
+  }
+  
+  processUpkeep () {
+    // TODO
   }
   
   processIntent () {
     // Translate intent into action.
-    if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
+    if (this.intent && this.intent.name === 'move' && this.checkStatus('can move')) {
       this.action = Object.assign({}, this.intent);
-    } else if (this.checkState('can act')) {
+    } else if (this.checkStatus('can act')) {
       this.action = Object.assign({}, this.intent);
     } else {
       this.action = undefined;
     }
   }
   
-  performActions () {
+  processActions () {
     const app = this._app;
     if (!this.action) return;
     
@@ -67,7 +71,7 @@ class Actor extends StoryElement {
     
     if (this.action.name === 'move'
         && !(this.action.x === 0 && this.action.y === 0)
-        && this.checkState('can move')) {
+        && this.checkStatus('can move')) {
       const speed = 4; // TODO
       const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
       this.x += Math.cos(rotation) * speed;
@@ -79,11 +83,7 @@ class Actor extends StoryElement {
       const particle = new Particle(app, { x: this.x, y: this.y + this.sizeY / 2, duration: 5 * 30 });  // TODO
       app.particles.push(particle);
     }
-  }
-  
-  performReactions () {
-    // TODO
-  }
+  }  
 }
 
 export default Actor;

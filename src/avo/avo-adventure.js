@@ -15,10 +15,6 @@ class AvoAdventure {
 
     this.actionMode = new ActionMode(this);
     
-    this.input = {
-      keysPressed: {}
-    };
-    
     // Initialise the story
     this.story = story || new Story(this);
     
