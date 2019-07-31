@@ -19,7 +19,7 @@ class AvoAdventure {
     this.story = story || new Story(this);
     
     this.nextFrame = null;
-    this.runFrame();
+    this.main();
   }
   
   changeMode (newMode) {
@@ -30,9 +30,9 @@ class AvoAdventure {
     this.mode = newMode;
   }
   
-  /*  Each frame is a 'step' in the game
+  /*  Each main step is a 'frame' in the game
    */
-  runFrame () {
+  main () {
     if  (this.mode === MODES.INITIALISING) this.startStoryIfReady();
     
     // Run game logic and update game visuals
@@ -41,7 +41,7 @@ class AvoAdventure {
     this.paint();
     this.cleanUp();
     
-    this.nextFrame = setTimeout(this.runFrame.bind(this), 1000 / FRAMES_PER_SECOND);
+    this.nextFrame = setTimeout(this.main.bind(this), 1000 / FRAMES_PER_SECOND);
   }
   
   /*  Run game logic
