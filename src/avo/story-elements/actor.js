@@ -13,13 +13,15 @@ class Actor extends StoryElement {
     Object.assign(this, initialValues);
   }
   
-  play (app) {
-    this.processIntent(app);
-    this.performActions(app);
-    this.performReactions(app);
+  play () {
+    const app = this._app;    
+    this.processIntent();
+    this.performActions();
+    this.performReactions();
   }
   
-  paint (app) {
+  paint () {
+    const app = this._app;
     const camera = app.camera;
     const canvas2d = app.actionMode && app.actionMode.canvas2d;
     
@@ -46,7 +48,7 @@ class Actor extends StoryElement {
     return true;  // TODO
   }
   
-  processIntent (app) {
+  processIntent () {
     // Translate intent into action.
     if (this.intent && this.intent.name === 'move' && this.checkState('can move')) {
       this.action = Object.assign({}, this.intent);
@@ -57,7 +59,8 @@ class Actor extends StoryElement {
     }
   }
   
-  performActions (app) {
+  performActions () {
+    const app = this._app;
     if (!this.action) return;
     
     // TODO: move all these to a library
@@ -78,7 +81,7 @@ class Actor extends StoryElement {
     }
   }
   
-  performReactions (app) {
+  performReactions () {
     // TODO
   }
 }

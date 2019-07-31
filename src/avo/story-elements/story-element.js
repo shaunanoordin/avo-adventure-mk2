@@ -1,5 +1,7 @@
 class StoryElement {
   constructor (app) {
+    this._app = app;
+    
     // Expired elements are removed at the end of the cycle.
     this._expired = false;
     
@@ -9,9 +11,9 @@ class StoryElement {
     this.sizeY = 48;
   }
   
-  play (app) {}
+  play () {}
   
-  paint (app) {}
+  paint () {}
 }
 
 export default StoryElement;

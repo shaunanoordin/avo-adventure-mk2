@@ -4,6 +4,8 @@ import Actor from '@avo/story-elements/actor';
 
 class Story {
   constructor (app) {
+    this._app = app;
+    
     // Assets
     app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
     
@@ -15,16 +17,17 @@ class Story {
     // app.addAsset();
   }
   
-  start (app) {
+  start () {
+    const app = this._app;
     console.info('STORY IS READY TO START!');
     app.changeMode(MODES.ACTION);
   }
   
   skipPlay () { return false }
-  customPlay (app) {}
+  customPlay () {}
   
   skipPaint () { return false }
-  customPaint (app) {}
+  customPaint () {}
 }
 
 export default Story;
