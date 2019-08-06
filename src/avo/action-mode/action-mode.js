@@ -1,4 +1,5 @@
 import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
+import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
   constructor (app) {
@@ -38,13 +39,14 @@ class ActionMode {
     this.processPlayerInput();
     
     // Run logic for each Story Element
-    Object.keys(app.actors).forEach(id => {
-      const actor = app.actors[id];
+    app.actors.forEach(actor => {
       actor.play();
     });
     app.particles.forEach(particle => {
       particle.play();
     });
+    
+    this.processPhysics();
     
     // Increment the duration of each currently pressed key
     Object.keys(this.keysPressed).forEach(key => {
@@ -63,8 +65,8 @@ class ActionMode {
     app.particles.forEach(particle => {
       particle.paint();
     });
-    Object.keys(app.actors).forEach(actorId => {
-      app.actors[actorId].paint();
+    app.actors.forEach(actor => {
+      actor.paint();
     });
     
   }
@@ -104,6 +106,31 @@ class ActionMode {
     }
     
   }
+  
+  processPhysics () {
+    const app = this._app;
+    
+    // Check Actor collisions
+    for (let a = 0; a < app.actors.length - 1; a++) {
+      let actorA = app.actors[a];
+      
+      for (let b = a + 1; b < app.actors.length; b++) {
+        let actorB = app.actors[b];
+        let collisionCorrection = Physics.checkCollision(actorA, actorB);
+                
+        if (collisionCorrection) {
+          // TODO: refine
+          // TODO: ignore if either are non-solid
+          actorA.x = collisionCorrection.ax;
+          actorA.y = collisionCorrection.ay;
+          actorB.x = collisionCorrection.bx;
+          actorB.y = collisionCorrection.by;
+        }
+      }
+    }
+    
+  }
+  
 }
 
 export default ActionMode;

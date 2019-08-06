@@ -1,10 +1,14 @@
-import { MODES } from '@avo/misc/constants';
+import { MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element';
 import Particle from './particle';
 
 class Actor extends StoryElement {
   constructor (app, initialValues = {}) {
     super(app);
+    
+    this.shape = SHAPES.CIRCLE;
+    this.solid = true;
+    this.movable = true;
     
     this.intent = undefined;
     this.action = undefined;
@@ -21,6 +25,8 @@ class Actor extends StoryElement {
   }
   
   paint () {
+    // TODO: this should just move the animation frame one step. Add getSprite() for sprite logic, which will be called in ActionMode.
+    
     const app = this._app;
     const camera = app.camera;
     const canvas2d = app.actionMode && app.actionMode.canvas2d;
@@ -31,16 +37,16 @@ class Actor extends StoryElement {
     // Simple shadow
     canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
     canvas2d.beginPath();
-    canvas2d.arc(this.x + camera.x, this.y + camera.y, (this.sizeX + this.sizeY) / 4, 0, 2 * Math.PI);
+    canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);
     canvas2d.fill();
     canvas2d.closePath();
     
     // Paint basic actor
     const assets = app.assets;
     const srcX = 0, srcY = 0;
-    const srcSizeX = this.sizeX, srcSizeY = this.sizeY;
+    const srcSizeX = this.size, srcSizeY = this.size;
     const tgtX = Math.floor(this.x - srcSizeX / 2), tgtY = Math.floor(this.y - srcSizeY / 2);
-    const tgtSizeX = Math.floor(this.sizeX), tgtSizeY = Math.floor(this.sizeY);
+    const tgtSizeX = Math.floor(this.size), tgtSizeY = Math.floor(this.size);
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
   }
   
