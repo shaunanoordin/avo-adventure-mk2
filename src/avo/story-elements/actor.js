@@ -7,6 +7,8 @@ class Actor extends StoryElement {
     super(app);
     
     this.shape = SHAPES.CIRCLE;
+    this.solid = true;
+    this.movable = true;
     
     this.intent = undefined;
     this.action = undefined;

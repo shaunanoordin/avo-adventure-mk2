@@ -16,8 +16,8 @@ class StoryElement {
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
     
     this.shape = SHAPES.NONE;
-    this.solid = true;  // TODO: should be false by default.
-    
+    this.solid = false;
+    this.movable = false;
   }
   
   play () {}
