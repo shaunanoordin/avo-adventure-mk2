@@ -12,6 +12,9 @@ class Story {
     app.playerActor = new Actor(app, { x: 160, y: 120 });
     app.actors.push(app.playerActor);
     
+    const testActorA = new Actor(app, { x: 80, y: 120 });
+    app.actors.push(testActorA);
+    
     // TODO:
     // app.addActor();
     // app.addAsset();

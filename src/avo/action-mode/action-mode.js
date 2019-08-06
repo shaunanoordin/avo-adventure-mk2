@@ -1,5 +1,5 @@
 import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
-import { PHYSICS } from '@avo/misc/physics';
+import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
   constructor (app) {
@@ -114,7 +114,7 @@ class ActionMode {
     for (let a = 0; a < app.actors.length - 1; a++) {
       let actorA = app.actors[a];
       
-      for (let b = a + 1; b < this.actors.length; b++) {
+      for (let b = a + 1; b < app.actors.length; b++) {
         let actorB = app.actors[b];
         let collisionCorrection = Physics.checkCollision(actorA, actorB);
                 
