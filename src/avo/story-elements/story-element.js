@@ -16,6 +16,8 @@ class StoryElement {
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
     
     this.shape = SHAPES.NONE;
+    this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
+    
     this.solid = false;
     this.movable = false;
   }
@@ -71,7 +73,7 @@ class StoryElement {
     }
   }
   
-  get vertices() {
+  get vertices () {
     const v = [];
     if (this.shape === SHAPES.SQUARE) {
       v.push({ x: this.left, y: this.top });
