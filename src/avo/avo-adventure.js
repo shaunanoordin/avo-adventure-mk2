@@ -6,7 +6,7 @@ class AvoAdventure {
   constructor (story) {
     this.mode = MODES.INITIALISING;
     
-    this.actors = {};
+    this.actors = [];
     this.particles = [];
     this.assets = {};
     this.playerActor = null;
@@ -71,10 +71,7 @@ class AvoAdventure {
   /*  Remove expired elements
    */
   cleanUp () {
-    Object.keys(this.actors).forEach(id => {
-      if (this.actors[id]._expired) delete this.actors[id];
-    });
-    
+    this.actors = this.actors.filter(actor => !actor._expired);
     this.particles = this.particles.filter(particle => !particle._expired);
   }
   

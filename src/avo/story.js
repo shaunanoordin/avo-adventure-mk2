@@ -1,5 +1,5 @@
 import { MODES } from '@avo/misc/constants';
-import ImageAsset from '@avo/misc/image-asset';
+import { ImageAsset } from '@avo/misc/image-asset';
 import Actor from '@avo/story-elements/actor';
 
 class Story {
@@ -10,7 +10,7 @@ class Story {
     app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
     
     app.playerActor = new Actor(app, { x: 160, y: 120 });
-    app.actors['player'] = app.playerActor;
+    app.actors.push(app.playerActor);
     
     // TODO:
     // app.addActor();

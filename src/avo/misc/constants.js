@@ -6,3 +6,9 @@ export const MODES = {
   ACTION: 'action',
   CYOA: 'choose your own adventure',
 }
+
+export const SHAPES = {
+  CIRCLE: 'circle',
+  SQUARE: 'square',
+  POLYGON: 'polygon',
+}
