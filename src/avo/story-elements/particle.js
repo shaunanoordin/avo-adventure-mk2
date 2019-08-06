@@ -1,9 +1,10 @@
-import { MODES } from '@avo/misc/constants';
+import { MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element'
 
 class Particle extends StoryElement {
   constructor (app, initialValues) {
     super(app);
+    this.shape = SHAPES.CIRCLE;
     
     this.duration = Infinity;
     
