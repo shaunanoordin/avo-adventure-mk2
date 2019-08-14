@@ -41,6 +41,15 @@ class Actor extends StoryElement {
     canvas2d.fill();
     canvas2d.closePath();
     
+    // Simple direction
+    canvas2d.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+    canvas2d.lineWidth = 2;
+    canvas2d.beginPath();
+    canvas2d.moveTo(this.x, this.y);
+    canvas2d.lineTo(this.x + Math.cos(this.rotation) * this.size * 0.6,
+                    this.y + Math.sin(this.rotation) * this.size * 0.6);
+    canvas2d.stroke();
+    
     // Paint basic actor
     const assets = app.assets;
     const srcX = 0, srcY = 0;
@@ -82,6 +91,7 @@ class Actor extends StoryElement {
       const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
       this.x += Math.cos(rotation) * speed;
       this.y += Math.sin(rotation) * speed;
+      this.rotation = rotation;
     }
     
     if (this.action.name === 'primary') {
