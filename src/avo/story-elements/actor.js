@@ -39,7 +39,6 @@ class Actor extends StoryElement {
     canvas2d.beginPath();
     canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);
     canvas2d.fill();
-    canvas2d.closePath();
     
     // Simple direction
     canvas2d.strokeStyle = 'rgba(0, 0, 0, 0.5)';
@@ -96,7 +95,12 @@ class Actor extends StoryElement {
     
     if (this.action.name === 'primary') {
       console.log('PEW PEW');
-      const particle = new Particle(app, { x: this.x, y: this.y + this.sizeY / 2, duration: 5 * 30 });  // TODO
+      const particle = new Particle(app, {
+        x: this.x + Math.cos(this.rotation) * this.size * 0.8,
+        y: this.y + Math.sin(this.rotation) * this.size * 0.8,
+        size: this.size * 1,
+        duration: 5 * 30
+      });  // TODO
       app.particles.push(particle);
     }
   }  
