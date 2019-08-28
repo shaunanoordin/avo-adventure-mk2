@@ -25,16 +25,14 @@ class Actor extends StoryElement {
     this.actions = {
       'idle': {
         type: ACTION_TYPES.IDLE,
-        continuous: true,
         steps: 1,
         script: function (app, actor, action, actionArgs, step) {
-          // TODO: playFrame: idle
+          actor.animationFrame = 'idle';
         }
       },
       'move': {
         type: ACTION_TYPES.CONTINUOUS,
-        continuous: true,
-        steps: 6,
+        steps: 6 * 8,
         script: function (app, actor, action, actionArgs, step) {
           const speed = 4; // TODO
           const rotation = Math.atan2(actionArgs.y, actionArgs.x);  // TODO
@@ -42,17 +40,22 @@ class Actor extends StoryElement {
           actor.y += Math.sin(rotation) * speed;
           actor.rotation = rotation;
           
-          // TODO: playFrame: move-1, move-2, move-1, move-3
+          if (0 * 8 <= step && step < 1 * 8) actor.animationFrame = 'move-1';
+          else if (1 * 8 <= step && step < 3 * 8) actor.animationFrame = 'move-2';
+          else if (3 * 8 <= step && step < 4 * 8) actor.animationFrame = 'move-1';
+          else if (4 * 8 <= step && step < 6 * 8) actor.animationFrame = 'move-3';
         },
       },
-      'attack': {  //
+      'attack': {
         type: ACTION_TYPES.STANDARD,
-        continuous: false,
         steps: 30,
         script: function (app, actor, action, actionArgs, step) {
           if (step < 20) {
-            // TODO: playFrame: attack-windup
+
+            actor.animationFrame = 'attack-windup';
+
           } else if (step === 20) {
+            
             const particle = new Particle(app, {
               x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
               y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
@@ -62,9 +65,12 @@ class Actor extends StoryElement {
             });
             app.particles.push(particle);
             
-            // TODO: playFrame: attack-active
+            actor.animationFrame = 'attack-active';
+            
           } else {
-            // TODO: playFrame: attack-winddown
+            
+            actor.animationFrame = 'attack-windown';
+            
           }
         }
       },
@@ -77,7 +83,7 @@ class Actor extends StoryElement {
   
   play () {
     const app = this._app;
-    this.processUpkeep();
+    // TODO: run the 'always'/'each frame' script.
     this.processIntent();
     this.processActions();
   }
@@ -94,6 +100,16 @@ class Actor extends StoryElement {
     
     // Simple shadow
     canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    // --------
+    // Temporary 'animation'
+    if (this.animationFrame === 'idle') canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    else if (this.animationFrame === 'move-1') canvas2d.fillStyle = 'rgba(0, 128, 128, 0.5)';
+    else if (this.animationFrame === 'move-2') canvas2d.fillStyle = 'rgba(0, 160, 128, 0.5)';
+    else if (this.animationFrame === 'move-3') canvas2d.fillStyle = 'rgba(0, 128, 160, 0.5)';
+    else if (this.animationFrame === 'attack-windup') canvas2d.fillStyle = 'rgba(192, 192, 0, 0.5)';
+    else if (this.animationFrame === 'attack-active') canvas2d.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    else if (this.animationFrame === 'attack-winddown') canvas2d.fillStyle = 'rgba(192, 128, 0, 0.5)';
+    //--------
     canvas2d.beginPath();
     canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);
     canvas2d.fill();
@@ -116,20 +132,8 @@ class Actor extends StoryElement {
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
   }
   
-  processUpkeep () {
-    // TODO
-  }
-  
   processIntent () {
     // Translate intent into action.
-    /*
-    if (this.intent && this.intent.name === 'move' && this.checkStatus('can move')) {
-      this.action = Object.assign({}, this.intent);
-    } else if (this.checkStatus('can act')) {
-      this.action = Object.assign({}, this.intent);
-    } else {
-      this.action = undefined;
-    }*/
     
     const action = this.actions[this.actionName];
     
@@ -188,29 +192,6 @@ class Actor extends StoryElement {
         this.goIdle();
       }
     }
-    
-    // TODO: move all these to a library
-    /*
-    if (this.action.name === 'move'
-        && !(this.action.x === 0 && this.action.y === 0)
-        && this.checkStatus('can move')) {
-      const speed = 4; // TODO
-      const rotation = Math.atan2(this.action.y, this.action.x);  // TODO
-      this.x += Math.cos(rotation) * speed;
-      this.y += Math.sin(rotation) * speed;
-      this.rotation = rotation;
-    }
-    
-    if (this.action.name === 'primary') {
-      console.log('PEW PEW');
-      const particle = new Particle(app, {
-        x: this.x + Math.cos(this.rotation) * this.size * 0.8,
-        y: this.y + Math.sin(this.rotation) * this.size * 0.8,
-        size: this.size * 1,
-        duration: 5 * 30
-      });  // TODO
-      app.particles.push(particle);
-    }*/
   }  
 }
 
