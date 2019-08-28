@@ -52,6 +52,7 @@ class ActionMode {
     Object.keys(this.keysPressed).forEach(key => {
       if (this.keysPressed[key]) this.keysPressed[key]++;
     })
+    
   }
   
   paint () {
@@ -99,9 +100,17 @@ class ActionMode {
       if (this.keysPressed['ArrowUp']) moveY--;
       
       if (this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
-        playerActor.intent = { name: 'primary' };
+        playerActor.intent = {
+          name: 'primary'
+        };
       } else if (moveX || moveY) {
-        playerActor.intent = { name: 'move', x: moveX, y: moveY };
+        playerActor.intent = {
+          name: 'move',
+          args: {
+            x: moveX,
+            y: moveY,
+          },
+        };
       }
     }
     
