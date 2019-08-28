@@ -45,12 +45,27 @@ class Actor extends StoryElement {
           // TODO: playFrame: move-1, move-2, move-1, move-3
         },
       },
-      'primary': {  //
+      'attack': {  //
         type: ACTION_TYPES.STANDARD,
         continuous: false,
-        steps: 10,
-        script: function (app, actor, action, step) {
-          // TODO
+        steps: 30,
+        script: function (app, actor, action, actionArgs, step) {
+          if (step < 20) {
+            // TODO: playFrame: attack-windup
+          } else if (step === 20) {
+            const particle = new Particle(app, {
+              x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
+              y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
+              size: actor.size * 1,
+              duration: 5 * 30,
+              // TODO: onCollision logic
+            });
+            app.particles.push(particle);
+            
+            // TODO: playFrame: attack-active
+          } else {
+            // TODO: playFrame: attack-winddown
+          }
         }
       },
       
@@ -143,7 +158,7 @@ class Actor extends StoryElement {
         
         // Finally, convert the intent into the new action.
         this.actionName = this.intent.name;
-        this.actionArgs = { ...this.intent.args };
+        this.actionArgs = (this.intent.args) ? { ...this.intent.args } : {};
       }
       
     }

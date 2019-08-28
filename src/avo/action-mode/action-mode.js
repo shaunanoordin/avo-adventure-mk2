@@ -53,6 +53,11 @@ class ActionMode {
       if (this.keysPressed[key]) this.keysPressed[key]++;
     })
     
+    
+    // DEBUG
+    if (app.playerActor) {
+      //console.log('+++ A: ', app.playerActor.actionName);
+    }
   }
   
   paint () {
@@ -101,7 +106,7 @@ class ActionMode {
       
       if (this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
         playerActor.intent = {
-          name: 'primary'
+          name: 'attack'
         };
       } else if (moveX || moveY) {
         playerActor.intent = {
