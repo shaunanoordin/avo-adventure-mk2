@@ -20,6 +20,8 @@ class StoryElement {
     
     this.solid = false;
     this.movable = false;
+    
+    this.animationFrame = 'idle';
   }
   
   play () {}

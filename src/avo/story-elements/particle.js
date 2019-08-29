@@ -29,9 +29,8 @@ class Particle extends StoryElement {
     // Simple shadow
     canvas2d.fillStyle = 'rgba(238, 238, 204, 0.5)';
     canvas2d.beginPath();
-    canvas2d.arc(this.x + camera.x, this.y + camera.y, (this.sizeX + this.sizeY) / 4, 0, 2 * Math.PI);
+    canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);
     canvas2d.fill();
-    canvas2d.closePath();
   }  
 }
 
