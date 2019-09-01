@@ -9,10 +9,11 @@ class AvoAdventure {
     this.actors = [];
     this.particles = [];
     this.assets = {};
-    this.playerActor = null;
+    this.data = {};
     
     this.camera = { x: 0, y: 0 };
-
+    this.playerActor = null;
+    
     this.actionMode = new ActionMode(this);
     
     // Initialise the story
