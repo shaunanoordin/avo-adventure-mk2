@@ -95,7 +95,7 @@ class StoryElement {
     return v;
   }
 
-  
+  onCollision (target, collisionCorrection) {}
   
 }
 

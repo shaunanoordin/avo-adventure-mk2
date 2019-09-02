@@ -53,13 +53,13 @@ class Actor extends StoryElement {
       },
       'attack': {
         type: ACTION_TYPES.STANDARD,
-        steps: 30,
+        steps: 15,
         script: function (app, actor, action, actionArgs, step) {
-          if (step < 20) {
+          if (step < 10) {
 
             actor.animationFrame = 'attack-windup';
 
-          } else if (step === 20) {
+          } else if (step === 10) {
             
             const particle = new Particle(app, {
               x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
