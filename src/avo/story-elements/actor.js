@@ -18,6 +18,11 @@ class Actor extends StoryElement {
     this.solid = true;
     this.movable = true;
     
+    this.stats = {
+      health: 100,  // TEMP
+      maxHealth: 100,  // TEMP
+    };
+    
     this.intent = undefined;
     this.actionName = 'idle';
     this.actionArgs = {};
@@ -48,13 +53,13 @@ class Actor extends StoryElement {
       },
       'attack': {
         type: ACTION_TYPES.STANDARD,
-        steps: 30,
+        steps: 15,
         script: function (app, actor, action, actionArgs, step) {
-          if (step < 20) {
+          if (step < 10) {
 
             actor.animationFrame = 'attack-windup';
 
-          } else if (step === 20) {
+          } else if (step === 10) {
             
             const particle = new Particle(app, {
               x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
@@ -86,9 +91,14 @@ class Actor extends StoryElement {
     // TODO: run the 'always'/'each frame' script.
     this.processIntent();
     this.processActions();
+    
+    // TODO // TEMP - move this into this.scripts.always() ?
+    if (this.stats.health < 100) { this.stats.health++ }
   }
   
   paint () {
+    // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
+    
     // TODO: this should just move the animation frame one step. Add getSprite() for sprite logic, which will be called in ActionMode.
     
     const app = this._app;
@@ -130,6 +140,37 @@ class Actor extends StoryElement {
     const tgtX = Math.floor(this.x - srcSizeX / 2), tgtY = Math.floor(this.y - srcSizeY / 2);
     const tgtSizeX = Math.floor(this.size), tgtSizeY = Math.floor(this.size);
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+    
+    // Paint UI elements
+    let healthOffsetY = 7;
+    const healthRatio = (this.stats.maxHealth > 0)
+      ? (this.stats.health || 0) / this.stats.maxHealth
+      : 0;
+    canvas2d.strokeStyle = 'rgba(0, 0, 0)';
+    canvas2d.lineWidth = 4;
+    canvas2d.beginPath();
+    canvas2d.moveTo(this.x - this.size / 3,
+                    this.y + this.size / 2 + healthOffsetY);
+    canvas2d.lineTo(this.x + this.size / 3,
+                    this.y + this.size / 2 + healthOffsetY);
+    canvas2d.stroke();
+    canvas2d.strokeStyle = 'rgba(255, 0, 0)';
+    canvas2d.lineWidth = 2;
+    canvas2d.beginPath();
+    canvas2d.moveTo(this.x - (this.size / 3 * healthRatio),
+                    this.y + this.size / 2 + healthOffsetY);
+    canvas2d.lineTo(this.x + (this.size / 3 * healthRatio),
+                    this.y + this.size / 2 + healthOffsetY);
+    canvas2d.stroke();
+    
+    healthOffsetY = 4;
+    canvas2d.font = '8px Arial';
+    canvas2d.fillStyle = 'rgba(204, 68, 68)';    
+    canvas2d.textBaseline = 'hanging';
+    canvas2d.textAlign = 'right';
+    canvas2d.fillText('❤️', this.x - this.size / 3, this.y + this.size / 2 + healthOffsetY);
+    canvas2d.textAlign = 'left';
+    canvas2d.fillText(this.stats.health, this.x + this.size / 3, this.y + this.size / 2 + healthOffsetY);
   }
   
   processIntent () {

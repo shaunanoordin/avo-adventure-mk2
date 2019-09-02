@@ -31,7 +31,14 @@ class Particle extends StoryElement {
     canvas2d.beginPath();
     canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);
     canvas2d.fill();
-  }  
+  }
+  
+  onCollision (target, collisionCorrection) {
+    // TODO
+    if (target && target.stats) {
+      target.stats.health = Math.max((target.stats.health || 0) - 2, 0); 
+    }
+  }
 }
 
 export default Particle;

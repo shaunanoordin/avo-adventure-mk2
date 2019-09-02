@@ -61,6 +61,8 @@ class ActionMode {
   }
   
   paint () {
+    // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
+    
     const app = this._app;
     const canvas2d = this.canvas2d;
     
@@ -125,20 +127,48 @@ class ActionMode {
     const app = this._app;
     
     // Check Actor collisions
-    for (let a = 0; a < app.actors.length - 1; a++) {
+    for (let a = 0; a < app.actors.length; a++) {
       let actorA = app.actors[a];
       
+      // ...with other Actors
       for (let b = a + 1; b < app.actors.length; b++) {
         let actorB = app.actors[b];
         let collisionCorrection = Physics.checkCollision(actorA, actorB);
                 
         if (collisionCorrection) {
-          // TODO: refine
-          // TODO: ignore if either are non-solid
           actorA.x = collisionCorrection.ax;
           actorA.y = collisionCorrection.ay;
           actorB.x = collisionCorrection.bx;
           actorB.y = collisionCorrection.by;
+          actorA.onCollision(actorB, collisionCorrection);
+          actorB.onCollision(actorA, collisionCorrection);
+        }
+      }
+    }
+    
+    // Check Particle collisions
+    for (let a = 0; a < app.particles.length; a++) {
+      let particleA = app.particles[a];
+      
+      // ...with other Particles
+      for (let b = a + 1; b < app.particles.length; b++) {
+        let particleB = app.particles[b];
+        let collisionCorrection = Physics.checkCollision(particleA, particleB);
+        
+        if (collisionCorrection) {
+          particleA.onCollision(particleB, collisionCorrection);
+          particleB.onCollision(particleA, collisionCorrection);
+        }
+      }
+      
+      // ...with Actors
+      for (let b = 0; b < app.actors.length; b++) {
+        let actorB = app.actors[b];
+        let collisionCorrection = Physics.checkCollision(particleA, actorB);
+        
+        if (collisionCorrection) {
+          particleA.onCollision(actorB, collisionCorrection);
+          actorB.onCollision(particleA, collisionCorrection);
         }
       }
     }
