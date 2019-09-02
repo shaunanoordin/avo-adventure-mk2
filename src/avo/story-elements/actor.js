@@ -94,6 +94,8 @@ class Actor extends StoryElement {
   }
   
   paint () {
+    // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
+    
     // TODO: this should just move the animation frame one step. Add getSprite() for sprite logic, which will be called in ActionMode.
     
     const app = this._app;

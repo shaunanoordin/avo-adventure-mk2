@@ -61,6 +61,8 @@ class ActionMode {
   }
   
   paint () {
+    // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
+    
     const app = this._app;
     const canvas2d = this.canvas2d;
     
