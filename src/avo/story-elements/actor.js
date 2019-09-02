@@ -18,6 +18,11 @@ class Actor extends StoryElement {
     this.solid = true;
     this.movable = true;
     
+    this.stats = {
+      health: 100,  // TEMP
+      maxHealth: 100,  // TEMP
+    };
+    
     this.intent = undefined;
     this.actionName = 'idle';
     this.actionArgs = {};
@@ -130,6 +135,13 @@ class Actor extends StoryElement {
     const tgtX = Math.floor(this.x - srcSizeX / 2), tgtY = Math.floor(this.y - srcSizeY / 2);
     const tgtSizeX = Math.floor(this.size), tgtSizeY = Math.floor(this.size);
     canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+    
+    // Paint UI elements
+    canvas2d.font = '8px Arial';
+    canvas2d.fillStyle = 'rgba(204, 68, 68)';
+    canvas2d.textAlign = 'center';
+    canvas2d.textBaseline = 'hanging';
+    canvas2d.fillText(`❤️${this.stats.health}`, this.x, this.y + this.size / 2 + 4);
   }
   
   processIntent () {
