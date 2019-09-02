@@ -36,7 +36,7 @@ class Particle extends StoryElement {
   onCollision (target, collisionCorrection) {
     // TODO
     if (target && target.stats) {
-      target.stats.health = Math.max((target.stats.health || 0) - 1, 0); 
+      target.stats.health = Math.max((target.stats.health || 0) - 2, 0); 
     }
   }
 }
