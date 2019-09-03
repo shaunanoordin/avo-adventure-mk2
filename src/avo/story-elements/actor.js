@@ -66,6 +66,8 @@ class Actor extends StoryElement {
               y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
               size: actor.size * 1,
               duration: 5 * 30,
+              source: actor,
+              ignoreSource: true,
               // TODO: onCollision logic
             });
             app.particles.push(particle);
@@ -93,7 +95,7 @@ class Actor extends StoryElement {
     this.processActions();
     
     // TODO // TEMP - move this into this.scripts.always() ?
-    if (this.stats.health < 100) { this.stats.health++ }
+    if (this.stats.health < 100) { this.stats.health += 0.05 }
   }
   
   paint () {
@@ -170,7 +172,7 @@ class Actor extends StoryElement {
     canvas2d.textAlign = 'right';
     canvas2d.fillText('❤️', this.x - this.size / 3, this.y + this.size / 2 + healthOffsetY);
     canvas2d.textAlign = 'left';
-    canvas2d.fillText(this.stats.health, this.x + this.size / 3, this.y + this.size / 2 + healthOffsetY);
+    canvas2d.fillText(Math.floor(this.stats.health), this.x + this.size / 3, this.y + this.size / 2 + healthOffsetY);
   }
   
   processIntent () {
