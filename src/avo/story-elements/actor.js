@@ -25,22 +25,22 @@ class Actor extends StoryElement {
     
     this.intent = undefined;
     this.actionName = 'idle';
-    this.actionArgs = {};
+    this.actionAttr = {};
     this.actionStep = 0;
     this.actions = {
       'idle': {
         type: ACTION_TYPES.IDLE,
         steps: 1,
-        script: function (app, actor, action, actionArgs, step) {
+        script: function (app, actor, action, actionAttr, step) {
           actor.animationFrame = 'idle';
         }
       },
       'move': {
         type: ACTION_TYPES.CONTINUOUS,
         steps: 6 * 8,
-        script: function (app, actor, action, actionArgs, step) {
+        script: function (app, actor, action, actionAttr, step) {
           const speed = 4; // TODO
-          const rotation = Math.atan2(actionArgs.y, actionArgs.x);  // TODO
+          const rotation = Math.atan2(actionAttr.y, actionAttr.x);  // TODO
           actor.x += Math.cos(rotation) * speed;
           actor.y += Math.sin(rotation) * speed;
           actor.rotation = rotation;
@@ -54,7 +54,7 @@ class Actor extends StoryElement {
       'attack': {
         type: ACTION_TYPES.STANDARD,
         steps: 15,
-        script: function (app, actor, action, actionArgs, step) {
+        script: function (app, actor, action, actionAttr, step) {
           if (step < 10) {
 
             actor.animationFrame = 'attack-windup';
@@ -205,7 +205,7 @@ class Actor extends StoryElement {
         
         // Finally, convert the intent into the new action.
         this.actionName = this.intent.name;
-        this.actionArgs = (this.intent.args) ? { ...this.intent.args } : {};
+        this.actionAttr = (this.intent.attr) ? { ...this.intent.attr } : {};
       }
       
     }
@@ -215,7 +215,7 @@ class Actor extends StoryElement {
   goIdle () {
     this.actionName = 'idle';
     this.actionStep = 0;
-    this.actionArgs = {};
+    this.actionAttr = {};
   }
   
   processActions () {
@@ -223,7 +223,7 @@ class Actor extends StoryElement {
     const action = this.actions[this.actionName]
     if (!action) return;
     
-    action.script(app, this, action, this.actionArgs, this.actionStep);
+    action.script(app, this, action, this.actionAttr, this.actionStep);
     
     this.actionStep += 1;
     

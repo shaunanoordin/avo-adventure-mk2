@@ -113,7 +113,7 @@ class ActionMode {
       } else if (moveX || moveY) {
         playerActor.intent = {
           name: 'move',
-          args: {
+          attr: {
             x: moveX,
             y: moveY,
           },
