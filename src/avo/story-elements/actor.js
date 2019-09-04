@@ -65,7 +65,7 @@ class Actor extends StoryElement {
               x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
               y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
               size: actor.size * 1,
-              duration: 5 * 30,
+              duration: 30,
               source: actor,
               ignoreSource: true,
               // TODO: onCollision logic
