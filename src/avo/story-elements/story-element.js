@@ -15,6 +15,8 @@ class StoryElement {
     // TODO: this.z = 1;
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
     
+    // TEST
+    // TODO
     this.selfAcceleration = 1;
     this.selfDeceleration = 1;
     this.selfMaxSpeed = 8;

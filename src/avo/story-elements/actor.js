@@ -33,14 +33,6 @@ class Actor extends StoryElement {
         steps: 1,
         script: function (app, actor, action, actionAttr, step) {
           actor.animationFrame = 'idle';
-          
-          const curRotation = Math.atan2(actor.selfMoveY, actor.selfMoveX)
-          const curMoveSpeed = Math.sqrt(actor.selfMoveX * actor.selfMoveX + actor.selfMoveY * actor.selfMoveY);
-          const newMoveSpeed = Math.max(0, curMoveSpeed - actor.selfDeceleration);
-          
-          actor.selfMoveX = newMoveSpeed * Math.cos(curRotation);
-          actor.selfMoveY = newMoveSpeed * Math.sin(curRotation);
-          
         }
       },
       'move': {
@@ -68,6 +60,7 @@ class Actor extends StoryElement {
           
           actor.selfMoveX = moveX;
           actor.selfMoveY = moveY;
+          actor.rotation = actionRotation;
           
           if (0 * 8 <= step && step < 1 * 8) actor.animationFrame = 'move-1';
           else if (1 * 8 <= step && step < 3 * 8) actor.animationFrame = 'move-2';
@@ -120,6 +113,16 @@ class Actor extends StoryElement {
     
     // TODO // TEMP - move this into this.scripts.always() ?
     if (this.stats.health < 100) { this.stats.health += 0.05 }
+    
+    // Deceleration
+    if (this.actionName !== 'move') {
+      const curRotation = Math.atan2(this.selfMoveY, this.selfMoveX)
+      const curMoveSpeed = Math.sqrt(this.selfMoveX * this.selfMoveX + this.selfMoveY * this.selfMoveY);
+      const newMoveSpeed = Math.max(0, curMoveSpeed - this.selfDeceleration);
+
+      this.selfMoveX = newMoveSpeed * Math.cos(curRotation);
+      this.selfMoveY = newMoveSpeed * Math.sin(curRotation);
+    }
   }
   
   paint () {
