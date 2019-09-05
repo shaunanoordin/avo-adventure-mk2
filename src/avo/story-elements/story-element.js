@@ -15,6 +15,14 @@ class StoryElement {
     // TODO: this.z = 1;
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
     
+    this.selfAcceleration = 1;
+    this.selfDeceleration = 1;
+    this.selfMaxSpeed = 8;
+    this.selfMoveX = 0;
+    this.selfMoveY = 0;
+    this.pushMoveX = 0;
+    this.pushMoveY = 0;
+    
     this.shape = SHAPES.NONE;
     this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
     

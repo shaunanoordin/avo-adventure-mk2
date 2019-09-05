@@ -33,17 +33,41 @@ class Actor extends StoryElement {
         steps: 1,
         script: function (app, actor, action, actionAttr, step) {
           actor.animationFrame = 'idle';
+          
+          const curRotation = Math.atan2(actor.selfMoveY, actor.selfMoveX)
+          const curMoveSpeed = Math.sqrt(actor.selfMoveX * actor.selfMoveX + actor.selfMoveY * actor.selfMoveY);
+          const newMoveSpeed = Math.max(0, curMoveSpeed - actor.selfDeceleration);
+          
+          actor.selfMoveX = newMoveSpeed * Math.cos(curRotation);
+          actor.selfMoveY = newMoveSpeed * Math.sin(curRotation);
+          
         }
       },
       'move': {
         type: ACTION_TYPES.CONTINUOUS,
         steps: 6 * 8,
         script: function (app, actor, action, actionAttr, step) {
+          /*
           const speed = 4; // TODO
           const rotation = Math.atan2(actionAttr.y, actionAttr.x);  // TODO
           actor.x += Math.cos(rotation) * speed;
           actor.y += Math.sin(rotation) * speed;
           actor.rotation = rotation;
+          */
+          
+          const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
+          let moveX = actor.selfMoveX + actor.selfAcceleration * Math.cos(actionRotation);
+          let moveY = actor.selfMoveY + actor.selfAcceleration * Math.sin(actionRotation);
+          
+          if (actor.selfMaxSpeed) {
+            const correctedSpeed = Math.min(actor.selfMaxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
+            const moveRotation = Math.atan2(moveY, moveX);
+            moveX = correctedSpeed * Math.cos(moveRotation);
+            moveY = correctedSpeed * Math.sin(moveRotation);
+          }
+          
+          actor.selfMoveX = moveX;
+          actor.selfMoveY = moveY;
           
           if (0 * 8 <= step && step < 1 * 8) actor.animationFrame = 'move-1';
           else if (1 * 8 <= step && step < 3 * 8) actor.animationFrame = 'move-2';
