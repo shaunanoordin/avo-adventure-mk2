@@ -128,12 +128,16 @@ class ActionMode {
     
     // Move Actors and Particles
     app.actors.forEach(actor => {
-      actor.x += actor.selfMoveX;
-      actor.y += actor.selfMoveY;
+      actor.x += actor.moveX;
+      actor.y += actor.moveY;
+      actor.x += actor.pushX;
+      actor.y += actor.pushY;
     });
     app.particles.forEach(particle => {
-      particle.x += particle.selfMoveX;
-      particle.y += particle.selfMoveY;
+      particle.x += particle.moveX;
+      particle.y += particle.moveY;
+      particle.x += particle.pushX;
+      particle.y += particle.pushY;
     });
     
     // Check Actor collisions

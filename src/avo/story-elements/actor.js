@@ -21,6 +21,9 @@ class Actor extends StoryElement {
     this.stats = {
       health: 100,  // TEMP
       maxHealth: 100,  // TEMP
+      acceleration: 1,
+      deceleration: 1,
+      maxSpeed: 8,
     };
     
     this.intent = undefined;
@@ -39,27 +42,22 @@ class Actor extends StoryElement {
         type: ACTION_TYPES.CONTINUOUS,
         steps: 6 * 8,
         script: function (app, actor, action, actionAttr, step) {
-          /*
-          const speed = 4; // TODO
-          const rotation = Math.atan2(actionAttr.y, actionAttr.x);  // TODO
-          actor.x += Math.cos(rotation) * speed;
-          actor.y += Math.sin(rotation) * speed;
-          actor.rotation = rotation;
-          */
+          const acceleration = actor.stats.acceleration || 0;
           
           const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
-          let moveX = actor.selfMoveX + actor.selfAcceleration * Math.cos(actionRotation);
-          let moveY = actor.selfMoveY + actor.selfAcceleration * Math.sin(actionRotation);
+          let moveX = actor.moveX + acceleration * Math.cos(actionRotation);
+          let moveY = actor.moveY + acceleration * Math.sin(actionRotation);
           
-          if (actor.selfMaxSpeed) {
-            const correctedSpeed = Math.min(actor.selfMaxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
+          if (actor.stats.maxSpeed >= 0) {
+            const maxSpeed = actor.stats.maxSpeed;
+            const correctedSpeed = Math.min(maxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
             const moveRotation = Math.atan2(moveY, moveX);
             moveX = correctedSpeed * Math.cos(moveRotation);
             moveY = correctedSpeed * Math.sin(moveRotation);
           }
           
-          actor.selfMoveX = moveX;
-          actor.selfMoveY = moveY;
+          actor.moveX = moveX;
+          actor.moveY = moveY;
           actor.rotation = actionRotation;
           
           if (0 * 8 <= step && step < 1 * 8) actor.animationFrame = 'move-1';
@@ -125,12 +123,13 @@ class Actor extends StoryElement {
     
     // Deceleration
     if (this.actionName !== 'move') {
-      const curRotation = Math.atan2(this.selfMoveY, this.selfMoveX)
-      const curMoveSpeed = Math.sqrt(this.selfMoveX * this.selfMoveX + this.selfMoveY * this.selfMoveY);
-      const newMoveSpeed = Math.max(0, curMoveSpeed - this.selfDeceleration);
+      const deceleration = this.stats.deceleration || 0;
+      const curRotation = Math.atan2(this.moveY, this.moveX)
+      const curMoveSpeed = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY);
+      const newMoveSpeed = Math.max(0, curMoveSpeed - deceleration);
 
-      this.selfMoveX = newMoveSpeed * Math.cos(curRotation);
-      this.selfMoveY = newMoveSpeed * Math.sin(curRotation);
+      this.moveX = newMoveSpeed * Math.cos(curRotation);
+      this.moveY = newMoveSpeed * Math.sin(curRotation);
     }
   }
   

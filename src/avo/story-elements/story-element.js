@@ -15,15 +15,11 @@ class StoryElement {
     // TODO: this.z = 1;
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
     
-    // TEST
-    // TODO
-    this.selfAcceleration = 1;
-    this.selfDeceleration = 1;
-    this.selfMaxSpeed = 8;
-    this.selfMoveX = 0;
-    this.selfMoveY = 0;
-    this.pushMoveX = 0;
-    this.pushMoveY = 0;
+    // Movement: self locomotion and external (pushed) movement.
+    this.moveX = 0;
+    this.moveY = 0;
+    this.pushX = 0;
+    this.pushY = 0;
     
     this.shape = SHAPES.NONE;
     this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
