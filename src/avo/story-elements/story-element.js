@@ -30,6 +30,7 @@ class StoryElement {
     this.animationFrame = 'idle';
     
     this.scripts = {};
+    this.effects = [];
   }
   
   play () {}

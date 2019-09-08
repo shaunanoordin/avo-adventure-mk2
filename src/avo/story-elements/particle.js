@@ -12,6 +12,11 @@ class Particle extends StoryElement {
       'always': function (app, actor) {},
     };
     
+    // Particles have a payload of Effects to apply on anything they collide
+    // with. Not to be confused with .effects, which are Effects applied TO the
+    // Particles.
+    this.payload = [];
+    
     // Particles can have a limited duration.
     this.duration = Infinity;
     

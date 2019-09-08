@@ -1,14 +1,6 @@
-import { MODES, SHAPES } from '@avo/misc/constants';
+import { ACTION_TYPES, EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element';
 import Particle from './particle';
-
-const ACTION_TYPES = {
-  IDLE: 'idle',  // Default. Loops.
-  CONTINUOUS: 'continuous',  // Requires continuous input (e.g. moving). Loops until cancelled (e.g. user stops pressing arrow keys) or interrupted (e.g. by taking damage and going into the knockback state).
-  STANDARD: 'standard',  // Actions that play out all their steps. Cannot be cancelled by new user input. Can be interrupted.
-  SPECIAL_ONCE: 'special once',  // Actions that play out all their steps. Cannot be cancelled nor interrupted, except by story scripts.
-  SPECIAL_FOREVER: 'special forever',  // Actions that play in a loop. Cannot be cancelled nor interrupted, except by story scripts.
-};
 
 class Actor extends StoryElement {
   constructor (app, initialValues = {}) {
@@ -83,7 +75,20 @@ class Actor extends StoryElement {
               duration: 30,
               source: actor,
               ignoreSource: true,
-              // TODO: onCollision logic
+              payload: [
+                {
+                  name: 'damage',
+                  stacking: EFFECTS_STACKING.STACK,
+                  power: 10,
+                },
+                {
+                  name: 'push',
+                  stacking: EFFECTS_STACKING.STACK,
+                  duration: 15,
+                  power: 2,
+                  rotation: actor.rotation,
+                },
+              ],
             });
             app.particles.push(particle);
             
