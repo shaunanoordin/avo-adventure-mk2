@@ -101,13 +101,22 @@ class Actor extends StoryElement {
       
     };
     
+    this.scripts = {
+      'always': function (app, actor) {},
+      'damage': function (app, actor, effect) {},
+      'push': function (app, actor, effect) {},
+    };
+    
     // Set initial values
     Object.assign(this, initialValues);
   }
   
   play () {
     const app = this._app;
-    // TODO: run the 'always'/'each frame' script.
+    
+    // Run script: "always execute on every frame"
+    this.scripts.always && this.scripts.always(app, this);
+    
     this.processIntent();
     this.processActions();
     

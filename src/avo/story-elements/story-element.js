@@ -32,6 +32,8 @@ class StoryElement {
     this.movable = false;
     
     this.animationFrame = 'idle';
+    
+    this.scripts = {};
   }
   
   play () {}

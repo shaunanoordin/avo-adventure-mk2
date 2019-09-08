@@ -8,6 +8,10 @@ class Particle extends StoryElement {
     super(app);
     this.shape = SHAPES.CIRCLE;
     
+    this.scripts = {
+      'always': function (app, actor) {},
+    };
+    
     // Particles can have a limited duration.
     this.duration = Infinity;
     
@@ -26,6 +30,11 @@ class Particle extends StoryElement {
   }
   
   play () {
+    const app = this._app;
+    
+    // Run script: "always execute on every frame"
+    this.scripts.always && this.scripts.always(app, this);
+    
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
     this.recentTargets = this.recentTargets.filter(item => ( --item.duration > 0 ))
