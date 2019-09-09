@@ -79,7 +79,8 @@ class Actor extends StoryElement {
                 attackPower: 20,
                 pushPower: 8,
                 pushAngle: actor.rotation,
-                pushDuration: 5,
+                pushDuration: 6,
+                pushDecay: 1,
               },
               scripts: {
                 'collision': function (app, particle, target) {
@@ -91,6 +92,7 @@ class Actor extends StoryElement {
                       attr: {
                         power: particle.stats.pushPower,
                         angle: particle.stats.pushAngle,
+                        decay: particle.stats.pushDecay,
                       },
                       duration: particle.stats.pushDuration,
                       stacking: EFFECTS_STACKING.STACK,
@@ -118,11 +120,14 @@ class Actor extends StoryElement {
       'always': function (app, actor) {},
       'damage': function (app, actor, effect) {},
       'push': function (app, actor, effect) {
-        console.log('PUSH');
         const power = effect.attr && effect.attr.power || 0;
         const angle = effect.attr && effect.attr.angle || 0;
         actor.pushX += power * Math.cos(angle);
         actor.pushY += power * Math.sin(angle);
+        
+        if (effect.attr.decay && effect.attr.power) {
+          effect.attr.power = Math.max(effect.attr.power - effect.attr.decay, 0);
+        }
       },
     };
     
