@@ -1,4 +1,4 @@
-import { FRAMES_PER_SECOND, MODES, SHAPES } from '@avo/misc/constants';
+import { EFFECTS_STACKING, FRAMES_PER_SECOND, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element'
 
 const COLLISION_SPACING = FRAMES_PER_SECOND / 2;
@@ -75,7 +75,19 @@ class Particle extends StoryElement {
       // Add to the list of recent targets, so targets aren't hit back to back to back.
       this.recentTargets.push({ target, duration: COLLISION_SPACING })
     }
+  }
+  
+  applyEffect (effect, target) {
+    if (!effect || !target) return;
     
+    let shouldApply = !!target.scripts[effect.name];  // Does the target have a script to react to this effect?
+    
+    // TODO: check on effects stacking.
+    // const existingEffect = target.effects.find(eff => eff.name === effect.name);
+    
+    if (shouldApply) {
+      target.effects.push(effect);
+    }    
   }
 }
 

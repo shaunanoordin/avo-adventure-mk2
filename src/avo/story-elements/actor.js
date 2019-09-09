@@ -72,24 +72,29 @@ class Actor extends StoryElement {
               x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
               y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
               size: actor.size * 1,
-              duration: 30,
+              duration: 5,
               source: actor,
               ignoreSource: true,
               stats: {
-                power: 20,
-                push: 2,
-                angle: actor.rotation,
-                duration: 15,
+                attackPower: 20,
+                pushPower: 8,
+                pushAngle: actor.rotation,
+                pushDuration: 5,
               },
               scripts: {
                 'collision': function (app, particle, target) {
                   if (target && target.stats) {
-                    target.stats.health = Math.max((target.stats.health || 0) - particle.stats.power, 0);
+                    target.stats.health = Math.max((target.stats.health || 0) - particle.stats.attackPower, 0);
                     
-                    target.pushX += particle.stats.push * Math.cos(particle.stats.angle);
-                    target.pushY += particle.stats.push * Math.sin(particle.stats.angle);
-                    
-                    console.log(target.pushX)
+                    particle.applyEffect({
+                      name: 'push',
+                      attr: {
+                        power: particle.stats.pushPower,
+                        angle: particle.stats.pushAngle,
+                      },
+                      duration: particle.stats.pushDuration,
+                      stacking: EFFECTS_STACKING.STACK,
+                    }, target);
                     
                   }
                 },
@@ -112,7 +117,13 @@ class Actor extends StoryElement {
     this.scripts = {
       'always': function (app, actor) {},
       'damage': function (app, actor, effect) {},
-      'push': function (app, actor, effect) {},
+      'push': function (app, actor, effect) {
+        console.log('PUSH');
+        const power = effect.attr && effect.attr.power || 0;
+        const angle = effect.attr && effect.attr.angle || 0;
+        actor.pushX += power * Math.cos(angle);
+        actor.pushY += power * Math.sin(angle);
+      },
     };
     
     // Set initial values
@@ -125,6 +136,9 @@ class Actor extends StoryElement {
     // Run script: "always execute on every frame"
     this.scripts.always && this.scripts.always(app, this);
     
+    // TODO: copy processEffects to Particles, too.
+    
+    this.processEffects();
     this.processIntent();
     this.processActions();
     
@@ -261,6 +275,18 @@ class Actor extends StoryElement {
     this.actionName = 'idle';
     this.actionStep = 0;
     this.actionAttr = {};
+  }
+  
+  processEffects () {
+    const app = this._app;
+    
+    this.effects.forEach(effect => {
+      const script = this.scripts[effect.name];
+      script && script(app, this, effect)
+      effect.duration --;
+    })
+    
+    this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
   processActions () {
