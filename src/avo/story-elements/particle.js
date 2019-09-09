@@ -1,4 +1,4 @@
-import { FRAMES_PER_SECOND, MODES, SHAPES } from '@avo/misc/constants';
+import { EFFECTS_STACKING, FRAMES_PER_SECOND, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element'
 
 const COLLISION_SPACING = FRAMES_PER_SECOND / 2;
@@ -7,6 +7,11 @@ class Particle extends StoryElement {
   constructor (app, initialValues) {
     super(app);
     this.shape = SHAPES.CIRCLE;
+    
+    this.scripts = {
+      'always': function (app, particle) {},
+      'collision': function (app, particle, target) {}
+    };
     
     // Particles can have a limited duration.
     this.duration = Infinity;
@@ -26,6 +31,11 @@ class Particle extends StoryElement {
   }
   
   play () {
+    const app = this._app;
+    
+    // Run script: "always execute on every frame"
+    this.scripts.always && this.scripts.always(app, this);
+    
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
     this.recentTargets = this.recentTargets.filter(item => ( --item.duration > 0 ))
@@ -52,21 +62,32 @@ class Particle extends StoryElement {
   }
   
   onCollision (target, collisionCorrection) {
+    const app = this._app;
 
     const targetIsValid = !!target  // Is there a target?
       && !(this.ignoreSource && this.source === target)  // If the target is the source of the Particle, ignore it?
       && !this.recentTargets.find(t => ( t.target === target ));
     
     if (targetIsValid) {
-      // TODO
-      if (target && target.stats) {
-        target.stats.health = Math.max((target.stats.health || 0) - 10, 0); 
-      }
+      // Run script: particle collided with a target
+      this.scripts.collision && this.scripts.collision(app, this, target);
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
       this.recentTargets.push({ target, duration: COLLISION_SPACING })
     }
+  }
+  
+  applyEffect (effect, target) {
+    if (!effect || !target) return;
     
+    let shouldApply = !!target.reactions[effect.name];  // Does the target have a script to react to this effect?
+    
+    // TODO: check on effects stacking.
+    // const existingEffect = target.effects.find(eff => eff.name === effect.name);
+    
+    if (shouldApply) {
+      target.effects.push(effect);
+    }    
   }
 }
 

@@ -126,6 +126,24 @@ class ActionMode {
   processPhysics () {
     const app = this._app;
     
+    // Move Actors and Particles
+    app.actors.forEach(actor => {
+      actor.x += actor.moveX;
+      actor.y += actor.moveY;
+      actor.x += actor.pushX;
+      actor.y += actor.pushY;
+      actor.pushX = 0;
+      actor.pushY = 0;
+    });
+    app.particles.forEach(particle => {
+      particle.x += particle.moveX;
+      particle.y += particle.moveY;
+      particle.x += particle.pushX;
+      particle.y += particle.pushY;
+      particle.pushX = 0;
+      particle.pushY = 0;
+    });
+    
     // Check Actor collisions
     for (let a = 0; a < app.actors.length; a++) {
       let actorA = app.actors[a];

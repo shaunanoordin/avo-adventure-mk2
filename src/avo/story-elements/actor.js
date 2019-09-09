@@ -1,14 +1,6 @@
-import { MODES, SHAPES } from '@avo/misc/constants';
+import { ACTION_TYPES, EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element';
 import Particle from './particle';
-
-const ACTION_TYPES = {
-  IDLE: 'idle',  // Default. Loops.
-  CONTINUOUS: 'continuous',  // Requires continuous input (e.g. moving). Loops until cancelled (e.g. user stops pressing arrow keys) or interrupted (e.g. by taking damage and going into the knockback state).
-  STANDARD: 'standard',  // Actions that play out all their steps. Cannot be cancelled by new user input. Can be interrupted.
-  SPECIAL_ONCE: 'special once',  // Actions that play out all their steps. Cannot be cancelled nor interrupted, except by story scripts.
-  SPECIAL_FOREVER: 'special forever',  // Actions that play in a loop. Cannot be cancelled nor interrupted, except by story scripts.
-};
 
 class Actor extends StoryElement {
   constructor (app, initialValues = {}) {
@@ -21,6 +13,9 @@ class Actor extends StoryElement {
     this.stats = {
       health: 100,  // TEMP
       maxHealth: 100,  // TEMP
+      acceleration: 1,
+      deceleration: 1,
+      maxSpeed: 8,
     };
     
     this.intent = undefined;
@@ -39,11 +34,23 @@ class Actor extends StoryElement {
         type: ACTION_TYPES.CONTINUOUS,
         steps: 6 * 8,
         script: function (app, actor, action, actionAttr, step) {
-          const speed = 4; // TODO
-          const rotation = Math.atan2(actionAttr.y, actionAttr.x);  // TODO
-          actor.x += Math.cos(rotation) * speed;
-          actor.y += Math.sin(rotation) * speed;
-          actor.rotation = rotation;
+          const acceleration = actor.stats.acceleration || 0;
+          
+          const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
+          let moveX = actor.moveX + acceleration * Math.cos(actionRotation);
+          let moveY = actor.moveY + acceleration * Math.sin(actionRotation);
+          
+          if (actor.stats.maxSpeed >= 0) {
+            const maxSpeed = actor.stats.maxSpeed;
+            const correctedSpeed = Math.min(maxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
+            const moveRotation = Math.atan2(moveY, moveX);
+            moveX = correctedSpeed * Math.cos(moveRotation);
+            moveY = correctedSpeed * Math.sin(moveRotation);
+          }
+          
+          actor.moveX = moveX;
+          actor.moveY = moveY;
+          actor.rotation = actionRotation;
           
           if (0 * 8 <= step && step < 1 * 8) actor.animationFrame = 'move-1';
           else if (1 * 8 <= step && step < 3 * 8) actor.animationFrame = 'move-2';
@@ -65,10 +72,35 @@ class Actor extends StoryElement {
               x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
               y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
               size: actor.size * 1,
-              duration: 5 * 30,
+              duration: 5,
               source: actor,
               ignoreSource: true,
-              // TODO: onCollision logic
+              stats: {
+                attackPower: 20,
+                pushPower: 8,
+                pushAngle: actor.rotation,
+                pushDuration: 6,
+                pushDecay: 1,
+              },
+              scripts: {
+                'collision': function (app, particle, target) {
+                  if (target && target.stats) {
+                    target.stats.health = Math.max((target.stats.health || 0) - particle.stats.attackPower, 0);
+                    
+                    particle.applyEffect({
+                      name: 'push',
+                      attr: {
+                        power: particle.stats.pushPower,
+                        angle: particle.stats.pushAngle,
+                        decay: particle.stats.pushDecay,
+                      },
+                      duration: particle.stats.pushDuration,
+                      stacking: EFFECTS_STACKING.STACK,
+                    }, target);
+                    
+                  }
+                },
+              },
             });
             app.particles.push(particle);
             
@@ -84,18 +116,54 @@ class Actor extends StoryElement {
       
     };
     
+    this.scripts = {
+      'always': function (app, actor) {},
+    };
+    
+    this.reactions = {
+      'damage': function (app, actor, effect) {},
+      'push': function (app, actor, effect) {
+        const power = effect.attr && effect.attr.power || 0;
+        const angle = effect.attr && effect.attr.angle || 0;
+        actor.pushX += power * Math.cos(angle);
+        actor.pushY += power * Math.sin(angle);
+        
+        if (effect.attr.decay && effect.attr.power) {
+          effect.attr.power = Math.max(effect.attr.power - effect.attr.decay, 0);
+        }
+      },
+    };
+    
     // Set initial values
     Object.assign(this, initialValues);
   }
   
   play () {
     const app = this._app;
-    // TODO: run the 'always'/'each frame' script.
+    
+    // Run script: "always execute on every frame"
+    this.scripts.always && this.scripts.always(app, this);
+    
+    // TODO: copy processEffects to Particles, too.
+    
+    this.processEffects();
     this.processIntent();
     this.processActions();
     
     // TODO // TEMP - move this into this.scripts.always() ?
-    if (this.stats.health < 100) { this.stats.health += 0.05 }
+    if (this.stats.health <= 0) { this._expired = true }
+    if (this.stats.health < this.stats.maxHealth) { this.stats.health += 0.05 }
+    
+    // Upkeep: deceleration
+    if (this.actionName !== 'move') {
+      const deceleration = this.stats.deceleration || 0;
+      const curRotation = Math.atan2(this.moveY, this.moveX)
+      const curMoveSpeed = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY);
+      const newMoveSpeed = Math.max(0, curMoveSpeed - deceleration);
+
+      this.moveX = newMoveSpeed * Math.cos(curRotation);
+      this.moveY = newMoveSpeed * Math.sin(curRotation);
+    }
   }
   
   paint () {
@@ -216,6 +284,18 @@ class Actor extends StoryElement {
     this.actionName = 'idle';
     this.actionStep = 0;
     this.actionAttr = {};
+  }
+  
+  processEffects () {
+    const app = this._app;
+    
+    this.effects.forEach(effect => {
+      const script = this.reactions[effect.name];
+      script && script(app, this, effect)
+      effect.duration --;
+    })
+    
+    this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
   processActions () {

@@ -9,11 +9,19 @@ class StoryElement {
     // Expired elements are removed at the end of the cycle.
     this._expired = false;
     
+    this.stats = {};
+    
     this.x = 0;
     this.y = 0;
     this.size = 48;
     // TODO: this.z = 1;
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
+    
+    // Movement: self locomotion and external (pushed) movement.
+    this.moveX = 0;
+    this.moveY = 0;
+    this.pushX = 0;
+    this.pushY = 0;
     
     this.shape = SHAPES.NONE;
     this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
@@ -22,6 +30,10 @@ class StoryElement {
     this.movable = false;
     
     this.animationFrame = 'idle';
+    
+    this.scripts = {};  // Custom scripts, e.g. actor.scripts.always runs on every frame.
+    this.effects = [];  // Effects applied to the Actor/Particle/etc.
+    this.reactions = {};  // Reaction scripts; tells what the Actor/Particle/etc should do when they receive an Effect.
   }
   
   play () {}
