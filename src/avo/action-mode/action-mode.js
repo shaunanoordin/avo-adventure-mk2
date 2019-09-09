@@ -132,12 +132,16 @@ class ActionMode {
       actor.y += actor.moveY;
       actor.x += actor.pushX;
       actor.y += actor.pushY;
+      actor.pushX = 0;
+      actor.pushY = 0;
     });
     app.particles.forEach(particle => {
       particle.x += particle.moveX;
       particle.y += particle.moveY;
       particle.x += particle.pushX;
       particle.y += particle.pushY;
+      particle.pushX = 0;
+      particle.pushY = 0;
     });
     
     // Check Actor collisions

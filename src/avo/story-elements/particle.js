@@ -9,13 +9,9 @@ class Particle extends StoryElement {
     this.shape = SHAPES.CIRCLE;
     
     this.scripts = {
-      'always': function (app, actor) {},
+      'always': function (app, particle) {},
+      'collision': function (app, particle, target) {}
     };
-    
-    // Particles have a payload of Effects to apply on anything they collide
-    // with. Not to be confused with .effects, which are Effects applied TO the
-    // Particles.
-    this.payload = [];
     
     // Particles can have a limited duration.
     this.duration = Infinity;
@@ -66,16 +62,15 @@ class Particle extends StoryElement {
   }
   
   onCollision (target, collisionCorrection) {
+    const app = this._app;
 
     const targetIsValid = !!target  // Is there a target?
       && !(this.ignoreSource && this.source === target)  // If the target is the source of the Particle, ignore it?
       && !this.recentTargets.find(t => ( t.target === target ));
     
     if (targetIsValid) {
-      // TODO
-      if (target && target.stats) {
-        target.stats.health = Math.max((target.stats.health || 0) - 10, 0); 
-      }
+      // Run script: particle collided with a target
+      this.scripts.collision && this.scripts.collision(app, this, target);
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
       this.recentTargets.push({ target, duration: COLLISION_SPACING })

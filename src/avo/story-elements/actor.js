@@ -75,20 +75,25 @@ class Actor extends StoryElement {
               duration: 30,
               source: actor,
               ignoreSource: true,
-              payload: [
-                {
-                  name: 'damage',
-                  stacking: EFFECTS_STACKING.STACK,
-                  power: 10,
+              stats: {
+                power: 20,
+                push: 2,
+                angle: actor.rotation,
+                duration: 15,
+              },
+              scripts: {
+                'collision': function (app, particle, target) {
+                  if (target && target.stats) {
+                    target.stats.health = Math.max((target.stats.health || 0) - particle.stats.power, 0);
+                    
+                    target.pushX += particle.stats.push * Math.cos(particle.stats.angle);
+                    target.pushY += particle.stats.push * Math.sin(particle.stats.angle);
+                    
+                    console.log(target.pushX)
+                    
+                  }
                 },
-                {
-                  name: 'push',
-                  stacking: EFFECTS_STACKING.STACK,
-                  duration: 15,
-                  power: 2,
-                  rotation: actor.rotation,
-                },
-              ],
+              },
             });
             app.particles.push(particle);
             
@@ -126,7 +131,7 @@ class Actor extends StoryElement {
     // TODO // TEMP - move this into this.scripts.always() ?
     if (this.stats.health < 100) { this.stats.health += 0.05 }
     
-    // Deceleration
+    // Upkeep: deceleration
     if (this.actionName !== 'move') {
       const deceleration = this.stats.deceleration || 0;
       const curRotation = Math.atan2(this.moveY, this.moveX)

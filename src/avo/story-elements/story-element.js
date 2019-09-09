@@ -9,6 +9,8 @@ class StoryElement {
     // Expired elements are removed at the end of the cycle.
     this._expired = false;
     
+    this.stats = {};
+    
     this.x = 0;
     this.y = 0;
     this.size = 48;
