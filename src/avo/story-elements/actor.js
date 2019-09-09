@@ -151,7 +151,8 @@ class Actor extends StoryElement {
     this.processActions();
     
     // TODO // TEMP - move this into this.scripts.always() ?
-    if (this.stats.health < 100) { this.stats.health += 0.05 }
+    if (this.stats.health <= 0) { this._expired = true }
+    if (this.stats.health < this.stats.maxHealth) { this.stats.health += 0.05 }
     
     // Upkeep: deceleration
     if (this.actionName !== 'move') {
