@@ -31,8 +31,9 @@ class StoryElement {
     
     this.animationFrame = 'idle';
     
-    this.scripts = {};
-    this.effects = [];
+    this.scripts = {};  // Custom scripts, e.g. actor.scripts.always runs on every frame.
+    this.effects = [];  // Effects applied to the Actor/Particle/etc.
+    this.reactions = {};  // Reaction scripts; tells what the Actor/Particle/etc should do when they receive an Effect.
   }
   
   play () {}

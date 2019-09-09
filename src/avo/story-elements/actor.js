@@ -118,6 +118,9 @@ class Actor extends StoryElement {
     
     this.scripts = {
       'always': function (app, actor) {},
+    };
+    
+    this.reactions = {
       'damage': function (app, actor, effect) {},
       'push': function (app, actor, effect) {
         const power = effect.attr && effect.attr.power || 0;
@@ -286,7 +289,7 @@ class Actor extends StoryElement {
     const app = this._app;
     
     this.effects.forEach(effect => {
-      const script = this.scripts[effect.name];
+      const script = this.reactions[effect.name];
       script && script(app, this, effect)
       effect.duration --;
     })

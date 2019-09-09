@@ -80,7 +80,7 @@ class Particle extends StoryElement {
   applyEffect (effect, target) {
     if (!effect || !target) return;
     
-    let shouldApply = !!target.scripts[effect.name];  // Does the target have a script to react to this effect?
+    let shouldApply = !!target.reactions[effect.name];  // Does the target have a script to react to this effect?
     
     // TODO: check on effects stacking.
     // const existingEffect = target.effects.find(eff => eff.name === effect.name);
