@@ -27,7 +27,7 @@ class Actor extends StoryElement {
         type: ACTION_TYPES.IDLE,
         steps: 1,
         script: function (app, actor, action, actionAttr, step) {
-          actor.animationFrame = 'idle';
+          actor.animationName = 'idle';
         }
       },
       'move': {
@@ -52,10 +52,10 @@ class Actor extends StoryElement {
           actor.moveY = moveY;
           actor.rotation = actionRotation;
           
-          if (0 * 8 <= step && step < 1 * 8) actor.animationFrame = 'move-1';
-          else if (1 * 8 <= step && step < 3 * 8) actor.animationFrame = 'move-2';
-          else if (3 * 8 <= step && step < 4 * 8) actor.animationFrame = 'move-1';
-          else if (4 * 8 <= step && step < 6 * 8) actor.animationFrame = 'move-3';
+          if (0 * 8 <= step && step < 1 * 8) actor.animationName = 'move-1';
+          else if (1 * 8 <= step && step < 3 * 8) actor.animationName = 'move-2';
+          else if (3 * 8 <= step && step < 4 * 8) actor.animationName = 'move-1';
+          else if (4 * 8 <= step && step < 6 * 8) actor.animationName = 'move-3';
         },
       },
       'attack': {
@@ -64,7 +64,7 @@ class Actor extends StoryElement {
         script: function (app, actor, action, actionAttr, step) {
           if (step < 10) {
 
-            actor.animationFrame = 'attack-windup';
+            actor.animationName = 'attack-windup';
 
           } else if (step === 10) {
             
@@ -116,11 +116,11 @@ class Actor extends StoryElement {
             });
             app.particles.push(particle);
             
-            actor.animationFrame = 'attack-active';
+            actor.animationName = 'attack-active';
             
           } else {
             
-            actor.animationFrame = 'attack-windown';
+            actor.animationName = 'attack-windown';
             
           }
         }
@@ -190,13 +190,13 @@ class Actor extends StoryElement {
     canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
     // --------
     // Temporary 'animation'
-    if (this.animationFrame === 'idle') canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    else if (this.animationFrame === 'move-1') canvas2d.fillStyle = 'rgba(0, 128, 128, 0.5)';
-    else if (this.animationFrame === 'move-2') canvas2d.fillStyle = 'rgba(0, 160, 128, 0.5)';
-    else if (this.animationFrame === 'move-3') canvas2d.fillStyle = 'rgba(0, 128, 160, 0.5)';
-    else if (this.animationFrame === 'attack-windup') canvas2d.fillStyle = 'rgba(192, 192, 0, 0.5)';
-    else if (this.animationFrame === 'attack-active') canvas2d.fillStyle = 'rgba(255, 0, 0, 0.5)';
-    else if (this.animationFrame === 'attack-winddown') canvas2d.fillStyle = 'rgba(192, 128, 0, 0.5)';
+    if (this.animationName === 'idle') canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    else if (this.animationName === 'move-1') canvas2d.fillStyle = 'rgba(0, 128, 128, 0.5)';
+    else if (this.animationName === 'move-2') canvas2d.fillStyle = 'rgba(0, 160, 128, 0.5)';
+    else if (this.animationName === 'move-3') canvas2d.fillStyle = 'rgba(0, 128, 160, 0.5)';
+    else if (this.animationName === 'attack-windup') canvas2d.fillStyle = 'rgba(192, 192, 0, 0.5)';
+    else if (this.animationName === 'attack-active') canvas2d.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    else if (this.animationName === 'attack-winddown') canvas2d.fillStyle = 'rgba(192, 128, 0, 0.5)';
     //--------
     canvas2d.beginPath();
     canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);

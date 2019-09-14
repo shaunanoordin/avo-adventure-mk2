@@ -56,7 +56,7 @@ class ActionMode {
     
     // DEBUG
     if (app.playerActor) {
-      // console.log('+++ A: ', app.playerActor.animationFrame);
+      // console.log('+++ A: ', app.playerActor.animationName);
     }
   }
   

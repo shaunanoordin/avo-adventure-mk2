@@ -29,7 +29,7 @@ class StoryElement {
     this.solid = false;
     this.movable = false;
     
-    this.animationFrame = 'idle';
+    this.animationName = 'idle';
     this.animationSpritesheet = null;
     this.animationScript = function (app, element, canvas, options = {}) {};
     
