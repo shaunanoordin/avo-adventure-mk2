@@ -146,6 +146,79 @@ class Actor extends StoryElement {
       },
     };
     
+    this.animationScript = function (app, element, canvas, options = {}) {
+      
+      const camera = app.camera;
+      const layer = options.layer || '';
+
+      if (!canvas) return;
+
+      // Simple shadow
+      canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      // --------
+      // Temporary 'animation'
+      if (element.animationName === 'idle') canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      else if (element.animationName === 'move-1') canvas.fillStyle = 'rgba(0, 128, 128, 0.5)';
+      else if (element.animationName === 'move-2') canvas.fillStyle = 'rgba(0, 160, 128, 0.5)';
+      else if (element.animationName === 'move-3') canvas.fillStyle = 'rgba(0, 128, 160, 0.5)';
+      else if (element.animationName === 'attack-windup') canvas.fillStyle = 'rgba(192, 192, 0, 0.5)';
+      else if (element.animationName === 'attack-active') canvas.fillStyle = 'rgba(255, 0, 0, 0.5)';
+      else if (element.animationName === 'attack-winddown') canvas.fillStyle = 'rgba(192, 128, 0, 0.5)';
+      //--------
+      canvas.beginPath();
+      canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
+      canvas.fill();
+
+      // Simple direction
+      canvas.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+      canvas.lineWidth = 2;
+      canvas.beginPath();
+      canvas.moveTo(element.x, element.y);
+      canvas.lineTo(element.x + Math.cos(element.rotation) * element.size * 0.6,
+                      element.y + Math.sin(element.rotation) * element.size * 0.6);
+      canvas.stroke();
+
+      // Paint basic actor
+      const assets = app.assets;
+      const srcX = 0, srcY = 0;
+      const srcSizeX = element.size, srcSizeY = element.size;
+      const tgtX = Math.floor(element.x - srcSizeX / 2), tgtY = Math.floor(element.y - srcSizeY / 2);
+      const tgtSizeX = Math.floor(element.size), tgtSizeY = Math.floor(element.size);
+      canvas.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+
+      // Paint UI elements
+      let healthOffsetY = 7;
+      const healthRatio = (element.stats.maxHealth > 0)
+        ? (element.stats.health || 0) / element.stats.maxHealth
+        : 0;
+      canvas.strokeStyle = 'rgba(0, 0, 0)';
+      canvas.lineWidth = 4;
+      canvas.beginPath();
+      canvas.moveTo(element.x - element.size / 3,
+                    element.y + element.size / 2 + healthOffsetY);
+      canvas.lineTo(element.x + element.size / 3,
+                    element.y + element.size / 2 + healthOffsetY);
+      canvas.stroke();
+      canvas.strokeStyle = 'rgba(255, 0, 0)';
+      canvas.lineWidth = 2;
+      canvas.beginPath();
+      canvas.moveTo(element.x - (element.size / 3 * healthRatio),
+                    element.y + element.size / 2 + healthOffsetY);
+      canvas.lineTo(element.x + (element.size / 3 * healthRatio),
+                    element.y + element.size / 2 + healthOffsetY);
+      canvas.stroke();
+
+      healthOffsetY = 4;
+      canvas.font = '8px Arial';
+      canvas.fillStyle = 'rgba(204, 68, 68)';    
+      canvas.textBaseline = 'hanging';
+      canvas.textAlign = 'right';
+      canvas.fillText('❤️', element.x - element.size / 3, element.y + element.size / 2 + healthOffsetY);
+      canvas.textAlign = 'left';
+      canvas.fillText(Math.floor(element.stats.health), element.x + element.size / 3, element.y + element.size / 2 + healthOffsetY);
+      
+    };
+    
     // Set initial values
     Object.assign(this, initialValues);
   }
@@ -176,79 +249,6 @@ class Actor extends StoryElement {
       this.moveX = newMoveSpeed * Math.cos(curRotation);
       this.moveY = newMoveSpeed * Math.sin(curRotation);
     }
-  }
-  
-  paint () {
-    const app = this._app;
-    const camera = app.camera;
-    const canvas2d = app.actionMode && app.actionMode.canvas2d;
-    
-    if (app.mode !== MODES.ACTION) return;    
-    if (!canvas2d) return;
-    
-    // Simple shadow
-    canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    // --------
-    // Temporary 'animation'
-    if (this.animationName === 'idle') canvas2d.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    else if (this.animationName === 'move-1') canvas2d.fillStyle = 'rgba(0, 128, 128, 0.5)';
-    else if (this.animationName === 'move-2') canvas2d.fillStyle = 'rgba(0, 160, 128, 0.5)';
-    else if (this.animationName === 'move-3') canvas2d.fillStyle = 'rgba(0, 128, 160, 0.5)';
-    else if (this.animationName === 'attack-windup') canvas2d.fillStyle = 'rgba(192, 192, 0, 0.5)';
-    else if (this.animationName === 'attack-active') canvas2d.fillStyle = 'rgba(255, 0, 0, 0.5)';
-    else if (this.animationName === 'attack-winddown') canvas2d.fillStyle = 'rgba(192, 128, 0, 0.5)';
-    //--------
-    canvas2d.beginPath();
-    canvas2d.arc(this.x + camera.x, this.y + camera.y, this.size / 2, 0, 2 * Math.PI);
-    canvas2d.fill();
-    
-    // Simple direction
-    canvas2d.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-    canvas2d.lineWidth = 2;
-    canvas2d.beginPath();
-    canvas2d.moveTo(this.x, this.y);
-    canvas2d.lineTo(this.x + Math.cos(this.rotation) * this.size * 0.6,
-                    this.y + Math.sin(this.rotation) * this.size * 0.6);
-    canvas2d.stroke();
-    
-    // Paint basic actor
-    const assets = app.assets;
-    const srcX = 0, srcY = 0;
-    const srcSizeX = this.size, srcSizeY = this.size;
-    const tgtX = Math.floor(this.x - srcSizeX / 2), tgtY = Math.floor(this.y - srcSizeY / 2);
-    const tgtSizeX = Math.floor(this.size), tgtSizeY = Math.floor(this.size);
-    canvas2d.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
-    
-    // Paint UI elements
-    let healthOffsetY = 7;
-    const healthRatio = (this.stats.maxHealth > 0)
-      ? (this.stats.health || 0) / this.stats.maxHealth
-      : 0;
-    canvas2d.strokeStyle = 'rgba(0, 0, 0)';
-    canvas2d.lineWidth = 4;
-    canvas2d.beginPath();
-    canvas2d.moveTo(this.x - this.size / 3,
-                    this.y + this.size / 2 + healthOffsetY);
-    canvas2d.lineTo(this.x + this.size / 3,
-                    this.y + this.size / 2 + healthOffsetY);
-    canvas2d.stroke();
-    canvas2d.strokeStyle = 'rgba(255, 0, 0)';
-    canvas2d.lineWidth = 2;
-    canvas2d.beginPath();
-    canvas2d.moveTo(this.x - (this.size / 3 * healthRatio),
-                    this.y + this.size / 2 + healthOffsetY);
-    canvas2d.lineTo(this.x + (this.size / 3 * healthRatio),
-                    this.y + this.size / 2 + healthOffsetY);
-    canvas2d.stroke();
-    
-    healthOffsetY = 4;
-    canvas2d.font = '8px Arial';
-    canvas2d.fillStyle = 'rgba(204, 68, 68)';    
-    canvas2d.textBaseline = 'hanging';
-    canvas2d.textAlign = 'right';
-    canvas2d.fillText('❤️', this.x - this.size / 3, this.y + this.size / 2 + healthOffsetY);
-    canvas2d.textAlign = 'left';
-    canvas2d.fillText(Math.floor(this.stats.health), this.x + this.size / 3, this.y + this.size / 2 + healthOffsetY);
   }
   
   processIntent () {

@@ -74,7 +74,7 @@ class ActionMode {
       particle.paint(MODES.ACTION, canvas2d, {});
     });
     app.actors.forEach(actor => {
-      actor.paint();
+      actor.paint(MODES.ACTION, canvas2d, {});
     });
     
   }
