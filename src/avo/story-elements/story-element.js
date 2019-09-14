@@ -1,4 +1,4 @@
-import { ROTATIONS, DIRECTIONS, SHAPES } from '@avo/misc/constants';
+import { MODES, ROTATIONS, DIRECTIONS, SHAPES } from '@avo/misc/constants';
 
 class StoryElement {
   // TODO: rename to just 'Element' or 'Entity'?
@@ -30,6 +30,8 @@ class StoryElement {
     this.movable = false;
     
     this.animationFrame = 'idle';
+    this.animationSpritesheet = null;
+    this.animationScript = function (app, element, canvas, options = {}) {};
     
     this.scripts = {};  // Custom scripts, e.g. actor.scripts.always runs on every frame.
     this.effects = [];  // Effects applied to the Actor/Particle/etc.
@@ -38,7 +40,13 @@ class StoryElement {
   
   play () {}
   
-  paint () {}  // TODO: this should just move the animation frame one step. Add getSprite() for sprite logic, which will be called in ActionMode.
+  paint (mode, canvas, options = {}) {
+    // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
+    
+    if (mode === MODES.ACTION) {
+      this.animationScript && this.animationScript(this._app, this, canvas, options);
+    }
+  }
   
   get left () { return this.x - this.size / 2; }
   get right () { return this.x + this.size / 2; }

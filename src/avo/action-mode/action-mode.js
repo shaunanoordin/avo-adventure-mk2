@@ -1,4 +1,4 @@
-import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
+import { MODES, SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
 import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
@@ -71,7 +71,7 @@ class ActionMode {
     
     // Paint each Story Element
     app.particles.forEach(particle => {
-      particle.paint();
+      particle.paint(MODES.ACTION, canvas2d, {});
     });
     app.actors.forEach(actor => {
       actor.paint();

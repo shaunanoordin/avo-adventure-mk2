@@ -101,6 +101,18 @@ class Actor extends StoryElement {
                   }
                 },
               },
+              animationScript: function (app, element, canvas, options = {}) {
+                const camera = app.camera;
+                const layer = options.layer || '';
+
+                if (!canvas) return;
+                
+                // Simple shadow
+                canvas.fillStyle = 'rgba(238, 238, 204, 0.5)';
+                canvas.beginPath();
+                canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
+                canvas.fill();
+              },
             });
             app.particles.push(particle);
             
@@ -167,10 +179,6 @@ class Actor extends StoryElement {
   }
   
   paint () {
-    // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
-    
-    // TODO: this should just move the animation frame one step. Add getSprite() for sprite logic, which will be called in ActionMode.
-    
     const app = this._app;
     const camera = app.camera;
     const canvas2d = app.actionMode && app.actionMode.canvas2d;
