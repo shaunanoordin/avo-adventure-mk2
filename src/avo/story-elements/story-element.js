@@ -13,7 +13,7 @@ class StoryElement {
     
     this.x = 0;
     this.y = 0;
-    this.size = 48;
+    this.size = 32;
     // TODO: this.z = 1;
     this._rotation = ROTATIONS.SOUTH;  // Rotation in radians
     

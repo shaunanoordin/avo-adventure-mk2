@@ -164,12 +164,13 @@ class Actor extends StoryElement {
       else if (element.animationName === 'attack-windup') canvas.fillStyle = 'rgba(192, 192, 0, 0.5)';
       else if (element.animationName === 'attack-active') canvas.fillStyle = 'rgba(255, 0, 0, 0.5)';
       else if (element.animationName === 'attack-winddown') canvas.fillStyle = 'rgba(192, 128, 0, 0.5)';
-      //--------
+      // --------
       canvas.beginPath();
       canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
       canvas.fill();
 
       // Simple direction
+      // --------
       canvas.strokeStyle = 'rgba(0, 0, 0, 0.5)';
       canvas.lineWidth = 2;
       canvas.beginPath();
@@ -177,16 +178,31 @@ class Actor extends StoryElement {
       canvas.lineTo(element.x + Math.cos(element.rotation) * element.size * 0.6,
                       element.y + Math.sin(element.rotation) * element.size * 0.6);
       canvas.stroke();
+      // --------
 
-      // Paint basic actor
-      const assets = app.assets;
-      const srcX = 0, srcY = 0;
-      const srcSizeX = element.size, srcSizeY = element.size;
-      const tgtX = Math.floor(element.x - srcSizeX / 2), tgtY = Math.floor(element.y - srcSizeY / 2);
-      const tgtSizeX = Math.floor(element.size), tgtSizeY = Math.floor(element.size);
-      canvas.drawImage(assets.basicActor.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+      // Paint actor sprite
+      // --------
+      if (this.animationSpritesheet) {
+        const SPRITE_SIZE = 48;
+        let SPRITE_OFFSET_X = 0;
+        let SPRITE_OFFSET_Y = -8;
+
+        const srcSizeX = SPRITE_SIZE;
+        const srcSizeY = SPRITE_SIZE;
+        const srcX = 0;
+        const srcY = 0;
+
+        const tgtSizeX = SPRITE_SIZE;
+        const tgtSizeY = SPRITE_SIZE;
+        const tgtX = Math.floor(element.x - srcSizeX / 2 + SPRITE_OFFSET_X);
+        const tgtY = Math.floor(element.y - srcSizeY / 2 + SPRITE_OFFSET_Y);
+
+        canvas.drawImage(this.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+      }
+      // --------
 
       // Paint UI elements
+      // --------
       let healthOffsetY = 7;
       const healthRatio = (element.stats.maxHealth > 0)
         ? (element.stats.health || 0) / element.stats.maxHealth
@@ -216,7 +232,7 @@ class Actor extends StoryElement {
       canvas.fillText('❤️', element.x - element.size / 3, element.y + element.size / 2 + healthOffsetY);
       canvas.textAlign = 'left';
       canvas.fillText(Math.floor(element.stats.health), element.x + element.size / 3, element.y + element.size / 2 + healthOffsetY);
-      
+      // --------
     };
     
     // Set initial values
