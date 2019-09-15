@@ -7,12 +7,12 @@ class Story {
     this._app = app;
     
     // Assets
-    app.assets.basicActor = new ImageAsset('assets/actor-v1.png');
+    app.assets.basicActor = new ImageAsset('assets/actor-v2.png');
     
-    app.playerActor = new Actor(app, { x: 160, y: 120 });
+    app.playerActor = new Actor(app, { x: 160, y: 120, size: 32, animationSpritesheet: app.assets.basicActor });
     app.actors.push(app.playerActor);
     
-    const testActorA = new Actor(app, { x: 80, y: 120 });
+    const testActorA = new Actor(app, { x: 80, y: 120, size: 32, animationSpritesheet: app.assets.basicActor });
     app.actors.push(testActorA);
     
     // TODO:
