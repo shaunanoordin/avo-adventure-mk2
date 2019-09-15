@@ -1,4 +1,4 @@
-import { ACTION_TYPES, EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
+import { ACTION_TYPES, DIRECTIONS, EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element';
 import Particle from './particle';
 
@@ -120,7 +120,7 @@ class Actor extends StoryElement {
             
           } else {
             
-            actor.animationName = 'attack-windown';
+            actor.animationName = 'attack-winddown';
             
           }
         }
@@ -189,8 +189,24 @@ class Actor extends StoryElement {
 
         const srcSizeX = SPRITE_SIZE;
         const srcSizeY = SPRITE_SIZE;
-        const srcX = 0;
-        const srcY = 0;
+        let srcX = 0;
+        let srcY = 0;
+        
+        switch (element.direction) {
+          case DIRECTIONS.SOUTH: srcX = SPRITE_SIZE * 0; break;
+          case DIRECTIONS.NORTH: srcX = SPRITE_SIZE * 1; break;
+          case DIRECTIONS.EAST: srcX = SPRITE_SIZE * 2; break;
+          case DIRECTIONS.WEST: srcX = SPRITE_SIZE * 3; break;
+        }
+        
+        switch (element.animationName) {
+          case 'move-1': srcY = SPRITE_SIZE * 1; break;
+          case 'move-2': srcY = SPRITE_SIZE * 2; break;
+          case 'move-3': srcY = SPRITE_SIZE * 3; break;
+          case 'attack-windup': srcY = SPRITE_SIZE * 4; break;
+          case 'attack-active': srcY = SPRITE_SIZE * 5; break;
+          case 'attack-winddown': srcY = SPRITE_SIZE * 5; break;
+        }
 
         const tgtSizeX = SPRITE_SIZE;
         const tgtSizeY = SPRITE_SIZE;
