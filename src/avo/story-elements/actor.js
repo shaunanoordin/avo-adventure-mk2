@@ -32,7 +32,7 @@ class Actor extends StoryElement {
       },
       'move': {
         type: ACTION_TYPES.CONTINUOUS,
-        steps: 6 * 8,
+        steps: 6 * 2,
         script: function (app, actor, action, actionAttr, step) {
           const acceleration = actor.stats.acceleration || 0;
           
@@ -52,10 +52,10 @@ class Actor extends StoryElement {
           actor.moveY = moveY;
           actor.rotation = actionRotation;
           
-          if (0 * 8 <= step && step < 1 * 8) actor.animationName = 'move-1';
-          else if (1 * 8 <= step && step < 3 * 8) actor.animationName = 'move-2';
-          else if (3 * 8 <= step && step < 4 * 8) actor.animationName = 'move-1';
-          else if (4 * 8 <= step && step < 6 * 8) actor.animationName = 'move-3';
+          if (0 * 2 <= step && step < 1 * 2) actor.animationName = 'move-1';
+          else if (1 * 2 <= step && step < 3 * 2) actor.animationName = 'move-2';
+          else if (3 * 2 <= step && step < 4 * 2) actor.animationName = 'move-1';
+          else if (4 * 2 <= step && step < 6 * 2) actor.animationName = 'move-3';
         },
       },
       'attack': {
