@@ -14,7 +14,7 @@ class AvoAdventure {
     this.camera = {
       x: 0,
       y: 0,
-      targetActor: null,
+      targetActor: null,  // Sets an Actor to follow. If null, camera is static.
     };
     this.playerActor = null;
     
