@@ -38,6 +38,12 @@ class ActionMode {
     
     this.processPlayerInput();
     
+    // Sort for visual rendering
+    // TODO: check if this is necessary.
+    function sortY (a, b) { return a.y - b.y }
+    app.actors.sort(sortY);
+    app.particles.sort(sortY);
+    
     // Run logic for each Story Element
     app.actors.forEach(actor => {
       actor.play();
