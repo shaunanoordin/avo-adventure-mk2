@@ -38,6 +38,12 @@ class ActionMode {
     
     this.processPlayerInput();
     
+    // Sort for visual rendering
+    // TODO: check if this is necessary.
+    function sortY (a, b) { return a.y - b.y }
+    app.actors.sort(sortY);
+    app.particles.sort(sortY);
+    
     // Run logic for each Story Element
     app.actors.forEach(actor => {
       actor.play();
@@ -53,10 +59,10 @@ class ActionMode {
       if (this.keysPressed[key]) this.keysPressed[key]++;
     })
     
-    
-    // DEBUG
-    if (app.playerActor) {
-      // console.log('+++ A: ', app.playerActor.animationName);
+    // Camera Controls: focus the camera on the target actor, if any.
+    if (app.camera.targetActor) {
+      app.camera.x = Math.floor(this.width / 2 - app.camera.targetActor.x);
+      app.camera.y = Math.floor(this.height / 2 - app.camera.targetActor.y);
     }
   }
   
