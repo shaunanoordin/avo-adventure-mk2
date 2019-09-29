@@ -122,7 +122,13 @@ class Actor extends StoryElement {
     
     this.effects.forEach(effect => {
       const reaction = this.reactions[effect.name] || {};
-      reaction.always && reaction.always(app, this, effect);
+      
+      // For each active Effect, run a reaction.
+      if (effect.duration > 0) {
+        reaction.always && reaction.always(app, this, effect);
+      }
+      
+      // Effects should decay (unless duration === Infinity, of course) 
       effect.duration --;
       
       // Prepare to end any old effects.
