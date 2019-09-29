@@ -21,7 +21,9 @@ export const STANDARD_ANIMATIONS = {
     else if (element.animationName === 'attack-winddown') canvas.fillStyle = 'rgba(192, 128, 0, 0.5)';
     // --------
     canvas.beginPath();
-    canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
+    canvas.arc(Math.floor(element.x + camera.x),
+               Math.floor(element.y + camera.y),
+               element.size / 2, 0, 2 * Math.PI);
     canvas.fill();
 
     // Simple direction
@@ -29,9 +31,10 @@ export const STANDARD_ANIMATIONS = {
     canvas.strokeStyle = 'rgba(0, 0, 0, 0.5)';
     canvas.lineWidth = 2;
     canvas.beginPath();
-    canvas.moveTo(element.x, element.y);
-    canvas.lineTo(element.x + Math.cos(element.rotation) * element.size * 0.6,
-                    element.y + Math.sin(element.rotation) * element.size * 0.6);
+    canvas.moveTo(Math.floor(element.x + camera.x),
+                  Math.floor(element.y + camera.y));
+    canvas.lineTo(Math.floor(element.x + camera.x) + Math.cos(element.rotation) * element.size * 0.6,
+                  Math.floor(element.y + camera.y) + Math.sin(element.rotation) * element.size * 0.6);
     canvas.stroke();
     // --------
 
@@ -65,8 +68,8 @@ export const STANDARD_ANIMATIONS = {
 
       const tgtSizeX = SPRITE_SIZE;
       const tgtSizeY = SPRITE_SIZE;
-      const tgtX = Math.floor(element.x - srcSizeX / 2 + SPRITE_OFFSET_X);
-      const tgtY = Math.floor(element.y - srcSizeY / 2 + SPRITE_OFFSET_Y);
+      const tgtX = Math.floor(element.x - srcSizeX / 2 + SPRITE_OFFSET_X + camera.x);
+      const tgtY = Math.floor(element.y - srcSizeY / 2 + SPRITE_OFFSET_Y + camera.y);
 
       canvas.drawImage(element.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
     }

@@ -59,10 +59,11 @@ class ActionMode {
       if (this.keysPressed[key]) this.keysPressed[key]++;
     })
     
-    
-    // DEBUG
+    // EXPERIMENTAL
+    // Focus the camera on the player actor
     if (app.playerActor) {
-      // console.log('+++ A: ', app.playerActor.animationName);
+      app.camera.x = Math.floor(this.width / 2 - app.playerActor.x);
+      app.camera.y = Math.floor(this.height / 2 - app.playerActor.y);
     }
   }
   
