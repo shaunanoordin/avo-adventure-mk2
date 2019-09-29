@@ -121,11 +121,15 @@ class Actor extends StoryElement {
     const app = this._app;
     
     this.effects.forEach(effect => {
-      const script = this.reactions[effect.name];
-      script && script(app, this, effect)
+      const reaction = this.reactions[effect.name] || {};
+      reaction.always && reaction.always(app, this, effect);
       effect.duration --;
-    })
+      
+      // Prepare to end any old effects.
+      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove(app, this, effect);
+    });
     
+    // Remove old effects
     this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
