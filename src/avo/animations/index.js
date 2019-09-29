@@ -37,7 +37,7 @@ export const STANDARD_ANIMATIONS = {
 
     // Paint actor sprite
     // --------
-    if (this.animationSpritesheet) {
+    if (element.animationSpritesheet) {
       const SPRITE_SIZE = 48;
       let SPRITE_OFFSET_X = 0;
       let SPRITE_OFFSET_Y = -8;
@@ -68,7 +68,7 @@ export const STANDARD_ANIMATIONS = {
       const tgtX = Math.floor(element.x - srcSizeX / 2 + SPRITE_OFFSET_X);
       const tgtY = Math.floor(element.y - srcSizeY / 2 + SPRITE_OFFSET_Y);
 
-      canvas.drawImage(this.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+      canvas.drawImage(element.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
     }
     // --------
 
