@@ -71,6 +71,10 @@ class Particle extends StoryElement {
     // const existingEffect = target.effects.find(eff => eff.name === effect.name);
     
     if (shouldApply) {
+      // Prepare to add new effect
+      const reaction = target.reactions[effect.name] || {};
+      reaction.onAdd && reaction.onAdd(app, target, effect);
+      
       target.effects.push(effect);
     }    
   }
