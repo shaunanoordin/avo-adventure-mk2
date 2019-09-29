@@ -68,8 +68,8 @@ export const STANDARD_ANIMATIONS = {
 
       const tgtSizeX = SPRITE_SIZE;
       const tgtSizeY = SPRITE_SIZE;
-      const tgtX = Math.floor(element.x - srcSizeX / 2 + SPRITE_OFFSET_X + camera.x);
-      const tgtY = Math.floor(element.y - srcSizeY / 2 + SPRITE_OFFSET_Y + camera.y);
+      const tgtX = Math.floor(element.x + camera.x) - srcSizeX / 2 + SPRITE_OFFSET_X;
+      const tgtY = Math.floor(element.y + camera.y) - srcSizeY / 2 + SPRITE_OFFSET_Y;
 
       canvas.drawImage(element.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
     }
@@ -84,18 +84,18 @@ export const STANDARD_ANIMATIONS = {
     canvas.strokeStyle = 'rgba(0, 0, 0)';
     canvas.lineWidth = 4;
     canvas.beginPath();
-    canvas.moveTo(element.x - element.size / 3,
-                  element.y + element.size / 2 + healthOffsetY);
-    canvas.lineTo(element.x + element.size / 3,
-                  element.y + element.size / 2 + healthOffsetY);
+    canvas.moveTo(Math.floor(element.x + camera.x) - element.size / 3,
+                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
+    canvas.lineTo(Math.floor(element.x + camera.x) + element.size / 3,
+                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
     canvas.stroke();
     canvas.strokeStyle = 'rgba(255, 0, 0)';
     canvas.lineWidth = 2;
     canvas.beginPath();
-    canvas.moveTo(element.x - (element.size / 3 * healthRatio),
-                  element.y + element.size / 2 + healthOffsetY);
-    canvas.lineTo(element.x + (element.size / 3 * healthRatio),
-                  element.y + element.size / 2 + healthOffsetY);
+    canvas.moveTo(Math.floor(element.x + camera.x) - (element.size / 3 * healthRatio),
+                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
+    canvas.lineTo(Math.floor(element.x + camera.x) + (element.size / 3 * healthRatio),
+                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
     canvas.stroke();
 
     healthOffsetY = 4;
@@ -103,9 +103,13 @@ export const STANDARD_ANIMATIONS = {
     canvas.fillStyle = 'rgba(204, 68, 68)';    
     canvas.textBaseline = 'hanging';
     canvas.textAlign = 'right';
-    canvas.fillText('❤️', element.x - element.size / 3, element.y + element.size / 2 + healthOffsetY);
+    canvas.fillText('❤️',
+                    Math.floor(element.x + camera.x) - element.size / 3,
+                    Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
     canvas.textAlign = 'left';
-    canvas.fillText(Math.floor(element.stats.health), element.x + element.size / 3, element.y + element.size / 2 + healthOffsetY);
+    canvas.fillText(Math.floor(element.stats.health),
+                    Math.floor(element.x + camera.x) + element.size / 3,
+                    Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
     // --------
   },
 };
