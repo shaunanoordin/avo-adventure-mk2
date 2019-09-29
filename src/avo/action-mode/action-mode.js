@@ -75,6 +75,9 @@ class ActionMode {
     // Clear canvas before painting
     canvas2d.clearRect(0, 0, this.width, this.height);
     
+    // Paint the map (floor)
+    app.map && app.map.paint(MODES.ACTION, canvas2d, {});
+    
     // Paint each Story Element
     app.particles.forEach(particle => {
       particle.paint(MODES.ACTION, canvas2d, {});
