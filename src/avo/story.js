@@ -15,6 +15,9 @@ class Story {
     const testActorA = new Actor(app, { x: 80, y: 120, size: 32, animationSpritesheet: app.assets.basicActor });
     app.actors.push(testActorA);
     
+    // Set camera to follow player actor
+    app.camera.targetActor = app.playerActor;
+    
     // TODO:
     // app.addActor();
     // app.addAsset();

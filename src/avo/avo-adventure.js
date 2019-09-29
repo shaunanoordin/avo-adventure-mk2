@@ -11,7 +11,11 @@ class AvoAdventure {
     this.assets = {};
     this.data = {};
     
-    this.camera = { x: 0, y: 0 };
+    this.camera = {
+      x: 0,
+      y: 0,
+      targetActor: null,
+    };
     this.playerActor = null;
     
     this.actionMode = new ActionMode(this);

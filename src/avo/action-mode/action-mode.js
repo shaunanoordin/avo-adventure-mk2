@@ -59,11 +59,10 @@ class ActionMode {
       if (this.keysPressed[key]) this.keysPressed[key]++;
     })
     
-    // EXPERIMENTAL
-    // Focus the camera on the player actor
-    if (app.playerActor) {
-      app.camera.x = Math.floor(this.width / 2 - app.playerActor.x);
-      app.camera.y = Math.floor(this.height / 2 - app.playerActor.y);
+    // Camera Controls: focus the camera on the target actor, if any.
+    if (app.camera.targetActor) {
+      app.camera.x = Math.floor(this.width / 2 - app.camera.targetActor.x);
+      app.camera.y = Math.floor(this.height / 2 - app.camera.targetActor.y);
     }
   }
   
