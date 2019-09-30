@@ -12,12 +12,12 @@ class Map {
     this.height = 16;
     
     this.tiles =
-      '  ############  ' +
-      ' ##          ## ' +
+      '# ############  ' +
+      '  #          ## ' +
       '##            ##' +
       '#              #' +
-      '#   ###  ###   #' +
-      '#   #      #   #' +
+      '#    ##  ###   #' +
+      '#   ##     #   #' +
       '#   #      #   #' +
       '#      ##      #' +
       '#      ##      #' +
@@ -25,7 +25,7 @@ class Map {
       '#   #      #   #' +
       '#   ###  ###   #' +
       '#              #' +
-      '##    ####     #' +
+      '##    ####    ##' +
       ' ##          ## ' +
       '  ############  ';
     this.tileSize = 32;
@@ -104,34 +104,29 @@ class Map {
     // (i.e. determine how 'deep' the element pushed into the blocking tile.)
     if (correctionDirectionX > 0) {
       const tileEdgeX = leftCol * size + size;
-      // correctionX = tileEdgeX - element.left;
-      penetratingX = element.left - 
-        tileEdgeX;
-      correctionX = 1;
+      penetratingX = element.left - tileEdgeX;
+      correctionX = Math.min(-penetratingX, 2);
     } else if (correctionDirectionX < 0) {
       const tileEdgeX = rightCol * size;
-      // correctionX = tileEdgeX - element.right;
       penetratingX = element.right - tileEdgeX;
-      correctionX = -1;
+      correctionX = Math.max(-penetratingX, -2);
     }
     
     if (correctionDirectionY > 0) {
       const tileEdgeY = topRow * size + size;
-      // correctionY = tileEdgeY - element.top;
       penetratingY = element.top - tileEdgeY;
-      correctionY = 1;
+      correctionY = Math.min(-penetratingY, 2);
     } else if (correctionDirectionY < 0) {
       const tileEdgeY = bottomRow * size;
-      // correctionY = tileEdgeY - element.bottom;
       penetratingY = element.bottom - tileEdgeY;
-      correctionY = -1;
+      correctionY = Math.max(-penetratingY, -2);
     }
         
     let collisionCorrectedX = element.x + correctionX;
     let collisionCorrectedY = element.y + correctionY;
     
     // DEBUG
-    if (element === this._app.playerActor) console.log('Penetrating X: ', penetratingX, ' / Penetrating Y: ', penetratingY);
+    if (element === this._app.playerActor) console.log('penX: ', penetratingX.toFixed(2), ' / penY: ', penetratingY.toFixed(2));
     
     return {
       x: collisionCorrectedX,
@@ -150,10 +145,6 @@ class Map {
     return {
       col,
       row,
-      // left: col * size,
-      // right: col * size + size,
-      // top: col * size,
-      // bottom: col * size + size,
       ...tileType,
     };
   }
