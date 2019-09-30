@@ -61,8 +61,8 @@ class ActionMode {
     
     // Camera Controls: focus the camera on the target actor, if any.
     if (app.camera.targetActor) {
-      app.camera.x = Math.floor(this.width / 2 - app.camera.targetActor.x);
-      app.camera.y = Math.floor(this.height / 2 - app.camera.targetActor.y);
+      app.camera.x = this.width / 2 - app.camera.targetActor.x;
+      app.camera.y = this.height / 2 - app.camera.targetActor.y;
     }
   }
   
