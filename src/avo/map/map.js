@@ -20,7 +20,7 @@ class Map {
       '#   ##     #   #' +
       '#   #      #   #' +
       '#      ##      #' +
-      '#      ##      #' +
+      '#   #  ##      #' +
       '#   #      #   #' +
       '#   #      #   #' +
       '#   ###  ###   #' +
@@ -72,6 +72,21 @@ class Map {
   checkCollision (element) {
     if (!element || !element.solid) return;
     
+    // First check if there are any collisions in the cardinal directions.
+    let collisionCorrection = this.checkCollision_cardinals(element);
+    
+    // If not, check for collisions in the diagonal directions.
+    if (collisionCorrection.x === 0 && collisionCorrection.y === 0) {
+       collisionCorrection = this.checkCollision_diagonals(element);
+    }
+    
+    return {
+      x: element.x + collisionCorrection.x,
+      y: element.y + collisionCorrection.y,
+    };
+  }
+  
+  checkCollision_cardinals (element) {
     const size = this.tileSize;
     
     const leftCol = Math.floor(element.left / size);
@@ -122,16 +137,65 @@ class Map {
       penetratingY = element.bottom - tileEdgeY;
       correctionY = Math.max(-penetratingY, -GRADUAL_CORRECTION);
     }
-        
-    let collisionCorrectedX = element.x + correctionX;
-    let collisionCorrectedY = element.y + correctionY;
-    
-    // DEBUG
-    // if (element === this._app.playerActor) console.log('penX: ', penetratingX.toFixed(2), ' / penY: ', penetratingY.toFixed(2));
     
     return {
-      x: collisionCorrectedX,
-      y: collisionCorrectedY,
+      x: correctionX,
+      y: correctionY,
+    }
+  }
+  
+  checkCollision_diagonals (element) {
+    const size = this.tileSize;
+    
+    const leftCol = Math.floor(element.left / size);
+    const rightCol = Math.floor(element.right / size);
+    const topRow = Math.floor(element.top / size);
+    const bottomRow = Math.floor(element.bottom / size);
+    
+    const tileLT = this.getTile(leftCol, topRow);
+    const tileRT = this.getTile(rightCol, topRow);
+    const tileLB = this.getTile(leftCol, bottomRow);
+    const tileRB = this.getTile(rightCol, bottomRow);
+    
+    // Determine which tiles are blocking the element, and in which direction
+    // the correction needs to be done.
+    let correctionDirectionX = 0;
+    let correctionDirectionY = 0;
+    if (tileLT.wall) { correctionDirectionX++; correctionDirectionY++; }
+    if (tileRT.wall) { correctionDirectionX--; correctionDirectionY++; }
+    if (tileLB.wall) { correctionDirectionX++; correctionDirectionY--; }
+    if (tileRB.wall) { correctionDirectionX--; correctionDirectionY--; }
+    
+    let correctionX = 0;
+    let correctionY = 0;
+    if (correctionDirectionX !== 0 && correctionDirectionY !== 0) {
+      
+      let cornerX = 0;
+      let cornerY = 0;
+      
+      if (correctionDirectionX > 0) cornerX = leftCol * size + size;
+      if (correctionDirectionX < 0) cornerX = rightCol * size;
+      if (correctionDirectionY > 0) cornerY = topRow * size + size;
+      if (correctionDirectionY < 0) cornerY = bottomRow * size;
+      
+      // Assumes element is a circle.
+      
+      const distX = element.x - cornerX;
+      const distY = element.y - cornerY;
+      const dist = Math.sqrt(distX * distX + distY * distY);
+      
+      // If element's radius is too close to the corner, push the element away. 
+      if (dist < element.radius) {
+        const GRADUAL_CORRECTION = 10;
+        const angle = Math.atan2(distY, distX);
+        correctionX = element.radius / GRADUAL_CORRECTION * Math.cos(angle);
+        correctionY = element.radius / GRADUAL_CORRECTION * Math.sin(angle);
+      }
+    }
+    
+    return {
+      x: correctionX,
+      y: correctionY,
     }
   }
   
