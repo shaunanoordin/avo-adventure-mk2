@@ -9,10 +9,10 @@ class Story {
     // Assets
     app.assets.basicActor = new ImageAsset('assets/actor-v2.png');
     
-    app.playerActor = new Actor(app, { x: 32 * 4.5, y: 32 * 4.5, size: 32, animationSpritesheet: app.assets.basicActor });
+    app.playerActor = new Actor(app, { x: 32 * 4.5, y: 32 * 2.5, size: 32, animationSpritesheet: app.assets.basicActor });
     app.actors.push(app.playerActor);
     
-    const testActorA = new Actor(app, { x: 32 * 6.5, y: 32 * 4.5, size: 32, animationSpritesheet: app.assets.basicActor });
+    const testActorA = new Actor(app, { x: 32 * 6.5, y: 32 * 2.5, size: 32, animationSpritesheet: app.assets.basicActor });
     app.actors.push(testActorA);
     
     // Set camera to follow player actor

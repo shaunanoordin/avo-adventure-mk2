@@ -1,3 +1,9 @@
+const DEFAULT_TILE_TYPE = {
+  floor: false,
+  wall: false,
+  colour: '#fff',
+};
+
 class Map {
   constructor (app, initialValues) {
     this._app = app;
@@ -5,7 +11,23 @@ class Map {
     this.width = 16;
     this.height = 16;
     
-    this.tiles = [];
+    this.tiles =
+      '  ############  ' +
+      ' ##          ## ' +
+      '##            ##' +
+      '#              #' +
+      '#   ###  ###   #' +
+      '#   #      #   #' +
+      '#   #      #   #' +
+      '#      ##      #' +
+      '#      ##      #' +
+      '#   #      #   #' +
+      '#   #      #   #' +
+      '#   ###  ###   #' +
+      '#              #' +
+      '##  ########   #' +
+      ' ##          ## ' +
+      '  ############  ';
     this.tileSize = 32;
     this.tileTypes = {
       ' ': {
@@ -33,8 +55,10 @@ class Map {
     
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.height; col++) {
-        canvas.strokeStyle = '#888';
-        canvas.strokeRect(
+        const tile = this.getTile(col, row);
+        
+        canvas.fillStyle = (tile && tile.colour) || '#fff';
+        canvas.fillRect(
           Math.floor(col * size + camera.x),
           Math.floor(row * size + camera.y),
           size,
@@ -45,14 +69,16 @@ class Map {
     
   }
   
-  parseTiles (str) {
-    
-  }
-  
   getTile (col, row) {
     const index = row * this.width + col;
+    const tileValue = this.tiles[index] || '';
+    const tileType = this.tileTypes[tileValue] || DEFAULT_TILE_TYPE;
     
-    return {};
+    return {
+      col,
+      row,
+      ...tileType,
+    };
   }
 }
 
