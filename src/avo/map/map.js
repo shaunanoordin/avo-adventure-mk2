@@ -85,10 +85,6 @@ class Map {
     const tileR = this.getTile(rightCol, midRow);
     const tileT = this.getTile(midCol, topRow);
     const tileB = this.getTile(midCol, bottomRow);
-    const tileLT = this.getTile(leftCol, topRow);
-    const tileRT = this.getTile(rightCol, topRow);
-    const tileLB = this.getTile(leftCol, bottomRow);
-    const tileRB = this.getTile(rightCol, bottomRow);
     
     // Determine which tiles are blocking the element, and in which direction
     // the correction needs to be done.
@@ -98,45 +94,40 @@ class Map {
     if (tileR.wall) { correctionDirectionX--; }
     if (tileT.wall) { correctionDirectionY++; }
     if (tileB.wall) { correctionDirectionY--; }
-    //if (tileLT.wall) { correctionDirectionX++; correctionDirectionY++; }
-    //if (tileRT.wall) { correctionDirectionX--; correctionDirectionY++; }
-    //if (tileLB.wall) { correctionDirectionX++; correctionDirectionY--; }
-    //if (tileRB.wall) { correctionDirectionX--; correctionDirectionY--; }
-    
-    let correctionX = 0;
-    let correctionY = 0;
-    
-    let penetratingX = 0;
-    let penetratingY = 0;
     
     // Determine how far the correction needs to be made.
     // (i.e. determine how 'deep' the element pushed into the blocking tile.)
+    const GRADUAL_CORRECTION = 8;
+    let correctionX = 0;
+    let correctionY = 0;
+    let penetratingX = 0;
+    let penetratingY = 0;
+    
     if (correctionDirectionX > 0) {
       const tileEdgeX = leftCol * size + size;
       penetratingX = element.left - tileEdgeX;
-      correctionX = Math.min(-penetratingX, 8);
+      correctionX = Math.min(-penetratingX, GRADUAL_CORRECTION);
     } else if (correctionDirectionX < 0) {
       const tileEdgeX = rightCol * size;
       penetratingX = element.right - tileEdgeX;
-      correctionX = Math.max(-penetratingX, -8);
+      correctionX = Math.max(-penetratingX, -GRADUAL_CORRECTION);
     }
     
     if (correctionDirectionY > 0) {
       const tileEdgeY = topRow * size + size;
       penetratingY = element.top - tileEdgeY;
-      correctionY = Math.min(-penetratingY, 8);
+      correctionY = Math.min(-penetratingY, GRADUAL_CORRECTION);
     } else if (correctionDirectionY < 0) {
       const tileEdgeY = bottomRow * size;
       penetratingY = element.bottom - tileEdgeY;
-      correctionY = Math.max(-penetratingY, -8);
+      correctionY = Math.max(-penetratingY, -GRADUAL_CORRECTION);
     }
-    
         
     let collisionCorrectedX = element.x + correctionX;
     let collisionCorrectedY = element.y + correctionY;
     
     // DEBUG
-    if (element === this._app.playerActor) console.log('penX: ', penetratingX.toFixed(2), ' / penY: ', penetratingY.toFixed(2));
+    // if (element === this._app.playerActor) console.log('penX: ', penetratingX.toFixed(2), ' / penY: ', penetratingY.toFixed(2));
     
     return {
       x: collisionCorrectedX,
