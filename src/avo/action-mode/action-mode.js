@@ -154,6 +154,16 @@ class ActionMode {
       particle.pushY = 0;
     });
     
+    // Check Map tiles
+    const map = app.map;
+    app.actors.forEach(actor => {
+      let collisionCorrection = map.checkCollision(actor);
+      if (collisionCorrection) {
+        actor.x = collisionCorrection.x;
+        actor.y = collisionCorrection.y;
+      }
+    });
+    
     // Check Actor collisions
     for (let a = 0; a < app.actors.length; a++) {
       let actorA = app.actors[a];

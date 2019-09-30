@@ -25,7 +25,7 @@ class Map {
       '#   #      #   #' +
       '#   ###  ###   #' +
       '#              #' +
-      '##  ########   #' +
+      '##    ####     #' +
       ' ##          ## ' +
       '  ############  ';
     this.tileSize = 32;
@@ -67,6 +67,20 @@ class Map {
       }
     }
     
+  }
+  
+  checkCollision (element) {
+    if (!element) return;
+    
+    const tile = this.getTile(Math.floor(element.x / this.tileSize), Math.floor(element.y / this.tileSize));
+
+    // DEBUG
+    // if (element === this._app.playerActor) console.log(tile.col, tile.row);
+    
+    return {
+      x: element.x,
+      y: element.y,
+    }
   }
   
   getTile (col, row) {

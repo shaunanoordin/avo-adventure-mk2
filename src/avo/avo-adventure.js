@@ -11,7 +11,7 @@ class AvoAdventure {
     this.particles = [];
     this.assets = {};
     this.data = {};
-    this.map = new Map();
+    this.map = new Map(this);
     
     this.camera = {
       x: 0,
