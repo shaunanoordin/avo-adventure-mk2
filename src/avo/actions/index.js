@@ -1,4 +1,5 @@
 import { ACTION_TYPES, EFFECTS_STACKING } from '@avo/misc/constants';
+import { STANDARD_ANIMATIONS } from '@avo/animations';
 import Particle from '@avo/story-elements/particle';
 
 export const STANDARD_ACTIONS = {
@@ -82,19 +83,9 @@ export const STANDARD_ACTIONS = {
               }
             },
           },
-          animationScript: function (app, element, canvas, options = {}) {
-            const camera = app.camera;
-            const layer = options.layer || '';
-
-            if (!canvas) return;
-
-            // Simple shadow
-            canvas.fillStyle = 'rgba(238, 238, 204, 0.5)';
-            canvas.beginPath();
-            canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
-            canvas.fill();
-          },
+          animationScript: STANDARD_ANIMATIONS.PARTICLE,
         });
+        
         app.particles.push(particle);
 
         actor.animationName = 'attack-active';

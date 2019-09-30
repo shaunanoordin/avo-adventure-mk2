@@ -1,4 +1,4 @@
-import { MODES, SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
+import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
 import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
@@ -61,8 +61,8 @@ class ActionMode {
     
     // Camera Controls: focus the camera on the target actor, if any.
     if (app.camera.targetActor) {
-      app.camera.x = Math.floor(this.width / 2 - app.camera.targetActor.x);
-      app.camera.y = Math.floor(this.height / 2 - app.camera.targetActor.y);
+      app.camera.x = this.width / 2 - app.camera.targetActor.x;
+      app.camera.y = this.height / 2 - app.camera.targetActor.y;
     }
   }
   
@@ -71,16 +71,20 @@ class ActionMode {
     
     const app = this._app;
     const canvas2d = this.canvas2d;
+    const camera = app.camera;
     
     // Clear canvas before painting
     canvas2d.clearRect(0, 0, this.width, this.height);
     
+    // Paint the map (floor)
+    app.map && app.map.paint(canvas2d, camera, {});
+    
     // Paint each Story Element
     app.particles.forEach(particle => {
-      particle.paint(MODES.ACTION, canvas2d, {});
+      particle.paint(canvas2d, camera, {});
     });
     app.actors.forEach(actor => {
-      actor.paint(MODES.ACTION, canvas2d, {});
+      actor.paint(canvas2d, camera, {});
     });
     
   }
@@ -148,6 +152,16 @@ class ActionMode {
       particle.y += particle.pushY;
       particle.pushX = 0;
       particle.pushY = 0;
+    });
+    
+    // Check Map tiles
+    const map = app.map;
+    app.actors.forEach(actor => {
+      let collisionCorrection = map.checkCollision(actor);
+      if (collisionCorrection) {
+        actor.x = collisionCorrection.x;
+        actor.y = collisionCorrection.y;
+      }
     });
     
     // Check Actor collisions

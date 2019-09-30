@@ -1,5 +1,6 @@
 import ActionMode from '@avo/action-mode';
 import Story from '@avo/story';
+import Map from '@avo/map';
 import { FRAMES_PER_SECOND, MODES } from '@avo/misc/constants';
 
 class AvoAdventure {
@@ -10,6 +11,7 @@ class AvoAdventure {
     this.particles = [];
     this.assets = {};
     this.data = {};
+    this.map = new Map(this);
     
     this.camera = {
       x: 0,
