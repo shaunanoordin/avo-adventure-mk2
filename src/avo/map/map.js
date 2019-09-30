@@ -97,42 +97,41 @@ class Map {
     let correctionX = 0;
     let correctionY = 0;
     
+    let penetratingX = 0;
+    let penetratingY = 0;
+    
     // Determine how far the correction needs to be made.
     // (i.e. determine how 'deep' the element pushed into the blocking tile.)
     if (correctionDirectionX > 0) {
       const tileEdgeX = leftCol * size + size;
-      correctionX = tileEdgeX - element.left;
+      // correctionX = tileEdgeX - element.left;
+      penetratingX = element.left - 
+        tileEdgeX;
+      correctionX = 1;
     } else if (correctionDirectionX < 0) {
       const tileEdgeX = rightCol * size;
-      correctionX = tileEdgeX - element.right;
+      // correctionX = tileEdgeX - element.right;
+      penetratingX = element.right - tileEdgeX;
+      correctionX = -1;
     }
     
     if (correctionDirectionY > 0) {
       const tileEdgeY = topRow * size + size;
-      correctionY = tileEdgeY - element.top;
+      // correctionY = tileEdgeY - element.top;
+      penetratingY = element.top - tileEdgeY;
+      correctionY = 1;
     } else if (correctionDirectionY < 0) {
       const tileEdgeY = bottomRow * size;
-      correctionY = tileEdgeY - element.bottom;
+      // correctionY = tileEdgeY - element.bottom;
+      penetratingY = element.bottom - tileEdgeY;
+      correctionY = -1;
     }
-    
-    // Only correct on one axis at a time.
-    const correctionXmagnitude = Math.abs(correctionX);
-    const correctionYmagnitude = Math.abs(correctionY);
-    
-    // DEBUG
-    if (element === this._app.playerActor)
-      console.log('x: ', correctionX, ' || y: ', correctionY);
-    
-    if (correctionXmagnitude > 0 && correctionYmagnitude > 0) {
-      if (correctionXmagnitude > correctionYmagnitude) correctionX = 0;
-      else if (correctionXmagnitude < correctionYmagnitude) correctionY = 0;
-    }
-    
+        
     let collisionCorrectedX = element.x + correctionX;
     let collisionCorrectedY = element.y + correctionY;
     
     // DEBUG
-    // if (element === this._app.playerActor) console.log(tileLT.wall);
+    if (element === this._app.playerActor) console.log('Penetrating X: ', penetratingX, ' / Penetrating Y: ', penetratingY);
     
     return {
       x: collisionCorrectedX,
@@ -141,7 +140,9 @@ class Map {
   }
   
   getTile (col, row) {
-    const index = row * this.width + col;
+    const index = (col >= 0 && col < this.width && row >= 0 && row < this.height)
+      ? row * this.width + col
+      : undefined;
     const size = this.tileSize;
     const tileValue = this.tiles[index] || '';
     const tileType = this.tileTypes[tileValue] || DEFAULT_TILE_TYPE;
