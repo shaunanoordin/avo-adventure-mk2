@@ -52,15 +52,14 @@ class Map {
     
     if (!canvas || !camera) return;
     
-    
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.height; col++) {
         const tile = this.getTile(col, row);
         
         canvas.fillStyle = (tile && tile.colour) || '#fff';
         canvas.fillRect(
-          Math.floor(col * size + camera.x),
-          Math.floor(row * size + camera.y),
+          col * size + Math.floor(camera.x),
+          row * size + Math.floor(camera.y),
           size,
           size
         );
@@ -112,36 +111,44 @@ class Map {
     
     // Determine how far the correction needs to be made.
     // (i.e. determine how 'deep' the element pushed into the blocking tile.)
-    const GRADUAL_CORRECTION = 8;
     let correctionX = 0;
     let correctionY = 0;
-    let penetratingX = 0;
-    let penetratingY = 0;
     
     if (correctionDirectionX > 0) {
       const tileEdgeX = leftCol * size + size;
-      penetratingX = element.left - tileEdgeX;
-      correctionX = Math.min(-penetratingX, GRADUAL_CORRECTION);
+      correctionX = tileEdgeX - element.left;
     } else if (correctionDirectionX < 0) {
       const tileEdgeX = rightCol * size;
-      penetratingX = element.right - tileEdgeX;
-      correctionX = Math.max(-penetratingX, -GRADUAL_CORRECTION);
+      correctionX = tileEdgeX - element.right;
     }
     
     if (correctionDirectionY > 0) {
       const tileEdgeY = topRow * size + size;
-      penetratingY = element.top - tileEdgeY;
-      correctionY = Math.min(-penetratingY, GRADUAL_CORRECTION);
+      correctionY = tileEdgeY - element.top;
     } else if (correctionDirectionY < 0) {
       const tileEdgeY = bottomRow * size;
-      penetratingY = element.bottom - tileEdgeY;
-      correctionY = Math.max(-penetratingY, -GRADUAL_CORRECTION);
+      correctionY = tileEdgeY - element.bottom;
     }
     
     return {
       x: correctionX,
       y: correctionY,
     }
+    
+    // Note: previously, before we had checkCollision_diagonals(), we had a
+    // 'gradual correction' code that pushed the element out of the wall bit
+    // by bit to avoid a sudden repositioning of the element.
+    // Weakness: if the element's movement speed exceeds the GRADUAL_CORRECTION
+    // value, the element can just jog through the wall. If the
+    // GRADUAL_CORRECTION was too high, we'd just repeat the sudden
+    // repositioning problem.
+    //
+    // const GRADUAL_CORRECTION = 8;
+    // if (correctionDirectionX > 0) {
+    //    const tileEdgeX = leftCol * size + size;
+    //    const penetratingX = element.left - tileEdgeX;
+    //    correctionX = Math.min(-penetratingX, GRADUAL_CORRECTION);
+    // }
   }
   
   checkCollision_diagonals (element) {
