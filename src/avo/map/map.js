@@ -70,16 +70,32 @@ class Map {
   }
   
   checkCollision (element) {
-    if (!element) return;
+    if (!element || !element.solid) return;
     
-    const tile = this.getTile(Math.floor(element.x / this.tileSize), Math.floor(element.y / this.tileSize));
+    const tileLT = this.getTile(Math.floor(element.left / this.tileSize),
+                                Math.floor(element.top / this.tileSize));
+    const tileRT = this.getTile(Math.floor(element.right / this.tileSize),
+                                Math.floor(element.top / this.tileSize));
+    const tileLB = this.getTile(Math.floor(element.left / this.tileSize),
+                                Math.floor(element.bottom / this.tileSize));
+    const tileRB = this.getTile(Math.floor(element.right / this.tileSize),
+                                Math.floor(element.bottom / this.tileSize));
+    
+    let correctionX = 0;
+    let correctionY = 0;
+    
+    if (tileLT.wall) { correctionX++; correctionY++; }
+    if (tileRT.wall) { correctionX--; correctionY++; }
+    if (tileLB.wall) { correctionX++; correctionY--; }
+    if (tileRB.wall) { correctionX--; correctionY--; }
+    
 
     // DEBUG
-    // if (element === this._app.playerActor) console.log(tile.col, tile.row);
+    // if (element === this._app.playerActor) console.log(tileLT.wall);
     
     return {
-      x: element.x,
-      y: element.y,
+      x: element.x + correctionX,
+      y: element.y + correctionY,
     }
   }
   
