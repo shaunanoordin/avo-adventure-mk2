@@ -98,12 +98,10 @@ class Map {
     if (tileR.wall) { correctionDirectionX--; }
     if (tileT.wall) { correctionDirectionY++; }
     if (tileB.wall) { correctionDirectionY--; }
-    /*
-    if (tileLT.wall) { correctionDirectionX++; correctionDirectionY++; }
-    if (tileRT.wall) { correctionDirectionX--; correctionDirectionY++; }
-    if (tileLB.wall) { correctionDirectionX++; correctionDirectionY--; }
-    if (tileRB.wall) { correctionDirectionX--; correctionDirectionY--; }
-    */
+    //if (tileLT.wall) { correctionDirectionX++; correctionDirectionY++; }
+    //if (tileRT.wall) { correctionDirectionX--; correctionDirectionY++; }
+    //if (tileLB.wall) { correctionDirectionX++; correctionDirectionY--; }
+    //if (tileRB.wall) { correctionDirectionX--; correctionDirectionY--; }
     
     let correctionX = 0;
     let correctionY = 0;
@@ -116,22 +114,23 @@ class Map {
     if (correctionDirectionX > 0) {
       const tileEdgeX = leftCol * size + size;
       penetratingX = element.left - tileEdgeX;
-      correctionX = Math.min(-penetratingX, 2);
+      correctionX = Math.min(-penetratingX, 8);
     } else if (correctionDirectionX < 0) {
       const tileEdgeX = rightCol * size;
       penetratingX = element.right - tileEdgeX;
-      correctionX = Math.max(-penetratingX, -2);
+      correctionX = Math.max(-penetratingX, -8);
     }
     
     if (correctionDirectionY > 0) {
       const tileEdgeY = topRow * size + size;
       penetratingY = element.top - tileEdgeY;
-      correctionY = Math.min(-penetratingY, 2);
+      correctionY = Math.min(-penetratingY, 8);
     } else if (correctionDirectionY < 0) {
       const tileEdgeY = bottomRow * size;
       penetratingY = element.bottom - tileEdgeY;
-      correctionY = Math.max(-penetratingY, -2);
+      correctionY = Math.max(-penetratingY, -8);
     }
+    
         
     let collisionCorrectedX = element.x + correctionX;
     let collisionCorrectedY = element.y + correctionY;
