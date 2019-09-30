@@ -1,4 +1,4 @@
-import { MODES, ROTATIONS, DIRECTIONS, SHAPES } from '@avo/misc/constants';
+import { ROTATIONS, DIRECTIONS, SHAPES } from '@avo/misc/constants';
 
 class StoryElement {
   // TODO: rename to just 'Element' or 'Entity'?
@@ -40,12 +40,10 @@ class StoryElement {
   
   play () {}
   
-  paint (mode, canvas, camera, options = {}) {
+  paint (canvas, camera, options = {}) {
     // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
     
-    if (mode === MODES.ACTION) {
-      this.animationScript && this.animationScript(this._app, this, canvas, camera, options);
-    }
+    this.animationScript && this.animationScript(this._app, this, canvas, camera, options);
   }
   
   get left () { return this.x - this.size / 2; }

@@ -1,4 +1,4 @@
-import { MODES, SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
+import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
 import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
@@ -77,14 +77,14 @@ class ActionMode {
     canvas2d.clearRect(0, 0, this.width, this.height);
     
     // Paint the map (floor)
-    app.map && app.map.paint(MODES.ACTION, canvas2d, camera, {});
+    app.map && app.map.paint(canvas2d, camera, {});
     
     // Paint each Story Element
     app.particles.forEach(particle => {
-      particle.paint(MODES.ACTION, canvas2d, camera, {});
+      particle.paint(canvas2d, camera, {});
     });
     app.actors.forEach(actor => {
-      actor.paint(MODES.ACTION, canvas2d, camera, {});
+      actor.paint(canvas2d, camera, {});
     });
     
   }
