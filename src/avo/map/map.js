@@ -6,7 +6,7 @@ class Map {
     this.height = 16;
     
     this.tiles = [];
-    this.tileSize = 64;
+    this.tileSize = 32;
     this.tileTypes = {
       ' ': {
         floor: true,
@@ -24,7 +24,24 @@ class Map {
     Object.assign(this, initialValues);
   }
   
-  paint () {
+  paint (canvas, camera, options = {}) {
+    const app = this._app;
+    const size = this.tileSize;
+    
+    if (!canvas || !camera) return;
+    
+    
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.height; col++) {
+        canvas.strokeStyle = '#888';
+        canvas.strokeRect(
+          Math.floor(col * size + camera.x),
+          Math.floor(row * size + camera.y),
+          size,
+          size
+        );
+      }
+    }
     
   }
   
