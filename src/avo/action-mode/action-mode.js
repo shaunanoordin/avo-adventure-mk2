@@ -71,19 +71,20 @@ class ActionMode {
     
     const app = this._app;
     const canvas2d = this.canvas2d;
+    const camera = app.camera;
     
     // Clear canvas before painting
     canvas2d.clearRect(0, 0, this.width, this.height);
     
     // Paint the map (floor)
-    app.map && app.map.paint(MODES.ACTION, canvas2d, {});
+    app.map && app.map.paint(MODES.ACTION, canvas2d, camera, {});
     
     // Paint each Story Element
     app.particles.forEach(particle => {
-      particle.paint(MODES.ACTION, canvas2d, {});
+      particle.paint(MODES.ACTION, canvas2d, camera, {});
     });
     app.actors.forEach(actor => {
-      actor.paint(MODES.ACTION, canvas2d, {});
+      actor.paint(MODES.ACTION, canvas2d, camera, {});
     });
     
   }

@@ -40,11 +40,11 @@ class StoryElement {
   
   play () {}
   
-  paint (mode, canvas, options = {}) {
+  paint (mode, canvas, camera, options = {}) {
     // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
     
     if (mode === MODES.ACTION) {
-      this.animationScript && this.animationScript(this._app, this, canvas, options);
+      this.animationScript && this.animationScript(this._app, this, canvas, camera, options);
     }
   }
   

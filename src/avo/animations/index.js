@@ -1,12 +1,10 @@
 import { DIRECTIONS } from '@avo/misc/constants';
 
 export const STANDARD_ANIMATIONS = {
-  ACTOR: function (app, element, canvas, options = {}) {
-      
-    const camera = app.camera;
+  ACTOR: function (app, element, canvas, camera, options = {}) {
     const layer = options.layer || '';
 
-    if (!canvas) return;
+    if (!canvas || !camera) return;
 
     // Simple shadow
     canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -111,5 +109,17 @@ export const STANDARD_ANIMATIONS = {
                     Math.floor(element.x + camera.x) + element.size / 3,
                     Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
     // --------
+  },
+  
+  PARTICLE: function (app, element, canvas, camera, options = {}) {
+    const layer = options.layer || '';
+
+    if (!canvas || !camera) return;
+
+    // Simple shadow
+    canvas.fillStyle = 'rgba(238, 238, 204, 0.5)';
+    canvas.beginPath();
+    canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
+    canvas.fill();
   },
 };
