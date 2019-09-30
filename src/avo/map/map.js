@@ -75,24 +75,35 @@ class Map {
     const size = this.tileSize;
     
     const leftCol = Math.floor(element.left / size);
+    const midCol = Math.floor(element.x / size);
     const rightCol = Math.floor(element.right / size);
-    const topRow = Math.floor(element.top / size)
-    const bottomRow = Math.floor(element.bottom / size)
+    const topRow = Math.floor(element.top / size);
+    const midRow = Math.floor(element.y / size);
+    const bottomRow = Math.floor(element.bottom / size);
     
+    const tileL = this.getTile(leftCol, midRow);
+    const tileR = this.getTile(rightCol, midRow);
+    const tileT = this.getTile(midCol, topRow);
+    const tileB = this.getTile(midCol, bottomRow);
     const tileLT = this.getTile(leftCol, topRow);
     const tileRT = this.getTile(rightCol, topRow);
     const tileLB = this.getTile(leftCol, bottomRow);
     const tileRB = this.getTile(rightCol, bottomRow);
     
-    let correctionDirectionX = 0;
-    let correctionDirectionY = 0;
-    
     // Determine which tiles are blocking the element, and in which direction
     // the correction needs to be done.
+    let correctionDirectionX = 0;
+    let correctionDirectionY = 0;
+    if (tileL.wall) { correctionDirectionX++; }
+    if (tileR.wall) { correctionDirectionX--; }
+    if (tileT.wall) { correctionDirectionY++; }
+    if (tileB.wall) { correctionDirectionY--; }
+    /*
     if (tileLT.wall) { correctionDirectionX++; correctionDirectionY++; }
     if (tileRT.wall) { correctionDirectionX--; correctionDirectionY++; }
     if (tileLB.wall) { correctionDirectionX++; correctionDirectionY--; }
     if (tileRB.wall) { correctionDirectionX--; correctionDirectionY--; }
+    */
     
     let correctionX = 0;
     let correctionY = 0;
