@@ -193,10 +193,9 @@ class Map {
       
       // If element's radius is too close to the corner, push the element away. 
       if (dist < element.radius) {
-        const GRADUAL_CORRECTION = 10;
         const angle = Math.atan2(distY, distX);
-        correctionX = element.radius / GRADUAL_CORRECTION * Math.cos(angle);
-        correctionY = element.radius / GRADUAL_CORRECTION * Math.sin(angle);
+        correctionX = (element.radius - dist) * Math.cos(angle);
+        correctionY = (element.radius - dist) * Math.sin(angle);
       }
     }
     
