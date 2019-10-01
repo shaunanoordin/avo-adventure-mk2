@@ -29,6 +29,7 @@ class Actor extends StoryElement {
       'idle': STANDARD_ACTIONS.IDLE,
       'move': STANDARD_ACTIONS.MOVE,
       'attack': STANDARD_ACTIONS.ATTACK,
+      'dash': STANDARD_ACTIONS.DASH,
     };
     
     this.scripts = {

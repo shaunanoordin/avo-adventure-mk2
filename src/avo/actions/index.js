@@ -97,4 +97,19 @@ export const STANDARD_ACTIONS = {
       }
     }
   },
+  
+  DASH: {
+    type: ACTION_TYPES.STANDARD,
+    steps: 6,
+    script: function (app, actor, action, actionAttr, step) {
+      actor.animationName = 'dash';
+      
+      const power = (actor.stats.maxSpeed)
+        ? actor.stats.maxSpeed * 3  * (6 - step) / 6
+        : 0;
+      actor.pushX += power * Math.cos(actor.rotation);
+      actor.pushY += power * Math.sin(actor.rotation);
+
+    }
+  },
 };

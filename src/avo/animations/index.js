@@ -62,6 +62,7 @@ export const STANDARD_ANIMATIONS = {
         case 'attack-windup': srcY = SPRITE_SIZE * 4; break;
         case 'attack-active': srcY = SPRITE_SIZE * 5; break;
         case 'attack-winddown': srcY = SPRITE_SIZE * 5; break;
+        case 'dash': srcY = SPRITE_SIZE * 1; break;
       }
 
       const tgtSizeX = SPRITE_SIZE;
