@@ -116,9 +116,13 @@ class ActionMode {
       if (this.keysPressed['ArrowLeft']) moveX--;
       if (this.keysPressed['ArrowUp']) moveY--;
       
-      if (this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
+      if (this.keysPressed['z'] === SHORT_KEYPRESS_DURATION || this.keysPressed['Z'] === SHORT_KEYPRESS_DURATION || this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
         playerActor.intent = {
           name: 'attack'
+        };
+      } else if (this.keysPressed['x'] === SHORT_KEYPRESS_DURATION || this.keysPressed['X'] === SHORT_KEYPRESS_DURATION || this.keysPressed['Shift'] === SHORT_KEYPRESS_DURATION) {
+        playerActor.intent = {
+          name: 'dash'
         };
       } else if (moveX || moveY) {
         playerActor.intent = {
