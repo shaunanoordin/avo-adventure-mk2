@@ -1,4 +1,5 @@
 import ActionMode from '@avo/action-mode';
+import InteractionMode from '@avo/interaction-mode';
 import Story from '@avo/story';
 import Map from '@avo/map';
 import { FRAMES_PER_SECOND, MODES } from '@avo/misc/constants';
@@ -21,6 +22,7 @@ class AvoAdventure {
     this.playerActor = null;
     
     this.actionMode = new ActionMode(this);
+    this.interactionMode = new InteractionMode(this);
     
     // Initialise the story
     this.story = story || new Story(this);
@@ -30,9 +32,11 @@ class AvoAdventure {
   }
   
   changeMode (newMode) {
-    if (this.mode === MODES.ACTION) this.actionMode.unload(this);
+    if (this.mode === MODES.ACTION) this.actionMode.unload();
+    if (this.mode === MODES.INTERACTION) this.interactionMode.unload();
     
-    if (newMode === MODES.ACTION) this.actionMode.load(this);
+    if (newMode === MODES.ACTION) this.actionMode.load();
+    if (newMode === MODES.INTERACTION) this.interactionMode.load();
     
     this.mode = newMode;
   }

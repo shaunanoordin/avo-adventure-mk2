@@ -1,4 +1,4 @@
-import { SHORT_KEYPRESS_DURATION } from '@avo/misc/constants';
+import { SHORT_KEYPRESS_DURATION, MODES } from '@avo/misc/constants';
 import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
@@ -54,16 +54,22 @@ class ActionMode {
     
     this.processPhysics();
     
-    // Increment the duration of each currently pressed key
-    Object.keys(this.keysPressed).forEach(key => {
-      if (this.keysPressed[key]) this.keysPressed[key]++;
-    })
-    
     // Camera Controls: focus the camera on the target actor, if any.
     if (app.camera.targetActor) {
       app.camera.x = this.width / 2 - app.camera.targetActor.x;
       app.camera.y = this.height / 2 - app.camera.targetActor.y;
     }
+    
+    // DEBUG // TEST
+    if (this.keysPressed['Escape'] === SHORT_KEYPRESS_DURATION) {
+      this.resetKeysPressed();
+      app.changeMode(MODES.INTERACTION);
+    }
+    
+    // Increment the duration of each currently pressed key
+    Object.keys(this.keysPressed).forEach(key => {
+      if (this.keysPressed[key]) this.keysPressed[key]++;
+    })
   }
   
   paint () {
@@ -101,7 +107,13 @@ class ActionMode {
     this.keysPressed[e.key] = undefined;
   }
   
-  processPlayerInput() {
+  resetKeysPressed () {
+    Object.keys(this.keysPressed).forEach((key) => {
+      this.keysPressed[key] = undefined;
+    })
+  }
+  
+  processPlayerInput () {
     const app = this._app;
     const playerActor = app.playerActor;
     
