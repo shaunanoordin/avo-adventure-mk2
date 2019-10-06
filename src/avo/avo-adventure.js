@@ -7,6 +7,7 @@ import { FRAMES_PER_SECOND, MODES } from '@avo/misc/constants';
 class AvoAdventure {
   constructor (story) {
     this.mode = MODES.INITIALISING;
+    this.nextMode = undefined;  // When asked to change modes, it's queued instead of instant.
     
     this.actors = [];
     this.particles = [];
@@ -31,20 +32,26 @@ class AvoAdventure {
     this.main();
   }
   
-  changeMode (newMode) {
+  changeMode (nextMode) {
+    this.nextMode = nextMode;
+  }
+  
+  _changeMode () {
     if (this.mode === MODES.ACTION) this.actionMode.unload();
     if (this.mode === MODES.INTERACTION) this.interactionMode.unload();
     
-    if (newMode === MODES.ACTION) this.actionMode.load();
-    if (newMode === MODES.INTERACTION) this.interactionMode.load();
+    if (this.nextMode === MODES.ACTION) this.actionMode.load();
+    if (this.nextMode === MODES.INTERACTION) this.interactionMode.load();
     
-    this.mode = newMode;
+    this.mode = this.nextMode;
+    this.nextMode = undefined;
   }
   
   /*  Each main step is a 'frame' in the game
    */
   main () {
-    if  (this.mode === MODES.INITIALISING) this.startStoryIfReady();
+    if (this.mode === MODES.INITIALISING) this.startStoryIfReady();
+    if (this.nextMode) this._changeMode()
     
     // Run game logic and update game visuals
     // Note: gameplay and visual frames are tied.
