@@ -54,6 +54,9 @@ a:hover {
 #app > main {
   flex: 1 1 auto;
   background: #fff;
+  position: relative;
+  width: 640px;
+  height: 480px;
 }
 
 #app #action-mode {
@@ -62,6 +65,20 @@ a:hover {
   image-rendering: pixelated;
   width: 640px;
   height: 480px;
+}
+
+#app #interaction-mode {
+  display: none;
+  position: absolute;
+  overflow: auto;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: 640px;
+  height: 480px;
+}
+#app #interaction-mode.active {
+  display: block;
 }
 
 /*# sourceMappingURL=main.css.map */

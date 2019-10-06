@@ -4,7 +4,7 @@ export const SHORT_KEYPRESS_DURATION = 1;
 export const MODES = {
   INITIALISING: 'initialising',
   ACTION: 'action',
-  CYOA: 'choose your own adventure',  // TODO: change this to 'NOVEL'
+  INTERACTION: 'interaction',
 };
 
 export const SHAPES = {

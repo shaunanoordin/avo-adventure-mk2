@@ -9,6 +9,9 @@ $black: #000;
 $red: #c44;
 $red-highlight: #e66;
 
+$width: 640px;
+$height: 480px;
+
 * {
   box-sizing: border-box;
 }
@@ -66,12 +69,30 @@ a {
 #app > main {
   flex: 1 1 auto;
   background: $white;
+  position: relative;
+  width: $width;
+  height: $height;
 }
 
 #app #action-mode {
   display: block;
   image-rendering: crisp-edges;
   image-rendering: pixelated;
-  width: 640px;
-  height: 480px;
+  width: $width;
+  height: $height;
+}
+
+#app #interaction-mode {
+  display: none;
+  position: absolute;
+  overflow: auto;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  width: $width;
+  height: $height;
+  
+  &.active {
+    display: block;
+  }
 }
