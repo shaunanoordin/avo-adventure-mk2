@@ -21,6 +21,11 @@ class Interaction {
     }
     panel.appendChild(closeButton);
     
+    const simpleText = document.createElement('div');
+    simpleText.textContent = 'MAIN MENU';
+    simpleText.style.padding = '1em';
+    simpleText.style.background = '#fff';
+    panel.appendChild(simpleText);
   }
   
   unload () {
