@@ -27,7 +27,9 @@ class ActionMode {
     this.focus();    
   }
   
-  unload () {}
+  unload () {
+    this.resetKeysPressed();
+  }
   
   focus () {
     this.html.focus();
@@ -62,7 +64,6 @@ class ActionMode {
     
     // DEBUG // TEST
     if (this.keysPressed['Escape'] === SHORT_KEYPRESS_DURATION) {
-      this.resetKeysPressed();
       app.changeMode(MODES.INTERACTION);
     }
     

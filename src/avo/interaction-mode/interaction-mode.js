@@ -1,24 +1,16 @@
-import { MODES } from '@avo/misc/constants';
+import Interaction from '@avo/interactions';
 
 class InteractionMode {
   constructor (app) {
     this._app = app;
     
     this.html = document.getElementById('interaction-mode');
+    this.interaction = new Interaction(this._app);
   }
   
   load () {
-    this.html.className = 'active';
-    
-    // TEST
-    this.emptyHtml();
-    const closeButton = document.createElement('button');
-    closeButton.textContent = 'CLOSE';
-    closeButton.onclick = () => {
-      this._app.changeMode(MODES.ACTION);
-    }
-    this.addHtml(closeButton);
-    
+    this.html.className = 'active';    
+    this.interaction && this.interaction.load();
     this.focus();
   }
   
@@ -27,18 +19,14 @@ class InteractionMode {
   }
   
   focus () {
-    // TEST
-    const buttons = this.html.getElementsByTagName('button');
-    if (buttons[0]) {
-      buttons[0].focus();
-    }
+    this.interaction && this.interaction.focus();
   }
   
-  addHtml (node) {
+  add (node) {
     this.html.appendChild(node);
   }
   
-  emptyHtml () {
+  empty () {
     while (this.html.firstChild) { this.html.removeChild(this.html.firstChild) }
   }
 }
