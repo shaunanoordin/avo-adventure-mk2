@@ -33,7 +33,7 @@ class Actor extends StoryElement {
     };
     
     this.scripts = {
-      'always': function (app, actor) {},
+      'always': function ({ app, actor, timeStep }) {},
     };
     
     this.reactions = {
@@ -51,13 +51,13 @@ class Actor extends StoryElement {
     const app = this._app;
     
     // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always(app, this);
+    this.scripts.always && this.scripts.always({ app, actor: this, timeStep });
     
     // TODO: copy processEffects to Particles, too.
     
-    this.processEffects();
+    this.processEffects(timeStep);
     this.processIntent();
-    this.processActions();
+    this.processActions(timeStep);
     
     // TODO // TEMP - move this into this.scripts.always() ?
     if (this.stats.health <= 0) { this._expired = true }
@@ -118,7 +118,7 @@ class Actor extends StoryElement {
     this.actionAttr = {};
   }
   
-  processEffects () {
+  processEffects (timeStep) {
     const app = this._app;
     
     this.effects.forEach(effect => {
@@ -126,11 +126,11 @@ class Actor extends StoryElement {
       
       // For each active Effect, run a reaction.
       if (effect.duration > 0) {
-        reaction.always && reaction.always(app, this, effect);
+        reaction.always && reaction.always({ app, actor: this, effect, timeStep});
       }
       
       // Effects should decay (unless duration === Infinity, of course) 
-      effect.duration --;
+      effect.duration -= timeStep;
       
       // Prepare to end any old effects.
       if (effect.duration <= 0) reaction.onRemove && reaction.onRemove(app, this, effect);
@@ -140,7 +140,7 @@ class Actor extends StoryElement {
     this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
-  processActions () {
+  processActions (timeStep) {
     const app = this._app;
     const action = this.actions[this.actionName]
     if (!action) return;

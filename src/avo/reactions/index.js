@@ -1,15 +1,15 @@
 export const STANDARD_REACTIONS = {
   
   DAMAGE: {
-    onAdd: function (app, actor, effect) {},
-    always: function (app, actor, effect) {},
-    onRemove: function (app, actor, effect) {},
+    onAdd: function ({ app, actor, effect }) {},
+    always: function ({ app, actor, effect }) {},
+    onRemove: function ({ app, actor, effect }) {},
   },
   
   PUSH: {
-    onAdd: function (app, actor, effect) { console.log('NEW PUSH!') },
+    onAdd: function ({ app, actor, effect }) { console.log('NEW PUSH!') },
     
-    always: function (app, actor, effect) {
+    always: function ({ app, actor, effect, timeStep }) {  // TODO: change name of 'actor' to 'entity'
       const power = effect.attr && effect.attr.power || 0;
       const angle = effect.attr && effect.attr.angle || 0;
       actor.pushX += power * Math.cos(angle);

@@ -54,18 +54,18 @@ export const STANDARD_ACTIONS = {
           x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
           y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
           size: actor.size * 1,
-          duration: 5,
+          duration: 1000,
           source: actor,
           ignoreSource: true,
           stats: {
             attackPower: 20,
             pushPower: 8,
             pushAngle: actor.rotation,
-            pushDuration: 6,
+            pushDuration: 1000,
             pushDecay: 1,
           },
           scripts: {
-            'collision': function (app, particle, target) {
+            'collision': function ({ app, particle, target }) {
               if (target && target.stats) {
                 target.stats.health = Math.max((target.stats.health || 0) - particle.stats.attackPower, 0);
 
