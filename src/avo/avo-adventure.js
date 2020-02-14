@@ -28,8 +28,8 @@ class AvoAdventure {
     // Initialise the story
     this.story = story || new Story(this);
     
-    this.nextFrame = null;
-    this.main();
+    this.prevTime = null;
+    this.nextFrame = window.requestAnimationFrame(this.main.bind(this));
   }
   
   changeMode (nextMode) {
@@ -49,29 +49,32 @@ class AvoAdventure {
   
   /*  Each main step is a 'frame' in the game
    */
-  main () {
+  main (time) {
+    const timeStep = (this.prevTime) ? time - this.prevTime : time;
+    this.prevTime = time;
+    
     if (this.mode === MODES.INITIALISING) this.startStoryIfReady();
     if (this.nextMode) this._changeMode()
     
     // Run game logic and update game visuals
     // Note: gameplay and visual frames are tied.
-    this.play();
+    this.play(timeStep);
     this.paint();
     this.cleanUp();
     
-    this.nextFrame = setTimeout(this.main.bind(this), 1000 / FRAMES_PER_SECOND);
+    this.nextFrame = window.requestAnimationFrame(this.main.bind(this));
   }
   
   /*  Run game logic
    */
-  play () {
+  play (timeStep) {
     const story = this.story;
     
     if (!story.skipPlay()) {
-      if (this.mode === MODES.ACTION) this.actionMode.play(this);
+      if (this.mode === MODES.ACTION) this.actionMode.play(timeStep);
     }
     
-    story.customPlay(this);
+    story.customPlay(timeStep);
   }
 
   /*  Update game visuals
@@ -80,10 +83,10 @@ class AvoAdventure {
     const story = this.story;
     
     if (!story.skipPaint()) {
-      if (this.mode === MODES.ACTION) this.actionMode.paint(this);
+      if (this.mode === MODES.ACTION) this.actionMode.paint();
     }
 
-    story.customPaint(this);
+    story.customPaint();
   }
   
   /*  Remove expired elements

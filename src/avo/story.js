@@ -30,7 +30,7 @@ class Story {
   }
   
   skipPlay () { return false }
-  customPlay () {}
+  customPlay (timeStep) {}
   
   skipPaint () { return false }
   customPaint () {}

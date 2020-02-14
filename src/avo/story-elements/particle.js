@@ -30,7 +30,7 @@ class Particle extends StoryElement {
     Object.assign(this, initialValues);
   }
   
-  play () {
+  play (timeStep) {
     const app = this._app;
     
     // Run script: "always execute on every frame"
