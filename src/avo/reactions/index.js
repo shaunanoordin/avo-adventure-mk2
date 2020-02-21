@@ -11,12 +11,10 @@ export const STANDARD_REACTIONS = {
     
     always: function ({ app, element, effect, timeStep }) {
       
-      //TODO: Calculate how timeStep factors into the push's decay
-      
       const power = effect.attr && effect.attr.power || 0;
       const angle = effect.attr && effect.attr.angle || 0;
-      element.pushX += power * Math.cos(angle);
-      element.pushY += power * Math.sin(angle);
+      element.pushX += power * timeStep / 1000 * Math.cos(angle);
+      element.pushY += power * timeStep / 1000 * Math.sin(angle);
 
       if (effect.attr.decay && effect.attr.power) {
         effect.attr.power = Math.max(effect.attr.power - effect.attr.decay * timeStep / 1000, 0);

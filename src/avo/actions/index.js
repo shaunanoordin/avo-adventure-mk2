@@ -15,6 +15,8 @@ export const STANDARD_ACTIONS = {
     type: ACTION_TYPES.CONTINUOUS,
     duration: 500,
     script: function ({ app, element, action, actionAttr, completion }) {
+      // TODO: calculate how much a user
+      
       const acceleration = element.stats.acceleration || 0;
 
       const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
@@ -62,10 +64,10 @@ export const STANDARD_ACTIONS = {
           ignoreSource: true,
           stats: {
             attackPower: 20,
-            pushPower: 8,
+            pushPower: 100,
             pushAngle: element.rotation,
             pushDuration: 1000,
-            pushDecay: 50,
+            pushDecay: 100,
           },
           scripts: {
             'collision': function ({ app, element, target }) {
