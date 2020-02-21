@@ -145,7 +145,7 @@ class Actor extends StoryElement {
     const action = this.actions[this.actionName]
     if (!action) return;
     
-    action.script(app, this, action, this.actionAttr, this.actionStep);
+    action.script({ app, element: this, action, actionAttr: this.actionAttr, step: this.actionStep });
     
     this.actionStep += 1;
     

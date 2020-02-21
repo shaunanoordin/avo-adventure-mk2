@@ -10,6 +10,9 @@ export const STANDARD_REACTIONS = {
     onAdd: function ({ app, element, effect }) { console.log('NEW PUSH!') },
     
     always: function ({ app, element, effect, timeStep }) {
+      
+      //TODO: Calculate how timeStep factors into the push's decay
+      
       const power = effect.attr && effect.attr.power || 0;
       const angle = effect.attr && effect.attr.angle || 0;
       element.pushX += power * Math.cos(angle);
