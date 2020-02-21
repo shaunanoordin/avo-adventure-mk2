@@ -65,7 +65,7 @@ export const STANDARD_ACTIONS = {
             pushDecay: 1,
           },
           scripts: {
-            'collision': function ({ app, particle, target }) {
+            'collision': function ({ app, element, target }) {
               if (target && target.stats) {
                 target.stats.health = Math.max((target.stats.health || 0) - particle.stats.attackPower, 0);
 

@@ -34,7 +34,7 @@ class Particle extends StoryElement {
     const app = this._app;
     
     // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, particle: this, timeStep });
+    this.scripts.always && this.scripts.always({ app, element: this, timeStep });
     
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
@@ -58,7 +58,7 @@ class Particle extends StoryElement {
     
     if (targetIsValid) {
       // Run script: particle collided with a target
-      this.scripts.collision && this.scripts.collision({ app, particle: this, target });
+      this.scripts.collision && this.scripts.collision({ app, element: this, target });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
       this.recentTargets.push({ target, duration: COLLISION_SPACING })

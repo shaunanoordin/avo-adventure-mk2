@@ -51,7 +51,7 @@ class Actor extends StoryElement {
     const app = this._app;
     
     // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, actor: this, timeStep });
+    this.scripts.always && this.scripts.always({ app, element: this, timeStep });
     
     // TODO: copy processEffects to Particles, too.
     
@@ -126,14 +126,14 @@ class Actor extends StoryElement {
       
       // For each active Effect, run a reaction.
       if (effect.duration > 0) {
-        reaction.always && reaction.always({ app, actor: this, effect, timeStep});
+        reaction.always && reaction.always({ app, element: this, effect, timeStep});
       }
       
       // Effects should decay (unless duration === Infinity, of course) 
       effect.duration -= timeStep;
       
       // Prepare to end any old effects.
-      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove(app, this, effect);
+      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, element: this, effect });
     });
     
     // Remove old effects
