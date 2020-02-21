@@ -24,7 +24,7 @@ class Actor extends StoryElement {
     this.intent = undefined;
     this.actionName = 'idle';
     this.actionAttr = {};
-    this.actionStep = 0;
+    this.actionCounter = 0;
     this.actions = {
       'idle': STANDARD_ACTIONS.IDLE,
       'move': STANDARD_ACTIONS.MOVE,
@@ -98,9 +98,9 @@ class Actor extends StoryElement {
           || action.type === ACTION_TYPES.CONTINUOUS) {
 
         // Second, check if the new action is different from the old one. 
-        // Reset the actionStep counter if that's the case.
+        // Reset the actionCounter if that's the case.
         if (this.actionName !== this.intent.name) {
-          this.actionStep = 0;
+          this.actionCounter = 0;
         }
         
         // Finally, convert the intent into the new action.
@@ -114,7 +114,7 @@ class Actor extends StoryElement {
   
   goIdle () {
     this.actionName = 'idle';
-    this.actionStep = 0;
+    this.actionCounter = 0;
     this.actionAttr = {};
   }
   
@@ -145,12 +145,13 @@ class Actor extends StoryElement {
     const action = this.actions[this.actionName]
     if (!action) return;
     
-    action.script({ app, element: this, action, actionAttr: this.actionAttr, step: this.actionStep });
+    const completion = (action.duration > 0) ? this.actionCounter / action.duration : 0;
+    action.script({ app, element: this, action, actionAttr: this.actionAttr, completion });
     
-    this.actionStep += 1;
+    this.actionCounter += timeStep;
     
-    if (this.actionStep >= action.steps) {  // Is the action over?
-      this.actionStep = 0;
+    if (this.actionCounter >= action.duration) {  // Is the action over?
+      this.actionCounter = 0;
       
       // If it's over (and doesn't loop), revert to default.
       if (action.type === ACTION_TYPES.STANDARD || action.type === ACTION_TYPES.SPECIAL_ONCE) {

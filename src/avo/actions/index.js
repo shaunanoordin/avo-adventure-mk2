@@ -5,16 +5,16 @@ import Particle from '@avo/story-elements/particle';
 export const STANDARD_ACTIONS = {
   IDLE: {
     type: ACTION_TYPES.IDLE,
-    steps: 1,
-    script: function ({ app, element, action, actionAttr, step }) {
+    duration: 1,
+    script: function ({ app, element, action, actionAttr, completion }) {
       element.animationName = 'idle';
     }
   },
   
   MOVE: {
     type: ACTION_TYPES.CONTINUOUS,
-    steps: 6 * 2,
-    script: function ({ app, element, action, actionAttr, step }) {
+    duration: 500,
+    script: function ({ app, element, action, actionAttr, completion }) {
       const acceleration = element.stats.acceleration || 0;
 
       const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
@@ -33,22 +33,25 @@ export const STANDARD_ACTIONS = {
       element.moveY = moveY;
       element.rotation = actionRotation;
 
-      if (0 * 2 <= step && step < 1 * 2) element.animationName = 'move-1';
-      else if (1 * 2 <= step && step < 3 * 2) element.animationName = 'move-2';
-      else if (3 * 2 <= step && step < 4 * 2) element.animationName = 'move-1';
-      else if (4 * 2 <= step && step < 6 * 2) element.animationName = 'move-3';
+      if (0 <= completion && completion < 0.25) element.animationName = 'move-1';
+      else if (0.25 <= completion && completion < 0.50) element.animationName = 'move-2';
+      else if (0.50 <= completion && completion < 0.75) element.animationName = 'move-1';
+      else if (0.75 <= completion && completion <= 1) element.animationName = 'move-3';
     },
   },
   
   ATTACK: {
     type: ACTION_TYPES.STANDARD,
-    steps: 15,
-    script: function ({ app, element, action, actionAttr, step }) {
-      if (step < 10) {
+    duration: 2000,
+    script: function ({ app, element, action, actionAttr, completion }) {
+      if (completion < 0.5) {
 
+        actionAttr.triggered = false;
         element.animationName = 'attack-windup';
 
-      } else if (step === 10) {
+      } else if (completion >= 0.5 && !actionAttr.triggered) {
+        
+        actionAttr.triggered = true;
 
         const particle = new Particle(app, {
           x: element.x + Math.cos(element.rotation) * element.size * 0.8,
@@ -100,12 +103,12 @@ export const STANDARD_ACTIONS = {
   
   DASH: {
     type: ACTION_TYPES.STANDARD,
-    steps: 6,
-    script: function ({ app, element, action, actionAttr, step }) {
+    duration: 200,
+    script: function ({ app, element, action, actionAttr, completion }) {
       element.animationName = 'dash';
       
       const power = (element.stats.maxSpeed)
-        ? element.stats.maxSpeed * 3  * (6 - step) / 6
+        ? element.stats.maxSpeed * 3  * (1 - completion)
         : 0;
       element.pushX += power * Math.cos(element.rotation);
       element.pushY += power * Math.sin(element.rotation);
