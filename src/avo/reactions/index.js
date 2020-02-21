@@ -19,7 +19,7 @@ export const STANDARD_REACTIONS = {
       element.pushY += power * Math.sin(angle);
 
       if (effect.attr.decay && effect.attr.power) {
-        effect.attr.power = Math.max(effect.attr.power - effect.attr.decay, 0);
+        effect.attr.power = Math.max(effect.attr.power - effect.attr.decay * timeStep / 1000, 0);
       }
     },
     

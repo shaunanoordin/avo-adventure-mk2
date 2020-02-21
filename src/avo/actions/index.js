@@ -42,14 +42,14 @@ export const STANDARD_ACTIONS = {
   
   ATTACK: {
     type: ACTION_TYPES.STANDARD,
-    duration: 2000,
+    duration: 1000,
     script: function ({ app, element, action, actionAttr, completion }) {
-      if (completion < 0.5) {
+      if (completion < 0.6) {
 
         actionAttr.triggered = false;
         element.animationName = 'attack-windup';
 
-      } else if (completion >= 0.5 && !actionAttr.triggered) {
+      } else if (completion >= 0.6 && !actionAttr.triggered) {
         
         actionAttr.triggered = true;
 
@@ -65,7 +65,7 @@ export const STANDARD_ACTIONS = {
             pushPower: 8,
             pushAngle: element.rotation,
             pushDuration: 1000,
-            pushDecay: 1,
+            pushDecay: 50,
           },
           scripts: {
             'collision': function ({ app, element, target }) {
