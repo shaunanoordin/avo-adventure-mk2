@@ -1,7 +1,7 @@
-import { EFFECTS_STACKING, FRAMES_PER_SECOND, MODES, SHAPES } from '@avo/misc/constants';
+import { EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element'
 
-const COLLISION_SPACING = FRAMES_PER_SECOND / 2;
+const TIME_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
 
 class Particle extends StoryElement {
   constructor (app, initialValues) {
@@ -61,7 +61,7 @@ class Particle extends StoryElement {
       this.scripts.collision && this.scripts.collision({ app, element: this, target });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
-      this.recentTargets.push({ target, duration: COLLISION_SPACING })
+      this.recentTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_COLLISIONS })
     }
   }
   
