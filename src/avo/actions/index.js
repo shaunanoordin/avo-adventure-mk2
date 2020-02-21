@@ -6,7 +6,7 @@ export const STANDARD_ACTIONS = {
   IDLE: {
     type: ACTION_TYPES.IDLE,
     duration: 1,
-    script: function ({ app, element, action, actionAttr, completion }) {
+    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
       element.animationName = 'idle';
     }
   },
@@ -14,10 +14,8 @@ export const STANDARD_ACTIONS = {
   MOVE: {
     type: ACTION_TYPES.CONTINUOUS,
     duration: 500,
-    script: function ({ app, element, action, actionAttr, completion }) {
-      // TODO: calculate how much a user
-      
-      const acceleration = element.stats.acceleration || 0;
+    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
+      const acceleration = element.stats.acceleration * timeStep / 1000 || 0;
 
       const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
       let moveX = element.moveX + acceleration * Math.cos(actionRotation);
@@ -45,7 +43,7 @@ export const STANDARD_ACTIONS = {
   ATTACK: {
     type: ACTION_TYPES.STANDARD,
     duration: 1000,
-    script: function ({ app, element, action, actionAttr, completion }) {
+    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
       if (completion < 0.6) {
 
         actionAttr.triggered = false;
@@ -106,8 +104,10 @@ export const STANDARD_ACTIONS = {
   DASH: {
     type: ACTION_TYPES.STANDARD,
     duration: 200,
-    script: function ({ app, element, action, actionAttr, completion }) {
+    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
       element.animationName = 'dash';
+      
+      // TODO: factor in timestep?
       
       const power = (element.stats.maxSpeed)
         ? element.stats.maxSpeed * 3  * (1 - completion)

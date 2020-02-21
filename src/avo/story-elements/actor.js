@@ -16,9 +16,9 @@ class Actor extends StoryElement {
     this.stats = {
       health: 100,  // TEMP
       maxHealth: 100,  // TEMP
-      acceleration: 1,
-      deceleration: 1,
-      maxSpeed: 8,
+      acceleration: 60,
+      deceleration: 60,
+      maxSpeed: 4,
     };
     
     this.intent = undefined;
@@ -65,7 +65,7 @@ class Actor extends StoryElement {
     
     // Upkeep: deceleration
     if (this.actionName !== 'move') {
-      const deceleration = this.stats.deceleration || 0;
+      const deceleration = this.stats.deceleration * timeStep / 1000 || 0;
       const curRotation = Math.atan2(this.moveY, this.moveX)
       const curMoveSpeed = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY);
       const newMoveSpeed = Math.max(0, curMoveSpeed - deceleration);
@@ -146,7 +146,7 @@ class Actor extends StoryElement {
     if (!action) return;
     
     const completion = (action.duration > 0) ? this.actionCounter / action.duration : 0;
-    action.script({ app, element: this, action, actionAttr: this.actionAttr, completion });
+    action.script({ app, element: this, action, actionAttr: this.actionAttr, completion, timeStep });
     
     this.actionCounter += timeStep;
     
