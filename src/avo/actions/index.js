@@ -6,7 +6,7 @@ export const STANDARD_ACTIONS = {
   IDLE: {
     type: ACTION_TYPES.IDLE,
     duration: 1,
-    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
       element.animationName = 'idle';
     }
   },
@@ -14,7 +14,7 @@ export const STANDARD_ACTIONS = {
   MOVE: {
     type: ACTION_TYPES.CONTINUOUS,
     duration: 500,
-    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
       const acceleration = element.stats.acceleration * timeStep / 1000 || 0;
 
       const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
@@ -33,23 +33,23 @@ export const STANDARD_ACTIONS = {
       element.moveY = moveY;
       element.rotation = actionRotation;
 
-      if (0 <= completion && completion < 0.25) element.animationName = 'move-1';
-      else if (0.25 <= completion && completion < 0.50) element.animationName = 'move-2';
-      else if (0.50 <= completion && completion < 0.75) element.animationName = 'move-1';
-      else if (0.75 <= completion && completion <= 1) element.animationName = 'move-3';
+      if (0 <= progress && progress < 0.25) element.animationName = 'move-1';
+      else if (0.25 <= progress && progress < 0.50) element.animationName = 'move-2';
+      else if (0.50 <= progress && progress < 0.75) element.animationName = 'move-1';
+      else if (0.75 <= progress && progress <= 1) element.animationName = 'move-3';
     },
   },
   
   ATTACK: {
     type: ACTION_TYPES.STANDARD,
     duration: 1000,
-    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
-      if (completion < 0.6) {
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
+      if (progress < 0.6) {
 
         actionAttr.triggered = false;
         element.animationName = 'attack-windup';
 
-      } else if (completion >= 0.6 && !actionAttr.triggered) {
+      } else if (progress >= 0.6 && !actionAttr.triggered) {
         
         actionAttr.triggered = true;
 
@@ -104,13 +104,13 @@ export const STANDARD_ACTIONS = {
   DASH: {
     type: ACTION_TYPES.STANDARD,
     duration: 200,
-    script: function ({ app, element, action, actionAttr, completion, timeStep }) {
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
       element.animationName = 'dash';
       
       // TODO: factor in timestep?
       
       const power = (element.stats.maxSpeed)
-        ? element.stats.maxSpeed * 3  * (1 - completion)
+        ? element.stats.maxSpeed * 3  * (1 - progress)
         : 0;
       element.pushX += power * Math.cos(element.rotation);
       element.pushY += power * Math.sin(element.rotation);

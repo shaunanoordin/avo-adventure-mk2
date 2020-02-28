@@ -145,8 +145,8 @@ class Actor extends StoryElement {
     const action = this.actions[this.actionName]
     if (!action) return;
     
-    const completion = (action.duration > 0) ? this.actionCounter / action.duration : 0;
-    action.script({ app, element: this, action, actionAttr: this.actionAttr, completion, timeStep });
+    const progress = (action.duration > 0) ? this.actionCounter / action.duration : 0;
+    action.script({ app, element: this, action, actionAttr: this.actionAttr, progress, timeStep });
     
     this.actionCounter += timeStep;
     
