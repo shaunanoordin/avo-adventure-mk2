@@ -38,7 +38,7 @@ class StoryElement {
     this.reactions = {};  // Reaction scripts; tells what the Actor/Particle/etc should do when they receive an Effect.
   }
   
-  play () {}
+  play (timeStep) {}
   
   paint (canvas, camera, options = {}) {
     // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas

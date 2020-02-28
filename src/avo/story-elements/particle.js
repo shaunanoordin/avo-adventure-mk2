@@ -1,7 +1,7 @@
-import { EFFECTS_STACKING, FRAMES_PER_SECOND, MODES, SHAPES } from '@avo/misc/constants';
+import { EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
 import StoryElement from './story-element'
 
-const COLLISION_SPACING = FRAMES_PER_SECOND / 2;
+const TIME_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
 
 class Particle extends StoryElement {
   constructor (app, initialValues) {
@@ -9,8 +9,8 @@ class Particle extends StoryElement {
     this.shape = SHAPES.CIRCLE;
     
     this.scripts = {
-      'always': function (app, particle) {},
-      'collision': function (app, particle, target) {}
+      'always': function ({ app, particle, timeStep }) {},
+      'collision': function ({ app, particle, target }) {}
     };
     
     // Particles can have a limited duration.
@@ -30,19 +30,22 @@ class Particle extends StoryElement {
     Object.assign(this, initialValues);
   }
   
-  play () {
+  play (timeStep) {
     const app = this._app;
     
     // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always(app, this);
+    this.scripts.always && this.scripts.always({ app, element: this, timeStep });
     
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
-    this.recentTargets = this.recentTargets.filter(item => ( --item.duration > 0 ))
+    this.recentTargets = this.recentTargets.filter(item => {
+      item.duration -= timeStep
+      return item.duration > 0;
+    })
     
     // Tick down the duration and remove if the timer runs out.
     // Note that if duration === Infinity, the Particle is permanent.
-    this.duration --;
+    this.duration -= timeStep;
     if (this.duration < 0) this._expired = true;
   }
     
@@ -55,10 +58,10 @@ class Particle extends StoryElement {
     
     if (targetIsValid) {
       // Run script: particle collided with a target
-      this.scripts.collision && this.scripts.collision(app, this, target);
+      this.scripts.collision && this.scripts.collision({ app, element: this, target });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
-      this.recentTargets.push({ target, duration: COLLISION_SPACING })
+      this.recentTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_COLLISIONS })
     }
   }
   

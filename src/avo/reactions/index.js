@@ -1,26 +1,27 @@
 export const STANDARD_REACTIONS = {
   
   DAMAGE: {
-    onAdd: function (app, actor, effect) {},
-    always: function (app, actor, effect) {},
-    onRemove: function (app, actor, effect) {},
+    onAdd: function ({ app, element, effect }) {},
+    always: function ({ app, element, effect }) {},
+    onRemove: function ({ app, element, effect }) {},
   },
   
   PUSH: {
-    onAdd: function (app, actor, effect) { console.log('NEW PUSH!') },
+    onAdd: function ({ app, element, effect }) { console.log('NEW PUSH!') },
     
-    always: function (app, actor, effect) {
+    always: function ({ app, element, effect, timeStep }) {
+      
       const power = effect.attr && effect.attr.power || 0;
       const angle = effect.attr && effect.attr.angle || 0;
-      actor.pushX += power * Math.cos(angle);
-      actor.pushY += power * Math.sin(angle);
+      element.pushX += power * timeStep / 1000 * Math.cos(angle);
+      element.pushY += power * timeStep / 1000 * Math.sin(angle);
 
       if (effect.attr.decay && effect.attr.power) {
-        effect.attr.power = Math.max(effect.attr.power - effect.attr.decay, 0);
+        effect.attr.power = Math.max(effect.attr.power - effect.attr.decay * timeStep / 1000, 0);
       }
     },
     
-    onRemove: function (app, actor, effect) { console.log('PUSH FINISHED!') },
+    onRemove: function ({ app, element, effect }) { console.log('PUSH FINISHED!') },
   }
   
 };

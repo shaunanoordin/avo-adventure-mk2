@@ -35,7 +35,7 @@ class ActionMode {
     this.html.focus();
   }
   
-  play () {
+  play (timeStep) {
     const app = this._app;
     
     this.processPlayerInput();
@@ -48,10 +48,10 @@ class ActionMode {
     
     // Run logic for each Story Element
     app.actors.forEach(actor => {
-      actor.play();
+      actor.play(timeStep);
     });
     app.particles.forEach(particle => {
-      particle.play();
+      particle.play(timeStep);
     });
     
     this.processPhysics();

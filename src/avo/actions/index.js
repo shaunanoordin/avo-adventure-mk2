@@ -5,67 +5,70 @@ import Particle from '@avo/story-elements/particle';
 export const STANDARD_ACTIONS = {
   IDLE: {
     type: ACTION_TYPES.IDLE,
-    steps: 1,
-    script: function (app, actor, action, actionAttr, step) {
-      actor.animationName = 'idle';
+    duration: 1,
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
+      element.animationName = 'idle';
     }
   },
   
   MOVE: {
     type: ACTION_TYPES.CONTINUOUS,
-    steps: 6 * 2,
-    script: function (app, actor, action, actionAttr, step) {
-      const acceleration = actor.stats.acceleration || 0;
+    duration: 500,
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
+      const acceleration = element.stats.acceleration * timeStep / 1000 || 0;
 
       const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
-      let moveX = actor.moveX + acceleration * Math.cos(actionRotation);
-      let moveY = actor.moveY + acceleration * Math.sin(actionRotation);
+      let moveX = element.moveX + acceleration * Math.cos(actionRotation);
+      let moveY = element.moveY + acceleration * Math.sin(actionRotation);
 
-      if (actor.stats.maxSpeed >= 0) {
-        const maxSpeed = actor.stats.maxSpeed;
+      if (element.stats.maxSpeed >= 0) {
+        const maxSpeed = element.stats.maxSpeed;
         const correctedSpeed = Math.min(maxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
         const moveRotation = Math.atan2(moveY, moveX);
         moveX = correctedSpeed * Math.cos(moveRotation);
         moveY = correctedSpeed * Math.sin(moveRotation);
       }
 
-      actor.moveX = moveX;
-      actor.moveY = moveY;
-      actor.rotation = actionRotation;
+      element.moveX = moveX;
+      element.moveY = moveY;
+      element.rotation = actionRotation;
 
-      if (0 * 2 <= step && step < 1 * 2) actor.animationName = 'move-1';
-      else if (1 * 2 <= step && step < 3 * 2) actor.animationName = 'move-2';
-      else if (3 * 2 <= step && step < 4 * 2) actor.animationName = 'move-1';
-      else if (4 * 2 <= step && step < 6 * 2) actor.animationName = 'move-3';
+      if (0 <= progress && progress < 0.25) element.animationName = 'move-1';
+      else if (0.25 <= progress && progress < 0.50) element.animationName = 'move-2';
+      else if (0.50 <= progress && progress < 0.75) element.animationName = 'move-1';
+      else if (0.75 <= progress && progress <= 1) element.animationName = 'move-3';
     },
   },
   
   ATTACK: {
     type: ACTION_TYPES.STANDARD,
-    steps: 15,
-    script: function (app, actor, action, actionAttr, step) {
-      if (step < 10) {
+    duration: 1000,
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
+      if (progress < 0.6) {
 
-        actor.animationName = 'attack-windup';
+        actionAttr.triggered = false;
+        element.animationName = 'attack-windup';
 
-      } else if (step === 10) {
+      } else if (progress >= 0.6 && !actionAttr.triggered) {
+        
+        actionAttr.triggered = true;
 
         const particle = new Particle(app, {
-          x: actor.x + Math.cos(actor.rotation) * actor.size * 0.8,
-          y: actor.y + Math.sin(actor.rotation) * actor.size * 0.8,
-          size: actor.size * 1,
-          duration: 5,
-          source: actor,
+          x: element.x + Math.cos(element.rotation) * element.size * 0.8,
+          y: element.y + Math.sin(element.rotation) * element.size * 0.8,
+          size: element.size * 1,
+          duration: 1000,
+          source: element,
           ignoreSource: true,
           stats: {
             attackPower: 20,
-            pushPower: 8,
-            pushAngle: actor.rotation,
-            pushDuration: 6,
-            pushDecay: 1,
+            pushPower: 100,
+            pushAngle: element.rotation,
+            pushDuration: 1000,
+            pushDecay: 100,
           },
           scripts: {
-            'collision': function (app, particle, target) {
+            'collision': function ({ app, element, target }) {
               if (target && target.stats) {
                 target.stats.health = Math.max((target.stats.health || 0) - particle.stats.attackPower, 0);
 
@@ -88,11 +91,11 @@ export const STANDARD_ACTIONS = {
         
         app.particles.push(particle);
 
-        actor.animationName = 'attack-active';
+        element.animationName = 'attack-active';
 
       } else {
 
-        actor.animationName = 'attack-winddown';
+        element.animationName = 'attack-winddown';
 
       }
     }
@@ -100,15 +103,17 @@ export const STANDARD_ACTIONS = {
   
   DASH: {
     type: ACTION_TYPES.STANDARD,
-    steps: 6,
-    script: function (app, actor, action, actionAttr, step) {
-      actor.animationName = 'dash';
+    duration: 200,
+    script: function ({ app, element, action, actionAttr, progress, timeStep }) {
+      element.animationName = 'dash';
       
-      const power = (actor.stats.maxSpeed)
-        ? actor.stats.maxSpeed * 3  * (6 - step) / 6
+      // TODO: factor in timestep?
+      
+      const power = (element.stats.maxSpeed)
+        ? element.stats.maxSpeed * 3  * (1 - progress)
         : 0;
-      actor.pushX += power * Math.cos(actor.rotation);
-      actor.pushY += power * Math.sin(actor.rotation);
+      element.pushX += power * Math.cos(element.rotation);
+      element.pushY += power * Math.sin(element.rotation);
 
     }
   },
