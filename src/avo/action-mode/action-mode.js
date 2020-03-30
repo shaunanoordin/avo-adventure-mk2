@@ -46,7 +46,7 @@ class ActionMode {
     app.actors.sort(sortY);
     app.particles.sort(sortY);
     
-    // Run logic for each Story Element
+    // Run logic for each Entity
     app.actors.forEach(actor => {
       actor.play(timeStep);
     });
@@ -86,7 +86,7 @@ class ActionMode {
     // Paint the map (floor)
     app.map && app.map.paint(canvas2d, camera, {});
     
-    // Paint each Story Element
+    // Paint each Entity
     app.particles.forEach(particle => {
       particle.paint(canvas2d, camera, {});
     });

@@ -1,7 +1,7 @@
 import { DIRECTIONS } from '@avo/misc/constants';
 
 export const STANDARD_ANIMATIONS = {
-  ACTOR: function (app, element, canvas, camera, options = {}) {
+  ACTOR: function (app, entity, canvas, camera, options = {}) {
     const layer = options.layer || '';
 
     if (!canvas || !camera) return;
@@ -10,18 +10,18 @@ export const STANDARD_ANIMATIONS = {
     canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
     // --------
     // Temporary 'animation'
-    if (element.animationName === 'idle') canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    else if (element.animationName === 'move-1') canvas.fillStyle = 'rgba(0, 128, 128, 0.5)';
-    else if (element.animationName === 'move-2') canvas.fillStyle = 'rgba(0, 160, 128, 0.5)';
-    else if (element.animationName === 'move-3') canvas.fillStyle = 'rgba(0, 128, 160, 0.5)';
-    else if (element.animationName === 'attack-windup') canvas.fillStyle = 'rgba(192, 192, 0, 0.5)';
-    else if (element.animationName === 'attack-active') canvas.fillStyle = 'rgba(255, 0, 0, 0.5)';
-    else if (element.animationName === 'attack-winddown') canvas.fillStyle = 'rgba(192, 128, 0, 0.5)';
+    if (entity.animationName === 'idle') canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    else if (entity.animationName === 'move-1') canvas.fillStyle = 'rgba(0, 128, 128, 0.5)';
+    else if (entity.animationName === 'move-2') canvas.fillStyle = 'rgba(0, 160, 128, 0.5)';
+    else if (entity.animationName === 'move-3') canvas.fillStyle = 'rgba(0, 128, 160, 0.5)';
+    else if (entity.animationName === 'attack-windup') canvas.fillStyle = 'rgba(192, 192, 0, 0.5)';
+    else if (entity.animationName === 'attack-active') canvas.fillStyle = 'rgba(255, 0, 0, 0.5)';
+    else if (entity.animationName === 'attack-winddown') canvas.fillStyle = 'rgba(192, 128, 0, 0.5)';
     // --------
     canvas.beginPath();
-    canvas.arc(Math.floor(element.x + camera.x),
-               Math.floor(element.y + camera.y),
-               element.size / 2, 0, 2 * Math.PI);
+    canvas.arc(Math.floor(entity.x + camera.x),
+               Math.floor(entity.y + camera.y),
+               entity.size / 2, 0, 2 * Math.PI);
     canvas.fill();
 
     // Simple direction
@@ -29,16 +29,16 @@ export const STANDARD_ANIMATIONS = {
     canvas.strokeStyle = 'rgba(0, 0, 0, 0.5)';
     canvas.lineWidth = 2;
     canvas.beginPath();
-    canvas.moveTo(Math.floor(element.x + camera.x),
-                  Math.floor(element.y + camera.y));
-    canvas.lineTo(Math.floor(element.x + camera.x) + Math.cos(element.rotation) * element.size * 0.6,
-                  Math.floor(element.y + camera.y) + Math.sin(element.rotation) * element.size * 0.6);
+    canvas.moveTo(Math.floor(entity.x + camera.x),
+                  Math.floor(entity.y + camera.y));
+    canvas.lineTo(Math.floor(entity.x + camera.x) + Math.cos(entity.rotation) * entity.size * 0.6,
+                  Math.floor(entity.y + camera.y) + Math.sin(entity.rotation) * entity.size * 0.6);
     canvas.stroke();
     // --------
 
     // Paint actor sprite
     // --------
-    if (element.animationSpritesheet) {
+    if (entity.animationSpritesheet) {
       const SPRITE_SIZE = 48;
       let SPRITE_OFFSET_X = 0;
       let SPRITE_OFFSET_Y = -8;
@@ -48,14 +48,14 @@ export const STANDARD_ANIMATIONS = {
       let srcX = 0;
       let srcY = 0;
 
-      switch (element.direction) {
+      switch (entity.direction) {
         case DIRECTIONS.SOUTH: srcX = SPRITE_SIZE * 0; break;
         case DIRECTIONS.NORTH: srcX = SPRITE_SIZE * 1; break;
         case DIRECTIONS.EAST: srcX = SPRITE_SIZE * 2; break;
         case DIRECTIONS.WEST: srcX = SPRITE_SIZE * 3; break;
       }
 
-      switch (element.animationName) {
+      switch (entity.animationName) {
         case 'move-1': srcY = SPRITE_SIZE * 1; break;
         case 'move-2': srcY = SPRITE_SIZE * 2; break;
         case 'move-3': srcY = SPRITE_SIZE * 3; break;
@@ -67,34 +67,34 @@ export const STANDARD_ANIMATIONS = {
 
       const tgtSizeX = SPRITE_SIZE;
       const tgtSizeY = SPRITE_SIZE;
-      const tgtX = Math.floor(element.x + camera.x) - srcSizeX / 2 + SPRITE_OFFSET_X;
-      const tgtY = Math.floor(element.y + camera.y) - srcSizeY / 2 + SPRITE_OFFSET_Y;
+      const tgtX = Math.floor(entity.x + camera.x) - srcSizeX / 2 + SPRITE_OFFSET_X;
+      const tgtY = Math.floor(entity.y + camera.y) - srcSizeY / 2 + SPRITE_OFFSET_Y;
 
-      canvas.drawImage(element.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
+      canvas.drawImage(entity.animationSpritesheet.img, srcX, srcY, srcSizeX, srcSizeY, tgtX, tgtY, tgtSizeX, tgtSizeY);
     }
     // --------
 
-    // Paint UI elements
+    // Paint UI entitys
     // --------
     let healthOffsetY = 7;
-    const healthRatio = (element.stats.maxHealth > 0)
-      ? (element.stats.health || 0) / element.stats.maxHealth
+    const healthRatio = (entity.stats.maxHealth > 0)
+      ? (entity.stats.health || 0) / entity.stats.maxHealth
       : 0;
     canvas.strokeStyle = 'rgba(0, 0, 0)';
     canvas.lineWidth = 4;
     canvas.beginPath();
-    canvas.moveTo(Math.floor(element.x + camera.x) - element.size / 3,
-                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
-    canvas.lineTo(Math.floor(element.x + camera.x) + element.size / 3,
-                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
+    canvas.moveTo(Math.floor(entity.x + camera.x) - entity.size / 3,
+                  Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
+    canvas.lineTo(Math.floor(entity.x + camera.x) + entity.size / 3,
+                  Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
     canvas.stroke();
     canvas.strokeStyle = 'rgba(255, 0, 0)';
     canvas.lineWidth = 2;
     canvas.beginPath();
-    canvas.moveTo(Math.floor(element.x + camera.x) - (element.size / 3 * healthRatio),
-                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
-    canvas.lineTo(Math.floor(element.x + camera.x) + (element.size / 3 * healthRatio),
-                  Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
+    canvas.moveTo(Math.floor(entity.x + camera.x) - (entity.size / 3 * healthRatio),
+                  Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
+    canvas.lineTo(Math.floor(entity.x + camera.x) + (entity.size / 3 * healthRatio),
+                  Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
     canvas.stroke();
 
     healthOffsetY = 4;
@@ -103,16 +103,16 @@ export const STANDARD_ANIMATIONS = {
     canvas.textBaseline = 'hanging';
     canvas.textAlign = 'right';
     canvas.fillText('❤️',
-                    Math.floor(element.x + camera.x) - element.size / 3,
-                    Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
+                    Math.floor(entity.x + camera.x) - entity.size / 3,
+                    Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
     canvas.textAlign = 'left';
-    canvas.fillText(Math.floor(element.stats.health),
-                    Math.floor(element.x + camera.x) + element.size / 3,
-                    Math.floor(element.y + camera.y) + element.size / 2 + healthOffsetY);
+    canvas.fillText(Math.floor(entity.stats.health),
+                    Math.floor(entity.x + camera.x) + entity.size / 3,
+                    Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
     // --------
   },
   
-  PARTICLE: function (app, element, canvas, camera, options = {}) {
+  PARTICLE: function (app, entity, canvas, camera, options = {}) {
     const layer = options.layer || '';
 
     if (!canvas || !camera) return;
@@ -120,7 +120,7 @@ export const STANDARD_ANIMATIONS = {
     // Simple shadow
     canvas.fillStyle = 'rgba(238, 238, 204, 0.5)';
     canvas.beginPath();
-    canvas.arc(element.x + camera.x, element.y + camera.y, element.size / 2, 0, 2 * Math.PI);
+    canvas.arc(entity.x + camera.x, entity.y + camera.y, entity.size / 2, 0, 2 * Math.PI);
     canvas.fill();
   },
 };

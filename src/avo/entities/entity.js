@@ -1,12 +1,10 @@
 import { ROTATIONS, DIRECTIONS, SHAPES } from '@avo/misc/constants';
 
-class StoryElement {
-  // TODO: rename to just 'Element' or 'Entity'?
-  
+class Entity {
   constructor (app) {
     this._app = app;
     
-    // Expired elements are removed at the end of the cycle.
+    // Expired entities are removed at the end of the cycle.
     this._expired = false;
     
     this.stats = {};
@@ -31,7 +29,7 @@ class StoryElement {
     
     this.animationName = 'idle';
     this.animationSpritesheet = null;
-    this.animationScript = function (app, element, canvas, options = {}) {};
+    this.animationScript = function (app, entity, canvas, options = {}) {};
     
     this.scripts = {};  // Custom scripts, e.g. actor.scripts.always runs on every frame.
     this.effects = [];  // Effects applied to the Actor/Particle/etc.
@@ -124,4 +122,4 @@ const CIRCLE_TO_POLYGON_APPROXIMATOR =
     return ({ cosAngle: Math.cos(angle), sinAngle: Math.sin(angle) });
   });
 
-export default StoryElement;
+export default Entity;

@@ -89,7 +89,7 @@ class AvoAdventure {
     story.customPaint();
   }
   
-  /*  Remove expired elements
+  /*  Remove expired entities
    */
   cleanUp () {
     this.actors = this.actors.filter(actor => !actor._expired);

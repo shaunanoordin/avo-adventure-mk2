@@ -2,10 +2,10 @@ import { ACTION_TYPES, SHAPES } from '@avo/misc/constants';
 import { STANDARD_ACTIONS } from '@avo/actions';
 import { STANDARD_REACTIONS } from '@avo/reactions';
 import { STANDARD_ANIMATIONS } from '@avo/animations';
-import StoryElement from './story-element';
+import Entity from './entity';
 import Particle from './particle';
 
-class Actor extends StoryElement {
+class Actor extends Entity {
   constructor (app, initialValues = {}) {
     super(app);
     
@@ -51,7 +51,7 @@ class Actor extends StoryElement {
     const app = this._app;
     
     // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, element: this, timeStep });
+    this.scripts.always && this.scripts.always({ app, entity: this, timeStep });
     
     // TODO: copy processEffects to Particles, too.
     
@@ -126,14 +126,14 @@ class Actor extends StoryElement {
       
       // For each active Effect, run a reaction.
       if (effect.duration > 0) {
-        reaction.always && reaction.always({ app, element: this, effect, timeStep});
+        reaction.always && reaction.always({ app, entity: this, effect, timeStep});
       }
       
       // Effects should decay (unless duration === Infinity, of course) 
       effect.duration -= timeStep;
       
       // Prepare to end any old effects.
-      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, element: this, effect });
+      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, entity: this, effect });
     });
     
     // Remove old effects
@@ -146,7 +146,7 @@ class Actor extends StoryElement {
     if (!action) return;
     
     const progress = (action.duration > 0) ? this.actionCounter / action.duration : 0;
-    action.script({ app, element: this, action, actionAttr: this.actionAttr, progress, timeStep });
+    action.script({ app, entity: this, action, actionAttr: this.actionAttr, progress, timeStep });
     
     this.actionCounter += timeStep;
     
