@@ -26,10 +26,9 @@ class Particle extends Entity {
   }
   
   play (timeStep) {
-    const app = this._app;
+    super.play(timeStep);
     
-    this.alwaysScript && this.alwaysScript({ app, entity: this, timeStep });
-    this.processEffects(timeStep);
+    const app = this._app;
     
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.

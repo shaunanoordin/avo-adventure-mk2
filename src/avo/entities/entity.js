@@ -52,7 +52,10 @@ class Entity {
   }
   
   play (timeStep) {
-    this.alwaysScript && this.alwaysScript({ app: this._app, entity: this, timeStep })
+    const app = this._app;
+    
+    this.alwaysScript && this.alwaysScript({ app, entity: this, timeStep });
+    this.processEffects(timeStep);
   }
   
   processEffects (timeStep) {

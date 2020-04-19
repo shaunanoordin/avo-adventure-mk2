@@ -45,10 +45,9 @@ class Actor extends Entity {
   }
   
   play (timeStep) {
-    const app = this._app;
+    super.play(timeStep);
     
-    this.alwaysScript && this.alwaysScript({ app, entity: this, timeStep });
-    this.processEffects(timeStep);
+    const app = this._app;
     
     this.processIntent();
     this.processActions(timeStep);
