@@ -1,4 +1,4 @@
-import { ACTION_TYPES, EFFECTS_STACKING } from '@avo/misc/constants';
+import { ACTION_TYPES, EFFECTS_STACKING, EXPECTED_TIMESTEP } from '@avo/misc/constants';
 import { STANDARD_ANIMATIONS } from '@avo/animations';
 import Particle from '@avo/entities/particle';
 
@@ -105,13 +105,13 @@ export const STANDARD_ACTIONS = {
     script: function ({ app, entity, action, actionAttr, progress, timeStep }) {
       entity.animationName = 'dash';
       
-      // TODO: factor in timestep?
+      const timeCorrection =  (timeStep / EXPECTED_TIMESTEP);
       
       const power = (entity.moveMaxSpeed)
         ? entity.moveMaxSpeed * 3  * (1 - progress)
         : 0;
-      entity.pushX += power * Math.cos(entity.rotation);
-      entity.pushY += power * Math.sin(entity.rotation);
+      entity.pushX += power * Math.cos(entity.rotation) * timeCorrection;
+      entity.pushY += power * Math.sin(entity.rotation) * timeCorrection;
 
     }
   },

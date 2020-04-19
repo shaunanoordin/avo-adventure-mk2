@@ -49,5 +49,18 @@ export const EFFECTS_STACKING = {
   OLDEST: 'oldest',  // Old Effects won't be overwritten by new ones with the same name.
 };
 
+/*
+When it matters (notably with Particles), we prevent collisionScripts from
+running on every frame. Instead, we provide some breathing space between each
+'tick'.
+ */
 export const TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
 
+/*
+While the engine is technically able to support any given framerate (determined
+by the hardware), a baseline is required to ground our video game logic to.
+e.g. we can say that we expect an object with "movement speed" of "2" to travel
+120 pixels in 1 second. (2 pixels per frame * 60 frames per second)
+ */
+export const EXPECTED_FRAMES_PER_SECOND = 60;
+export const EXPECTED_TIMESTEP = 1000 / EXPECTED_FRAMES_PER_SECOND;
