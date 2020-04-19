@@ -15,15 +15,15 @@ export const STANDARD_ACTIONS = {
     type: ACTION_TYPES.CONTINUOUS,
     duration: 500,
     script: function ({ app, entity, action, actionAttr, progress, timeStep }) {
-      const acceleration = entity.stats.acceleration * timeStep / 1000 || 0;
+      const moveAcceleration = entity.moveAcceleration * timeStep / 1000 || 0;
 
       const actionRotation = Math.atan2(actionAttr.y, actionAttr.x);
-      let moveX = entity.moveX + acceleration * Math.cos(actionRotation);
-      let moveY = entity.moveY + acceleration * Math.sin(actionRotation);
+      let moveX = entity.moveX + moveAcceleration * Math.cos(actionRotation);
+      let moveY = entity.moveY + moveAcceleration * Math.sin(actionRotation);
 
-      if (entity.stats.maxSpeed >= 0) {
-        const maxSpeed = entity.stats.maxSpeed;
-        const correctedSpeed = Math.min(maxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
+      if (entity.moveMaxSpeed >= 0) {
+        const moveMaxSpeed = entity.moveMaxSpeed;
+        const correctedSpeed = Math.min(moveMaxSpeed, Math.sqrt(moveX * moveX + moveY * moveY));
         const moveRotation = Math.atan2(moveY, moveX);
         moveX = correctedSpeed * Math.cos(moveRotation);
         moveY = correctedSpeed * Math.sin(moveRotation);
@@ -60,7 +60,7 @@ export const STANDARD_ACTIONS = {
           duration: 1000,
           source: entity,
           ignoreSource: true,
-          stats: {
+          attr: {
             attackPower: 20,
             pushPower: 100,
             pushAngle: entity.rotation,
@@ -69,17 +69,17 @@ export const STANDARD_ACTIONS = {
           },
           scripts: {
             'collision': function ({ app, entity, target }) {
-              if (target && target.stats) {
-                target.stats.health = Math.max((target.stats.health || 0) - particle.stats.attackPower, 0);
+              if (target && target.attr) {
+                target.attr.health = Math.max((target.attr.health || 0) - particle.attr.attackPower, 0);
 
                 particle.applyEffect({
                   name: 'push',
                   attr: {
-                    power: particle.stats.pushPower,
-                    angle: particle.stats.pushAngle,
-                    decay: particle.stats.pushDecay,
+                    power: particle.attr.pushPower,
+                    angle: particle.attr.pushAngle,
+                    decay: particle.attr.pushDecay,
                   },
-                  duration: particle.stats.pushDuration,
+                  duration: particle.attr.pushDuration,
                   stacking: EFFECTS_STACKING.STACK,
                 }, target);
 
@@ -109,8 +109,8 @@ export const STANDARD_ACTIONS = {
       
       // TODO: factor in timestep?
       
-      const power = (entity.stats.maxSpeed)
-        ? entity.stats.maxSpeed * 3  * (1 - progress)
+      const power = (entity.moveMaxSpeed)
+        ? entity.moveMaxSpeed * 3  * (1 - progress)
         : 0;
       entity.pushX += power * Math.cos(entity.rotation);
       entity.pushY += power * Math.sin(entity.rotation);

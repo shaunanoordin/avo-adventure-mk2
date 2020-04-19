@@ -77,8 +77,8 @@ export const STANDARD_ANIMATIONS = {
     // Paint UI entitys
     // --------
     let healthOffsetY = 7;
-    const healthRatio = (entity.stats.maxHealth > 0)
-      ? (entity.stats.health || 0) / entity.stats.maxHealth
+    const healthRatio = (entity.attr.maxHealth > 0)
+      ? (entity.attr.health || 0) / entity.attr.maxHealth
       : 0;
     canvas.strokeStyle = 'rgba(0, 0, 0)';
     canvas.lineWidth = 4;
@@ -106,7 +106,7 @@ export const STANDARD_ANIMATIONS = {
                     Math.floor(entity.x + camera.x) - entity.size / 3,
                     Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
     canvas.textAlign = 'left';
-    canvas.fillText(Math.floor(entity.stats.health),
+    canvas.fillText(Math.floor(entity.attr.health),
                     Math.floor(entity.x + camera.x) + entity.size / 3,
                     Math.floor(entity.y + camera.y) + entity.size / 2 + healthOffsetY);
     // --------

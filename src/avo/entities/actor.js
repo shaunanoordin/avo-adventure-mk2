@@ -11,14 +11,15 @@ class Actor extends Entity {
     
     this.shape = SHAPES.CIRCLE;
     this.solid = true;
-    this.movable = true;
     
-    this.stats = {
+    this.movable = true;
+    this.moveAcceleration = 60;
+    this.moveDeceleration = 60;
+    this.moveMaxSpeed = 4;
+    
+    this.attr = {
       health: 100,  // TEMP
       maxHealth: 100,  // TEMP
-      acceleration: 60,
-      deceleration: 60,
-      maxSpeed: 4,
     };
     
     this.intent = undefined;
@@ -58,15 +59,15 @@ class Actor extends Entity {
     this.processActions(timeStep);
     
     // TODO // TEMP - move this into this.scripts.always() ?
-    if (this.stats.health <= 0) { this._expired = true }
-    if (this.stats.health < this.stats.maxHealth) { this.stats.health += 0.05 }
+    if (this.attr.health <= 0) { this._expired = true }
+    if (this.attr.health < this.attr.maxHealth) { this.attr.health += 0.05 }
     
     // Upkeep: deceleration
     if (this.actionName !== 'move') {
-      const deceleration = this.stats.deceleration * timeStep / 1000 || 0;
+      const moveDeceleration = this.moveDeceleration * timeStep / 1000 || 0;
       const curRotation = Math.atan2(this.moveY, this.moveX)
       const curMoveSpeed = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY);
-      const newMoveSpeed = Math.max(0, curMoveSpeed - deceleration);
+      const newMoveSpeed = Math.max(0, curMoveSpeed - moveDeceleration);
 
       this.moveX = newMoveSpeed * Math.cos(curRotation);
       this.moveY = newMoveSpeed * Math.sin(curRotation);

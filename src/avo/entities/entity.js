@@ -7,7 +7,7 @@ class Entity {
     // Expired entities are removed at the end of the cycle.
     this._expired = false;
     
-    this.stats = {};
+    this.attr = {};
     
     this.x = 0;
     this.y = 0;
@@ -23,9 +23,12 @@ class Entity {
     
     this.shape = SHAPES.NONE;
     this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
-    
     this.solid = false;
+    
     this.movable = false;
+    this.moveAcceleration = 0;
+    this.moveDeceleration = 0;
+    this.moveMaxSpeed = 0;
     
     this.animationName = 'idle';
     this.animationSpritesheet = null;
