@@ -67,24 +67,22 @@ export const STANDARD_ACTIONS = {
             pushDuration: 1000,
             pushDecay: 100,
           },
-          scripts: {
-            'collision': function ({ app, entity, target }) {
-              if (target && target.attr) {
-                target.attr.health = Math.max((target.attr.health || 0) - particle.attr.attackPower, 0);
+          collisionScript: function ({ app, entity, target, collisionCorrection }) {
+            if (target && target.attr) {
+              target.attr.health = Math.max((target.attr.health || 0) - particle.attr.attackPower, 0);
 
-                particle.applyEffect({
-                  name: 'push',
-                  attr: {
-                    power: particle.attr.pushPower,
-                    angle: particle.attr.pushAngle,
-                    decay: particle.attr.pushDecay,
-                  },
-                  duration: particle.attr.pushDuration,
-                  stacking: EFFECTS_STACKING.STACK,
-                }, target);
+              particle.applyEffect({
+                name: 'push',
+                attr: {
+                  power: particle.attr.pushPower,
+                  angle: particle.attr.pushAngle,
+                  decay: particle.attr.pushDecay,
+                },
+                duration: particle.attr.pushDuration,
+                stacking: EFFECTS_STACKING.STACK,
+              }, target);
 
-              }
-            },
+            }
           },
           animationScript: STANDARD_ANIMATIONS.PARTICLE,
         });

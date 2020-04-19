@@ -8,11 +8,6 @@ class Particle extends Entity {
     super(app);
     this.shape = SHAPES.CIRCLE;
     
-    this.scripts = {
-      'always': function ({ app, particle, timeStep }) {},
-      'collision': function ({ app, particle, target }) {}
-    };
-    
     // Particles can have a limited duration.
     this.duration = Infinity;
     
@@ -33,8 +28,8 @@ class Particle extends Entity {
   play (timeStep) {
     const app = this._app;
     
-    // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, entity: this, timeStep });
+    this.alwaysScript && this.alwaysScript({ app, entity: this, timeStep });
+    this.processEffects(timeStep);
     
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
@@ -51,14 +46,13 @@ class Particle extends Entity {
     
   onCollision (target, collisionCorrection) {
     const app = this._app;
-
+    
     const targetIsValid = !!target  // Is there a target?
       && !(this.ignoreSource && this.source === target)  // If the target is the source of the Particle, ignore it?
       && !this.recentTargets.find(t => ( t.target === target ));
     
     if (targetIsValid) {
-      // Run script: particle collided with a target
-      this.scripts.collision && this.scripts.collision({ app, entity: this, target });
+      this.collisionScript && this.collisionScript({ app, entitiy: this, target, collisionCorrection });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
       this.recentTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_COLLISIONS })

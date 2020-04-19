@@ -34,17 +34,47 @@ class Entity {
     this.animationSpritesheet = null;
     this.animationScript = function (app, entity, canvas, options = {}) {};
     
-    this.scripts = {};  // Custom scripts, e.g. actor.scripts.always runs on every frame.
     this.effects = [];  // Effects applied to the Actor/Particle/etc.
     this.reactions = {};  // Reaction scripts; tells what the Actor/Particle/etc should do when they receive an Effect.
+    
+    this.alwaysScript = function ({ app, entitiy, timeStep }) {};  // Custom script to play on every frame.
+    this.collisionScript = function ({ app, entitiy, target, collisionCorrection }) {};  // Custom script to run on every collision.
   }
   
-  play (timeStep) {}
+  onCollision (target, collisionCorrection) {
+    this.collisionScript && this.collisionScript({ app: this._app, entitiy: this, target, collisionCorrection });
+  }
   
   paint (canvas, camera, options = {}) {
     // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
     
     this.animationScript && this.animationScript(this._app, this, canvas, camera, options);
+  }
+  
+  play (timeStep) {
+    this.alwaysScript && this.alwaysScript({ app: this._app, entity: this, timeStep })
+  }
+  
+  processEffects (timeStep) {
+    const app = this._app;
+    
+    this.effects.forEach(effect => {
+      const reaction = this.reactions[effect.name] || {};
+      
+      // For each active Effect, run a reaction.
+      if (effect.duration > 0) {
+        reaction.always && reaction.always({ app, entity: this, effect, timeStep});
+      }
+      
+      // Effects should decay (unless duration === Infinity, of course) 
+      effect.duration -= timeStep;
+      
+      // Prepare to end any old effects.
+      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, entity: this, effect });
+    });
+    
+    // Remove old effects
+    this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
   get left () { return this.x - this.size / 2; }
@@ -112,30 +142,6 @@ class Entity {
       }
     }
     return v;
-  }
-
-  onCollision (target, collisionCorrection) {}
-  
-  processEffects (timeStep) {
-    const app = this._app;
-    
-    this.effects.forEach(effect => {
-      const reaction = this.reactions[effect.name] || {};
-      
-      // For each active Effect, run a reaction.
-      if (effect.duration > 0) {
-        reaction.always && reaction.always({ app, entity: this, effect, timeStep});
-      }
-      
-      // Effects should decay (unless duration === Infinity, of course) 
-      effect.duration -= timeStep;
-      
-      // Prepare to end any old effects.
-      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, entity: this, effect });
-    });
-    
-    // Remove old effects
-    this.effects = this.effects.filter(effect => effect.duration > 0);
   }
 }
 

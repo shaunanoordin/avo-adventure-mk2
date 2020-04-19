@@ -33,10 +33,6 @@ class Actor extends Entity {
       'dash': STANDARD_ACTIONS.DASH,
     };
     
-    this.scripts = {
-      'always': function ({ app, actor, timeStep }) {},
-    };
-    
     this.reactions = {
       'damage': STANDARD_REACTIONS.DAMAGE,
       'push': STANDARD_REACTIONS.PUSH,
@@ -51,14 +47,12 @@ class Actor extends Entity {
   play (timeStep) {
     const app = this._app;
     
-    // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, entity: this, timeStep });
-    
+    this.alwaysScript && this.alwaysScript({ app, entity: this, timeStep });
     this.processEffects(timeStep);
+    
     this.processIntent();
     this.processActions(timeStep);
     
-    // TODO // TEMP - move this into this.scripts.always() ?
     if (this.attr.health <= 0) { this._expired = true }
     if (this.attr.health < this.attr.maxHealth) { this.attr.health += 0.05 }
     
