@@ -48,3 +48,6 @@ export const EFFECTS_STACKING = {
   NEWEST: 'newest',  // Newest Effect overwrites older Effects with the same name.
   OLDEST: 'oldest',  // Old Effects won't be overwritten by new ones with the same name.
 };
+
+export const TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
+

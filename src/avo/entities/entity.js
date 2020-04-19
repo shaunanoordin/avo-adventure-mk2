@@ -24,11 +24,7 @@ class Entity {
     this.shape = SHAPES.NONE;
     this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
     this.solid = false;
-    
     this.movable = false;
-    this.moveAcceleration = 0;
-    this.moveDeceleration = 0;
-    this.moveMaxSpeed = 0;
     
     this.animationName = 'idle';
     this.animationSpritesheet = null;

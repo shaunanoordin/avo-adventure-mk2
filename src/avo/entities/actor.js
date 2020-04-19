@@ -11,8 +11,8 @@ class Actor extends Entity {
     
     this.shape = SHAPES.CIRCLE;
     this.solid = true;
-    
     this.movable = true;
+    
     this.moveAcceleration = 60;
     this.moveDeceleration = 60;
     this.moveMaxSpeed = 4;

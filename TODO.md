@@ -1,0 +1,4 @@
+- Collision: standardise Particle collision logic with all other Entities?
+  - A Particle's collision script only runs once every 1 second for every target it touches. 
+  - An Entity's collision script runs EVERY frame for every target it touches.
+  - Ideally, the timing of when `.collisionScript()` is triggered should be standardised. 

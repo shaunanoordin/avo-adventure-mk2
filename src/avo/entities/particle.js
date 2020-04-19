@@ -1,7 +1,5 @@
-import { EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
+import { EFFECTS_STACKING, MODES, SHAPES, TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS } from '@avo/misc/constants';
 import Entity from './entity'
-
-const TIME_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
 
 class Particle extends Entity {
   constructor (app, initialValues) {
@@ -19,7 +17,7 @@ class Particle extends Entity {
     
     // When applying effects on collision, Particles shouldn't hit the same
     // targets perpetually every single frame.
-    this.recentTargets = [];
+    this._recentCollisionTargets = [];
     
     // Set initial values
     Object.assign(this, initialValues);
@@ -32,7 +30,7 @@ class Particle extends Entity {
     
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
-    this.recentTargets = this.recentTargets.filter(item => {
+    this._recentCollisionTargets = this._recentCollisionTargets.filter(item => {
       item.duration -= timeStep
       return item.duration > 0;
     })
@@ -48,13 +46,13 @@ class Particle extends Entity {
     
     const targetIsValid = !!target  // Is there a target?
       && !(this.ignoreSource && this.source === target)  // If the target is the source of the Particle, ignore it?
-      && !this.recentTargets.find(t => ( t.target === target ));
+      && !this._recentCollisionTargets.find(t => ( t.target === target ));
     
     if (targetIsValid) {
       this.collisionScript && this.collisionScript({ app, entitiy: this, target, collisionCorrection });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
-      this.recentTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_COLLISIONS })
+      this._recentCollisionTargets.push({ target, duration: TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS })
     }
   }
   
