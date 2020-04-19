@@ -53,8 +53,6 @@ class Actor extends Entity {
     // Run script: "always execute on every frame"
     this.scripts.always && this.scripts.always({ app, entity: this, timeStep });
     
-    // TODO: copy processEffects to Particles, too.
-    
     this.processEffects(timeStep);
     this.processIntent();
     this.processActions(timeStep);
@@ -116,28 +114,6 @@ class Actor extends Entity {
     this.actionName = 'idle';
     this.actionCounter = 0;
     this.actionAttr = {};
-  }
-  
-  processEffects (timeStep) {
-    const app = this._app;
-    
-    this.effects.forEach(effect => {
-      const reaction = this.reactions[effect.name] || {};
-      
-      // For each active Effect, run a reaction.
-      if (effect.duration > 0) {
-        reaction.always && reaction.always({ app, entity: this, effect, timeStep});
-      }
-      
-      // Effects should decay (unless duration === Infinity, of course) 
-      effect.duration -= timeStep;
-      
-      // Prepare to end any old effects.
-      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, entity: this, effect });
-    });
-    
-    // Remove old effects
-    this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
   processActions (timeStep) {

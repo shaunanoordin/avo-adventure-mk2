@@ -113,6 +113,27 @@ class Entity {
 
   onCollision (target, collisionCorrection) {}
   
+  processEffects (timeStep) {
+    const app = this._app;
+    
+    this.effects.forEach(effect => {
+      const reaction = this.reactions[effect.name] || {};
+      
+      // For each active Effect, run a reaction.
+      if (effect.duration > 0) {
+        reaction.always && reaction.always({ app, entity: this, effect, timeStep});
+      }
+      
+      // Effects should decay (unless duration === Infinity, of course) 
+      effect.duration -= timeStep;
+      
+      // Prepare to end any old effects.
+      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, entity: this, effect });
+    });
+    
+    // Remove old effects
+    this.effects = this.effects.filter(effect => effect.duration > 0);
+  }
 }
 
 const CIRCLE_TO_POLYGON_APPROXIMATOR =
