@@ -1,10 +1,17 @@
-import { EFFECTS_STACKING, MODES, SHAPES, TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS } from '@avo/misc/constants';
+import { EFFECTS_STACKING, MODES, SHAPES, TIME_BETWEEN_SUCCESSIVE_PAYLOADS } from '@avo/misc/constants';
 import Entity from './entity'
 
 class Particle extends Entity {
   constructor (app, initialValues) {
     super(app);
     this.shape = SHAPES.CIRCLE;
+    
+    // Custom script to run when a Particle hits a valid target.
+    // Different from collisionScript() in two ways:
+    // - Particles are more picky about what they consider valid targets.
+    // - Payloads can only hit targets once every few frames, not on every
+    //   frame of collision.
+    this.payloadScript = function ({ app, entity, target }) {};
     
     // Particles can have a limited duration.
     this.duration = Infinity;
@@ -42,6 +49,8 @@ class Particle extends Entity {
   }
     
   onCollision (target, collisionCorrection) {
+    super.onCollision(target, collisionCorrection);
+    
     const app = this._app;
     
     const targetIsValid = !!target  // Is there a target?
@@ -49,10 +58,10 @@ class Particle extends Entity {
       && !this._recentCollisionTargets.find(t => ( t.target === target ));
     
     if (targetIsValid) {
-      this.collisionScript && this.collisionScript({ app, entitiy: this, target, collisionCorrection });
+      this.payloadScript && this.payloadScript({ app, entity: this, target });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
-      this._recentCollisionTargets.push({ target, duration: TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS })
+      this._recentCollisionTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_PAYLOADS })
     }
   }
   

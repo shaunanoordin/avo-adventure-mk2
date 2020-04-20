@@ -33,8 +33,11 @@ class Entity {
     this.effects = [];  // Effects applied to the Actor/Particle/etc.
     this.reactions = {};  // Reaction scripts; tells what the Actor/Particle/etc should do when they receive an Effect.
     
-    this.alwaysScript = function ({ app, entitiy, timeStep }) {};  // Custom script to play on every frame.
-    this.collisionScript = function ({ app, entitiy, target, collisionCorrection }) {};  // Custom script to run on every collision.
+    // Custom script to play on every frame.
+    this.alwaysScript = function ({ app, entitiy, timeStep }) {};
+    
+    // Custom script to run on every frame of collision with another entity.
+    this.collisionScript = function ({ app, entitiy, target, collisionCorrection }) {};
   }
   
   onCollision (target, collisionCorrection) {

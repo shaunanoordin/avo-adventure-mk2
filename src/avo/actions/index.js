@@ -67,7 +67,7 @@ export const STANDARD_ACTIONS = {
             pushDuration: 1000,
             pushDecay: 100,
           },
-          collisionScript: function ({ app, entity, target, collisionCorrection }) {
+          payloadScript: function ({ app, entity, target }) {
             if (target && target.attr) {
               target.attr.health = Math.max((target.attr.health || 0) - particle.attr.attackPower, 0);
 
@@ -105,14 +105,11 @@ export const STANDARD_ACTIONS = {
     script: function ({ app, entity, action, actionAttr, progress, timeStep }) {
       entity.animationName = 'dash';
       
-      const timeCorrection =  (timeStep / EXPECTED_TIMESTEP);
-      
       const power = (entity.moveMaxSpeed)
         ? entity.moveMaxSpeed * 3  * (1 - progress)
         : 0;
-      entity.pushX += power * Math.cos(entity.rotation) * timeCorrection;
-      entity.pushY += power * Math.sin(entity.rotation) * timeCorrection;
-
+      entity.pushX += power * Math.cos(entity.rotation);
+      entity.pushY += power * Math.sin(entity.rotation);
     }
   },
 };

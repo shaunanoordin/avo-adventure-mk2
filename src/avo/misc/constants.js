@@ -54,7 +54,7 @@ When it matters (notably with Particles), we prevent collisionScripts from
 running on every frame. Instead, we provide some breathing space between each
 'tick'.
  */
-export const TIME_ALLOWED_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
+export const TIME_BETWEEN_SUCCESSIVE_PAYLOADS = 1000;
 
 /*
 While the engine is technically able to support any given framerate (determined
