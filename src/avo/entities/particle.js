@@ -1,17 +1,17 @@
-import { EFFECTS_STACKING, MODES, SHAPES } from '@avo/misc/constants';
-import StoryElement from './story-element'
+import { EFFECTS_STACKING, MODES, SHAPES, TIME_BETWEEN_SUCCESSIVE_PAYLOADS } from '@avo/misc/constants';
+import Entity from './entity'
 
-const TIME_BETWEEN_SUCCESSIVE_COLLISIONS = 1000;
-
-class Particle extends StoryElement {
+class Particle extends Entity {
   constructor (app, initialValues) {
     super(app);
     this.shape = SHAPES.CIRCLE;
     
-    this.scripts = {
-      'always': function ({ app, particle, timeStep }) {},
-      'collision': function ({ app, particle, target }) {}
-    };
+    // Custom script to run when a Particle hits a valid target.
+    // Different from collisionScript() in two ways:
+    // - Particles are more picky about what they consider valid targets.
+    // - Payloads can only hit targets once every few frames, not on every
+    //   frame of collision.
+    this.payloadScript = function ({ app, entity, target }) {};
     
     // Particles can have a limited duration.
     this.duration = Infinity;
@@ -24,21 +24,20 @@ class Particle extends StoryElement {
     
     // When applying effects on collision, Particles shouldn't hit the same
     // targets perpetually every single frame.
-    this.recentTargets = [];
+    this._recentCollisionTargets = [];
     
     // Set initial values
     Object.assign(this, initialValues);
   }
   
   play (timeStep) {
-    const app = this._app;
+    super.play(timeStep);
     
-    // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, element: this, timeStep });
+    const app = this._app;
     
     // Perform upkeep on the list of recent targets:
     // Tick down the recent target's duration, then remove any that has 0 duration.
-    this.recentTargets = this.recentTargets.filter(item => {
+    this._recentCollisionTargets = this._recentCollisionTargets.filter(item => {
       item.duration -= timeStep
       return item.duration > 0;
     })
@@ -50,18 +49,19 @@ class Particle extends StoryElement {
   }
     
   onCollision (target, collisionCorrection) {
+    super.onCollision(target, collisionCorrection);
+    
     const app = this._app;
-
+    
     const targetIsValid = !!target  // Is there a target?
       && !(this.ignoreSource && this.source === target)  // If the target is the source of the Particle, ignore it?
-      && !this.recentTargets.find(t => ( t.target === target ));
+      && !this._recentCollisionTargets.find(t => ( t.target === target ));
     
     if (targetIsValid) {
-      // Run script: particle collided with a target
-      this.scripts.collision && this.scripts.collision({ app, element: this, target });
+      this.payloadScript && this.payloadScript({ app, entity: this, target });
       
       // Add to the list of recent targets, so targets aren't hit back to back to back.
-      this.recentTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_COLLISIONS })
+      this._recentCollisionTargets.push({ target, duration: TIME_BETWEEN_SUCCESSIVE_PAYLOADS })
     }
   }
   

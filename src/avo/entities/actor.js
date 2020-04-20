@@ -2,10 +2,10 @@ import { ACTION_TYPES, SHAPES } from '@avo/misc/constants';
 import { STANDARD_ACTIONS } from '@avo/actions';
 import { STANDARD_REACTIONS } from '@avo/reactions';
 import { STANDARD_ANIMATIONS } from '@avo/animations';
-import StoryElement from './story-element';
+import Entity from './entity';
 import Particle from './particle';
 
-class Actor extends StoryElement {
+class Actor extends Entity {
   constructor (app, initialValues = {}) {
     super(app);
     
@@ -13,12 +13,13 @@ class Actor extends StoryElement {
     this.solid = true;
     this.movable = true;
     
-    this.stats = {
+    this.moveAcceleration = 60;
+    this.moveDeceleration = 60;
+    this.moveMaxSpeed = 4;
+    
+    this.attr = {
       health: 100,  // TEMP
       maxHealth: 100,  // TEMP
-      acceleration: 60,
-      deceleration: 60,
-      maxSpeed: 4,
     };
     
     this.intent = undefined;
@@ -30,10 +31,6 @@ class Actor extends StoryElement {
       'move': STANDARD_ACTIONS.MOVE,
       'attack': STANDARD_ACTIONS.ATTACK,
       'dash': STANDARD_ACTIONS.DASH,
-    };
-    
-    this.scripts = {
-      'always': function ({ app, actor, timeStep }) {},
     };
     
     this.reactions = {
@@ -48,27 +45,22 @@ class Actor extends StoryElement {
   }
   
   play (timeStep) {
+    super.play(timeStep);
+    
     const app = this._app;
     
-    // Run script: "always execute on every frame"
-    this.scripts.always && this.scripts.always({ app, element: this, timeStep });
-    
-    // TODO: copy processEffects to Particles, too.
-    
-    this.processEffects(timeStep);
     this.processIntent();
     this.processActions(timeStep);
     
-    // TODO // TEMP - move this into this.scripts.always() ?
-    if (this.stats.health <= 0) { this._expired = true }
-    if (this.stats.health < this.stats.maxHealth) { this.stats.health += 0.05 }
+    if (this.attr.health <= 0) { this._expired = true }
+    if (this.attr.health < this.attr.maxHealth) { this.attr.health += 0.05 }
     
     // Upkeep: deceleration
     if (this.actionName !== 'move') {
-      const deceleration = this.stats.deceleration * timeStep / 1000 || 0;
+      const moveDeceleration = this.moveDeceleration * timeStep / 1000 || 0;
       const curRotation = Math.atan2(this.moveY, this.moveX)
       const curMoveSpeed = Math.sqrt(this.moveX * this.moveX + this.moveY * this.moveY);
-      const newMoveSpeed = Math.max(0, curMoveSpeed - deceleration);
+      const newMoveSpeed = Math.max(0, curMoveSpeed - moveDeceleration);
 
       this.moveX = newMoveSpeed * Math.cos(curRotation);
       this.moveY = newMoveSpeed * Math.sin(curRotation);
@@ -118,35 +110,13 @@ class Actor extends StoryElement {
     this.actionAttr = {};
   }
   
-  processEffects (timeStep) {
-    const app = this._app;
-    
-    this.effects.forEach(effect => {
-      const reaction = this.reactions[effect.name] || {};
-      
-      // For each active Effect, run a reaction.
-      if (effect.duration > 0) {
-        reaction.always && reaction.always({ app, element: this, effect, timeStep});
-      }
-      
-      // Effects should decay (unless duration === Infinity, of course) 
-      effect.duration -= timeStep;
-      
-      // Prepare to end any old effects.
-      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, element: this, effect });
-    });
-    
-    // Remove old effects
-    this.effects = this.effects.filter(effect => effect.duration > 0);
-  }
-  
   processActions (timeStep) {
     const app = this._app;
     const action = this.actions[this.actionName]
     if (!action) return;
     
     const progress = (action.duration > 0) ? this.actionCounter / action.duration : 0;
-    action.script({ app, element: this, action, actionAttr: this.actionAttr, progress, timeStep });
+    action.script({ app, entity: this, action, actionAttr: this.actionAttr, progress, timeStep });
     
     this.actionCounter += timeStep;
     

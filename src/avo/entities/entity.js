@@ -1,15 +1,13 @@
 import { ROTATIONS, DIRECTIONS, SHAPES } from '@avo/misc/constants';
 
-class StoryElement {
-  // TODO: rename to just 'Element' or 'Entity'?
-  
+class Entity {
   constructor (app) {
     this._app = app;
     
-    // Expired elements are removed at the end of the cycle.
+    // Expired entities are removed at the end of the cycle.
     this._expired = false;
     
-    this.stats = {};
+    this.attr = {};
     
     this.x = 0;
     this.y = 0;
@@ -25,25 +23,60 @@ class StoryElement {
     
     this.shape = SHAPES.NONE;
     this.shapePolygonPath = null;  // Only applicable if shape === SHAPES.POLYGON
-    
     this.solid = false;
     this.movable = false;
     
     this.animationName = 'idle';
     this.animationSpritesheet = null;
-    this.animationScript = function (app, element, canvas, options = {}) {};
+    this.animationScript = function (app, entity, canvas, options = {}) {};
     
-    this.scripts = {};  // Custom scripts, e.g. actor.scripts.always runs on every frame.
     this.effects = [];  // Effects applied to the Actor/Particle/etc.
     this.reactions = {};  // Reaction scripts; tells what the Actor/Particle/etc should do when they receive an Effect.
+    
+    // Custom script to play on every frame.
+    this.alwaysScript = function ({ app, entitiy, timeStep }) {};
+    
+    // Custom script to run on every frame of collision with another entity.
+    this.collisionScript = function ({ app, entitiy, target, collisionCorrection }) {};
   }
   
-  play (timeStep) {}
+  onCollision (target, collisionCorrection) {
+    this.collisionScript && this.collisionScript({ app: this._app, entitiy: this, target, collisionCorrection });
+  }
   
   paint (canvas, camera, options = {}) {
     // TODO: see https://www.html5rocks.com/en/tutorials/canvas/hidpi/ about using window.devicePixelRatio to fix blurriness on a High DPI canvas
     
     this.animationScript && this.animationScript(this._app, this, canvas, camera, options);
+  }
+  
+  play (timeStep) {
+    const app = this._app;
+    
+    this.alwaysScript && this.alwaysScript({ app, entity: this, timeStep });
+    this.processEffects(timeStep);
+  }
+  
+  processEffects (timeStep) {
+    const app = this._app;
+    
+    this.effects.forEach(effect => {
+      const reaction = this.reactions[effect.name] || {};
+      
+      // For each active Effect, run a reaction.
+      if (effect.duration > 0) {
+        reaction.always && reaction.always({ app, entity: this, effect, timeStep});
+      }
+      
+      // Effects should decay (unless duration === Infinity, of course) 
+      effect.duration -= timeStep;
+      
+      // Prepare to end any old effects.
+      if (effect.duration <= 0) reaction.onRemove && reaction.onRemove({ app, entity: this, effect });
+    });
+    
+    // Remove old effects
+    this.effects = this.effects.filter(effect => effect.duration > 0);
   }
   
   get left () { return this.x - this.size / 2; }
@@ -112,9 +145,6 @@ class StoryElement {
     }
     return v;
   }
-
-  onCollision (target, collisionCorrection) {}
-  
 }
 
 const CIRCLE_TO_POLYGON_APPROXIMATOR =
@@ -124,4 +154,4 @@ const CIRCLE_TO_POLYGON_APPROXIMATOR =
     return ({ cosAngle: Math.cos(angle), sinAngle: Math.sin(angle) });
   });
 
-export default StoryElement;
+export default Entity;

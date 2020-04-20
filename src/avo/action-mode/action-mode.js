@@ -1,4 +1,4 @@
-import { SHORT_KEYPRESS_DURATION, MODES } from '@avo/misc/constants';
+import { SHORT_KEYPRESS_DURATION, MODES, EXPECTED_TIMESTEP } from '@avo/misc/constants';
 import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
@@ -46,7 +46,7 @@ class ActionMode {
     app.actors.sort(sortY);
     app.particles.sort(sortY);
     
-    // Run logic for each Story Element
+    // Run logic for each Entity
     app.actors.forEach(actor => {
       actor.play(timeStep);
     });
@@ -54,7 +54,7 @@ class ActionMode {
       particle.play(timeStep);
     });
     
-    this.processPhysics();
+    this.processPhysics(timeStep);
     
     // Camera Controls: focus the camera on the target actor, if any.
     if (app.camera.targetActor) {
@@ -86,7 +86,7 @@ class ActionMode {
     // Paint the map (floor)
     app.map && app.map.paint(canvas2d, camera, {});
     
-    // Paint each Story Element
+    // Paint each Entity
     app.particles.forEach(particle => {
       particle.paint(canvas2d, camera, {});
     });
@@ -150,23 +150,35 @@ class ActionMode {
     
   }
   
-  processPhysics () {
+  /*
+  Run Physics logic, notably in regards to motion and collision.
+  
+  Note: we're simulating physics with discrete time intervals (i.e. video game
+  frames-per-second) for simplicity, instead of calculating for continuous time
+  (i.e. more realistic physics).
+  
+  Please don't expect too much mathematical realism here, but as long as the
+  actual time interval (timeStep) matches the expected time interval, the video
+  game logic will work.
+  */
+  processPhysics (timeStep) {
     const app = this._app;
+    const timeCorrection = (timeStep / EXPECTED_TIMESTEP);
     
     // Move Actors and Particles
     app.actors.forEach(actor => {
-      actor.x += actor.moveX;
-      actor.y += actor.moveY;
-      actor.x += actor.pushX;
-      actor.y += actor.pushY;
+      actor.x += actor.moveX * timeCorrection;
+      actor.y += actor.moveY * timeCorrection;
+      actor.x += actor.pushX * timeCorrection;
+      actor.y += actor.pushY * timeCorrection;
       actor.pushX = 0;
       actor.pushY = 0;
     });
     app.particles.forEach(particle => {
-      particle.x += particle.moveX;
-      particle.y += particle.moveY;
-      particle.x += particle.pushX;
-      particle.y += particle.pushY;
+      particle.x += particle.moveX * timeCorrection;
+      particle.y += particle.moveY * timeCorrection;
+      particle.x += particle.pushX * timeCorrection;
+      particle.y += particle.pushY * timeCorrection;
       particle.pushX = 0;
       particle.pushY = 0;
     });
