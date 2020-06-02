@@ -20,6 +20,15 @@ class Actor extends Entity {
     this.attr = {
       health: 100,  // TEMP
       maxHealth: 100,  // TEMP
+      
+      ACT: 3,  // Action stat
+      DEF: 3,  // Defence stat
+      SPR: 3,  // Spirit stat
+      
+      DMG: 0,  // Damage 
+      DMG_recovery: 0,
+      STN: 0,  // Stun
+      STN_recovery: 0,
     };
     
     this.intent = undefined;
