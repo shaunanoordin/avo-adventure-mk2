@@ -38,8 +38,9 @@ class Actor extends Entity {
     this.actions = {
       'idle': STANDARD_ACTIONS.IDLE,
       'move': STANDARD_ACTIONS.MOVE,
-      'attack': STANDARD_ACTIONS.ATTACK,
-      'dash': STANDARD_ACTIONS.DASH,
+      'skill_1': STANDARD_ACTIONS.ATTACK,
+      'skill_2': STANDARD_ACTIONS.DASH,
+      'skill_3': undefined,
     };
     
     this.reactions = {

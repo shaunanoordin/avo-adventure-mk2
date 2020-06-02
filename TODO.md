@@ -1,0 +1,9 @@
+- Change the `ActionMode.keysPressed` system to use actual time!
+  - Use keys_pressDuration[] and keys_inputAcknowledged[]
+  - OR!!! Make a note that keysPressed[] counts FRAMES, not seconds.
+  - Actually, just change it to use actual time.
+- Add a Shoot Skill (Yes, we're calling Primary Actions and Dash Actions "skills" now. Much easier.)
+- Add Abilities/Traits to Actors.
+  - Traits sounds better, but might be confused with Entity.attr
+  - Hmm... maybe I'll just use traits and worry about the nomenclature later.
+- Remove the temporary Health system and use a proper DEF, DMG system.

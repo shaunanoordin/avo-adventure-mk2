@@ -69,6 +69,8 @@ class ActionMode {
     
     // Increment the duration of each currently pressed key
     Object.keys(this.keysPressed).forEach(key => {
+      // TODO: Change the keysPressed system to use actual time!
+      // Use keys_pressDuration[] and keys_inputAcknowledged[]
       if (this.keysPressed[key]) this.keysPressed[key]++;
     })
   }
@@ -131,11 +133,15 @@ class ActionMode {
       
       if (this.keysPressed['z'] === SHORT_KEYPRESS_DURATION || this.keysPressed['Z'] === SHORT_KEYPRESS_DURATION || this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
         playerActor.intent = {
-          name: 'attack'
+          name: 'skill_1'
         };
       } else if (this.keysPressed['x'] === SHORT_KEYPRESS_DURATION || this.keysPressed['X'] === SHORT_KEYPRESS_DURATION || this.keysPressed['Shift'] === SHORT_KEYPRESS_DURATION) {
         playerActor.intent = {
-          name: 'dash'
+          name: 'skill_2'
+        };
+      } else if (this.keysPressed['c'] === SHORT_KEYPRESS_DURATION || this.keysPressed['C'] === SHORT_KEYPRESS_DURATION) {
+        playerActor.intent = {
+          name: 'skill_3'
         };
       } else if (moveX || moveY) {
         playerActor.intent = {
