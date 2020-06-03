@@ -18,8 +18,14 @@ class ActionMode {
     this.html.onkeydown = this.onKeyDown.bind(this);
     this.html.onkeyup = this.onKeyUp.bind(this);
     
-    // Keys that are currently being pressed, and the number of frames they've
-    // been pressed for.
+    // Keys that are currently being pressed.
+    // Structure is: 
+    // key_value: {
+    //   pressed: true|false,
+    //   duration: number,
+    //   startAcknowledged: true|false,
+    //   endAcknowledged: true|false,
+    // }
     this.keysPressed = {};
   }
   
@@ -62,16 +68,18 @@ class ActionMode {
       app.camera.y = this.height / 2 - app.camera.targetActor.y;
     }
     
-    // DEBUG // TEST
-    if (this.keysPressed['Escape'] === SHORT_KEYPRESS_DURATION) {
+    // Open Escape menu
+    if (this.keysPressed['Escape']?.pressed &&
+        !this.keysPressed['Escape']?.startAcknowledged) {
       app.changeMode(MODES.INTERACTION);
+      this.keysPressed['Escape'].startAcknowledged = true;
     }
     
     // Increment the duration of each currently pressed key
     Object.keys(this.keysPressed).forEach(key => {
-      // TODO: Change the keysPressed system to use actual time!
-      // Use keys_pressDuration[] and keys_inputAcknowledged[]
-      if (this.keysPressed[key]) this.keysPressed[key]++;
+      if (this.keysPressed[key].pressed) {
+        this.keysPressed[key].duration += timeStep;
+      }
     })
   }
   
@@ -103,16 +111,48 @@ class ActionMode {
   }
   
   onKeyDown (e) {
-    if (!this.keysPressed[e.key]) this.keysPressed[e.key] = 1;
+    const key = e.key;
+    if (!key) return;
+    
+    // Initialise key record if needed
+    if (!this.keysPressed[key]) {
+      this.keysPressed[key] = {
+        pressed: false,
+        duration: 0,
+        startAcknowledged: false,
+        endAcknowledged: false,
+      };
+    }
+    
+    this.keysPressed[key].pressed = true;
+    this.keysPressed[key].duration = 0;
+    this.keysPressed[key].endAcknowledged = false;
   }
   
   onKeyUp (e) {
-    this.keysPressed[e.key] = undefined;
+    const key = e.key;
+    if (!key) return;
+    
+    // Initialise key record if needed
+    if (!this.keysPressed[key]) {
+      this.keysPressed[key] = {
+        pressed: false,
+        duration: 0,
+        startAcknowledged: false,
+        endAcknowledged: false,
+      };
+    }
+    
+    this.keysPressed[key].pressed = false;
+    this.keysPressed[key].startAcknowledged = false;
   }
   
   resetKeysPressed () {
     Object.keys(this.keysPressed).forEach((key) => {
-      this.keysPressed[key] = undefined;
+      this.keysPressed[key].pressed = false;
+      this.keysPressed[key].duration = 0;
+      this.keysPressed[key].startAcknowledged = false;
+      this.keysPressed[key].endAcknowledged = false;
     })
   }
   
@@ -126,24 +166,12 @@ class ActionMode {
       let moveX = 0;
       let moveY = 0;
       
-      if (this.keysPressed['ArrowRight']) moveX++;
-      if (this.keysPressed['ArrowDown']) moveY++;
-      if (this.keysPressed['ArrowLeft']) moveX--;
-      if (this.keysPressed['ArrowUp']) moveY--;
+      if (this.keysPressed['ArrowRight']?.pressed) moveX++;
+      if (this.keysPressed['ArrowDown']?.pressed) moveY++;
+      if (this.keysPressed['ArrowLeft']?.pressed) moveX--;
+      if (this.keysPressed['ArrowUp']?.pressed) moveY--;
       
-      if (this.keysPressed['z'] === SHORT_KEYPRESS_DURATION || this.keysPressed['Z'] === SHORT_KEYPRESS_DURATION || this.keysPressed[' '] === SHORT_KEYPRESS_DURATION) {
-        playerActor.intent = {
-          name: 'skill_1'
-        };
-      } else if (this.keysPressed['x'] === SHORT_KEYPRESS_DURATION || this.keysPressed['X'] === SHORT_KEYPRESS_DURATION || this.keysPressed['Shift'] === SHORT_KEYPRESS_DURATION) {
-        playerActor.intent = {
-          name: 'skill_2'
-        };
-      } else if (this.keysPressed['c'] === SHORT_KEYPRESS_DURATION || this.keysPressed['C'] === SHORT_KEYPRESS_DURATION) {
-        playerActor.intent = {
-          name: 'skill_3'
-        };
-      } else if (moveX || moveY) {
+      if (moveX || moveY) {
         playerActor.intent = {
           name: 'move',
           attr: {
@@ -152,6 +180,33 @@ class ActionMode {
           },
         };
       }
+          
+      ['z', 'Z', ' '].forEach(key => {
+        if (this.keysPressed[key]?.pressed && !this.keysPressed[key]?.startAcknowledged) {
+          playerActor.intent = {
+            name: 'skill_1'
+          };
+          this.keysPressed[key].startAcknowledged = true
+        }
+      });
+    
+      ['x', 'X', 'Shift'].forEach(key => {
+        if (this.keysPressed[key]?.pressed && !this.keysPressed[key]?.startAcknowledged) {
+          playerActor.intent = {
+            name: 'skill_2'
+          };
+          this.keysPressed[key].startAcknowledged = true
+        }
+      });
+      
+      ['c', 'C'].forEach(key => {
+        if (this.keysPressed[key]?.pressed && !this.keysPressed[key]?.startAcknowledged) {
+          playerActor.intent = {
+            name: 'skill_3'
+          };
+          this.keysPressed[key].startAcknowledged = true
+        }
+      });
     }
     
   }
