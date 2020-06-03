@@ -1,5 +1,3 @@
-export const SHORT_KEYPRESS_DURATION = 1;
-
 export const MODES = {
   INITIALISING: 'initialising',
   ACTION: 'action',

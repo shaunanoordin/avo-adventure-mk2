@@ -1,4 +1,4 @@
-import { SHORT_KEYPRESS_DURATION, MODES, EXPECTED_TIMESTEP } from '@avo/misc/constants';
+import { MODES, EXPECTED_TIMESTEP } from '@avo/misc/constants';
 import { Physics } from '@avo/misc/physics';
 
 class ActionMode {
@@ -127,6 +127,8 @@ class ActionMode {
     this.keysPressed[key].pressed = true;
     this.keysPressed[key].duration = 0;
     this.keysPressed[key].endAcknowledged = false;
+    // Note: onKeyDown fires MULTIPLE TIMES for every second the key is down,
+    // so don't reset startAcknowledged = false.
   }
   
   onKeyUp (e) {
