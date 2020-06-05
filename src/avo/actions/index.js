@@ -42,7 +42,7 @@ export const STANDARD_ACTIONS = {
   
   STRIKE: {
     type: ACTION_TYPES.STANDARD,
-    duration: 500,
+    duration: 200,
     script: function ({ app, entity, action, actionAttr, progress, timeStep }) {
       if (progress < 0.6) {
 
@@ -57,12 +57,18 @@ export const STANDARD_ACTIONS = {
           x: entity.x + Math.cos(entity.rotation) * entity.size * 0.8,
           y: entity.y + Math.sin(entity.rotation) * entity.size * 0.8,
           size: entity.size * 1,
-          duration: 1000,
+          duration: 100,
           source: entity,
           ignoreSource: true,
-          attr: {},
+          attr: {
+            attackPower: 20,
+            pushPower: 100,
+            pushAngle: entity.rotation,
+            pushDuration: 1000,
+            pushDecay: 100,
+          },
           payloadScript: function ({ app, entity, target }) {
-            if (target && target.attr) {
+            if (target?.attr) {
               target.attr.health = Math.max((target.attr.health || 0) - particle.attr.attackPower, 0);
 
               particle.applyEffect({
@@ -133,7 +139,14 @@ export const STANDARD_ACTIONS = {
           source: entity,
           ignoreSource: true,
           attr: {},
-          payloadScript: function ({ app, entity, target }) {},
+          payloadScript: function ({ app, entity, target }) {
+            
+            if (target?.attr) {
+              target.attr.health = Math.max((target.attr.health || 0) - 20, 0);
+            }
+            
+            entity._expired = true;
+          },
           animationScript: STANDARD_ANIMATIONS.PARTICLE,
         });
         
