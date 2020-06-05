@@ -40,9 +40,9 @@ export const STANDARD_ACTIONS = {
     },
   },
   
-  ATTACK: {
+  STRIKE: {
     type: ACTION_TYPES.STANDARD,
-    duration: 1000,
+    duration: 500,
     script: function ({ app, entity, action, actionAttr, progress, timeStep }) {
       if (progress < 0.6) {
 
@@ -60,13 +60,7 @@ export const STANDARD_ACTIONS = {
           duration: 1000,
           source: entity,
           ignoreSource: true,
-          attr: {
-            attackPower: 20,
-            pushPower: 100,
-            pushAngle: entity.rotation,
-            pushDuration: 1000,
-            pushDecay: 100,
-          },
+          attr: {},
           payloadScript: function ({ app, entity, target }) {
             if (target && target.attr) {
               target.attr.health = Math.max((target.attr.health || 0) - particle.attr.attackPower, 0);
@@ -110,6 +104,48 @@ export const STANDARD_ACTIONS = {
         : 0;
       entity.pushX += power * Math.cos(entity.rotation);
       entity.pushY += power * Math.sin(entity.rotation);
+    }
+  },
+  
+  SHOOT: {
+    type: ACTION_TYPES.STANDARD,
+    duration: 500,
+    script: function ({ app, entity, action, actionAttr, progress, timeStep }) {
+      if (progress < 0.6) {
+
+        actionAttr.triggered = false;
+        entity.animationName = 'attack-windup';
+
+      } else if (progress >= 0.6 && !actionAttr.triggered) {
+        
+        actionAttr.triggered = true;
+
+        const OFFSET = 0.8;
+        const MOVE_SPEED = 4;
+        
+        const particle = new Particle(app, {
+          x: entity.x + Math.cos(entity.rotation) * entity.size * OFFSET,
+          y: entity.y + Math.sin(entity.rotation) * entity.size * OFFSET,
+          moveX: Math.cos(entity.rotation) * MOVE_SPEED ,
+          moveY: Math.sin(entity.rotation) * MOVE_SPEED,
+          size: entity.size * 0.5,
+          duration: 1000,
+          source: entity,
+          ignoreSource: true,
+          attr: {},
+          payloadScript: function ({ app, entity, target }) {},
+          animationScript: STANDARD_ANIMATIONS.PARTICLE,
+        });
+        
+        app.particles.push(particle);
+
+        entity.animationName = 'attack-active';
+
+      } else {
+
+        entity.animationName = 'attack-winddown';
+
+      }
     }
   },
 };

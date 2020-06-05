@@ -23,7 +23,7 @@ class Actor extends Entity {
       
       ACT: 3,  // Action stat
       DEF: 3,  // Defence stat
-      SPR: 3,  // Spirit stat
+      WIL: 3,  // Willpower stat
       
       DMG: 0,  // Damage 
       DMG_recovery: 0,
@@ -38,9 +38,9 @@ class Actor extends Entity {
     this.actions = {
       'idle': STANDARD_ACTIONS.IDLE,
       'move': STANDARD_ACTIONS.MOVE,
-      'skill_1': STANDARD_ACTIONS.ATTACK,
+      'skill_1': STANDARD_ACTIONS.STRIKE,
       'skill_2': STANDARD_ACTIONS.DASH,
-      'skill_3': undefined,
+      'skill_3': STANDARD_ACTIONS.SHOOT,
     };
     
     this.reactions = {
